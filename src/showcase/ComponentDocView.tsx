@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { ComponentDoc } from './componentsData';
 import { ComponentPlaygrounds } from './ComponentPlaygrounds';
-import { Tabs } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Copy, Check, Terminal, Sliders, Code2, BookOpen } from 'lucide-react';
+import {
+  Tabs,
+  Badge,
+  Button,
+  Card,
+  AICodeBlock,
+  Tooltip,
+} from '@/components/ui';
+import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { useTheme } from '@/theme/ThemeContext';
 
@@ -12,7 +18,6 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'code' | 'props' | 'theme'>('preview');
   const [copiedImport, setCopiedImport] = useState(false);
-  const [copiedUsage, setCopiedUsage] = useState(false);
   const { addToast } = useToast();
   const { colors } = useTheme();
 
@@ -27,16 +32,6 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
     setTimeout(() => setCopiedImport(false), 2000);
   };
 
-  const handleCopyUsage = () => {
-    navigator.clipboard.writeText(component.usageCode);
-    setCopiedUsage(true);
-    addToast({
-      title: 'Copied usage code snippet!',
-      type: 'success',
-    });
-    setTimeout(() => setCopiedUsage(false), 2000);
-  };
-
   return (
     <div className="space-y-8 animate-fade-in pb-16">
       {/* Component Header */}
@@ -46,28 +41,32 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
             {component.name}
           </h1>
           <Badge variant="primary">{component.category}</Badge>
+          <Badge variant="outline">{component.themeTokens.length} Tokens</Badge>
         </div>
         <p className="text-base text-muted-foreground max-w-3xl leading-relaxed">
           {component.description}
         </p>
 
         {/* Quick Import Snippet */}
-        <div className="flex items-center justify-between p-3 px-4 rounded-xl bg-surface border border-border/80 max-w-xl">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto">
+        <div className="flex items-center justify-between p-2.5 px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-xs">
+          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto py-1">
             <Terminal className="h-4 w-4 text-primary shrink-0" />
             <span className="text-foreground">{component.importCode}</span>
           </div>
-          <button
-            onClick={handleCopyImport}
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition-colors"
-            title="Copy import statement"
-          >
-            {copiedImport ? (
-              <Check className="h-4 w-4 text-success" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
-          </button>
+          <Tooltip label="Copy import statement">
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={handleCopyImport}
+              className="ml-2 shrink-0"
+            >
+              {copiedImport ? (
+                <Check className="h-3.5 w-3.5 text-success" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
@@ -96,6 +95,7 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
           {
             id: 'theme',
             label: 'Theme Tokens',
+            icon: <Palette className="h-4 w-4" />,
             badge: component.themeTokens.length,
           },
         ]}
@@ -108,40 +108,31 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
         )}
 
         {activeTab === 'code' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Example Implementation
-              </span>
-              <button
-                onClick={handleCopyUsage}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface border border-border hover:bg-surface-elevated text-foreground transition-colors"
-              >
-                {copiedUsage ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-success" />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                    Copy Code
-                  </>
-                )}
-              </button>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Production Usage Example</h3>
+                <p className="text-xs text-muted-foreground">Drop-in TypeScript JSX implementation for {component.name}.</p>
+              </div>
             </div>
-            <pre className="p-5 rounded-2xl bg-surface border border-border font-mono text-xs text-foreground overflow-x-auto leading-relaxed">
-              <code>{component.usageCode}</code>
-            </pre>
+            <AICodeBlock
+              filename={`${component.id}.example.tsx`}
+              lines={component.usageCode.split('\n')}
+            />
           </div>
         )}
 
         {activeTab === 'props' && (
           <div className="space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Component Properties Reference
-            </span>
-            <div className="rounded-2xl border border-border overflow-hidden bg-surface">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Component Properties & Types</h3>
+                <p className="text-xs text-muted-foreground">Comprehensive API interface reference for {component.name}.</p>
+              </div>
+              <Badge variant="outline" size="sm">{component.props.length} Properties</Badge>
+            </div>
+
+            <div className="rounded-2xl border border-border overflow-hidden bg-surface shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-surface-subtle border-b border-border text-muted-foreground uppercase tracking-wider">
@@ -159,7 +150,9 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
                           {p.name}
                         </td>
                         <td className="py-3 px-4 font-mono text-muted-foreground">
-                          {p.type}
+                          <Badge variant="secondary" size="sm" className="font-mono text-[11px]">
+                            {p.type}
+                          </Badge>
                         </td>
                         <td className="py-3 px-4 font-mono text-foreground/80">
                           {p.defaultVal}
@@ -178,31 +171,30 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
 
         {activeTab === 'theme' && (
           <div className="space-y-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Associated CSS Custom Properties
-            </span>
-            <p className="text-xs text-muted-foreground">
-              These CSS variables govern the rendering of <span className="text-primary font-bold">{component.name}</span>. Modify them using the floating Theme Editor in the lower right.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Theme Token Dependencies</h3>
+              <p className="text-xs text-muted-foreground">
+                These CSS custom properties govern the rendering of <span className="text-primary font-bold">{component.name}</span>. Modify them dynamically in the Theme Customizer.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {component.themeTokens.map((tok) => (
-                <div
-                  key={tok}
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-surface border border-border"
-                >
-                  <code className="text-xs font-mono font-semibold text-primary">
-                    {tok}
-                  </code>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {tok === '--primary'
-                      ? colors.primary
-                      : tok === '--border'
-                      ? colors.border
-                      : tok === '--radius-md' || tok === '--radius-xl'
-                      ? `${colors.radius}px`
-                      : 'CSS Token'}
-                  </span>
-                </div>
+                <Card key={tok} className="p-3.5 bg-surface border border-border shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <code className="text-xs font-mono font-semibold text-primary">
+                      {tok}
+                    </code>
+                    <Badge variant="outline" size="sm" className="font-mono text-[10px]">
+                      {tok === '--primary'
+                        ? colors.primary
+                        : tok === '--border'
+                        ? colors.border
+                        : tok === '--radius' || tok === '--radius-md' || tok === '--radius-xl'
+                        ? `${colors.radius}px`
+                        : 'HSL Token'}
+                    </Badge>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
