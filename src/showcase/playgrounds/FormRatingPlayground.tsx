@@ -13,7 +13,7 @@ import { Sparkles } from 'lucide-react';
 
 export const PeekRatingPlayground: React.FC = () => {
   const { addToast } = useToast();
-  const { colors, isDark } = useTheme();
+  const { colors, isDark, preset } = useTheme();
 
   const [ratingVal, setRatingVal] = useState(4);
   const [ratingCount, setRatingCount] = useState(5);
@@ -26,8 +26,14 @@ export const PeekRatingPlayground: React.FC = () => {
   const [ratingAllowClear, setRatingAllowClear] = useState(true);
   const [ratingReadOnly, setRatingReadOnly] = useState(false);
   const [ratingDisabled, setRatingDisabled] = useState(false);
-  const [ratingActiveColor, setRatingActiveColor] = useState('#f5b400');
-  const [ratingIdleColor, setRatingIdleColor] = useState('#52525b');
+  const [ratingActiveColor, setRatingActiveColor] = useState(colors.accent || colors.primary || '#f5b400');
+  const [ratingIdleColor, setRatingIdleColor] = useState(isDark ? '#52525b' : '#d4d4d8');
+
+  // Synchronize rating colors with active theme preset
+  React.useEffect(() => {
+    setRatingActiveColor(colors.accent || colors.primary || '#f5b400');
+    setRatingIdleColor(isDark ? '#52525b' : '#d4d4d8');
+  }, [colors.accent, colors.primary, isDark, preset]);
 
   return (
     <div className="space-y-6">

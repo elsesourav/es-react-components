@@ -4,6 +4,10 @@ import {
   Badge,
   StreamingText,
   MarkdownEditor,
+  MarkdownRenderer,
+  ParameterSlider,
+  ParameterSwitch,
+  ParameterGrid,
   useToast,
 } from '@/components/ui';
 import { Sparkles } from 'lucide-react';
@@ -160,6 +164,126 @@ $$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
           onModeChange={(m) => setMarkdownMode(m)}
           minHeight="480px"
           helperText="Full GitHub-flavored Markdown with KaTeX math rendering ($inline$ & $$block$$)."
+        />
+      </div>
+    </div>
+  );
+};
+
+export const MarkdownRendererPlayground: React.FC = () => {
+  const { addToast } = useToast();
+
+  const [docType, setDocType] = useState<'math' | 'code' | 'alerts'>('math');
+  const [fontSize, setFontSize] = useState(14);
+  const [interactiveChecklists, setInteractiveChecklists] = useState(true);
+
+  const sampleDocs = {
+    math: `# KaTeX Theoretical Physics & Math
+Statistical mechanics evaluates continuous partition functions across dynamic phases:
+
+$$Z = \\sum_{s} e^{-\\beta E_s} = \\int \\mathcal{D}[\\phi] \\exp\\left( -\\frac{1}{\\hbar} S[\\phi] \\right)$$
+
+Euler's identity binds fundamental mathematical constants into a single harmony:
+
+$$e^{i\\pi} + 1 = 0$$
+
+> [!NOTE]
+> KaTeX math formulas are rendered client-side using pure CSS KaTeX webfonts without requiring server rendering.`,
+    code: `# Type-Safe Design Tokens & HSL Engine
+Below is the core token engine implementation:
+
+\`\`\`typescript
+export interface ThemeColors {
+  primary: string; // Hex (e.g. #6366f1)
+  background: string; // Hex (e.g. #0a0b14)
+  surface: string; // Hex (e.g. #111322)
+  foreground: string; // Hex (e.g. #fafafa)
+  border: string; // Hex (e.g. #1e2238)
+}
+
+export function applyTheme(colors: ThemeColors) {
+  const root = document.documentElement;
+  Object.entries(colors).forEach(([key, val]) => {
+    root.style.setProperty(\`--\${key}\`, val);
+  });
+}
+\`\`\`
+
+> [!TIP]
+> Hover any fenced code block to reveal one-click clipboard copying.`,
+    alerts: `# GitHub Flavored Callout Alerts
+Optical cues reinforce critical security requirements:
+
+> [!IMPORTANT]
+> All user passwords must be hashed using argon2id with high memory cost factors.
+
+> [!WARNING]
+> Never expose private JWT signing keys or database credentials in client bundles.
+
+> [!CAUTION]
+> Irreversible operations like permanent tenant deletion require secondary confirmation.
+
+### Execution Plan
+- [x] Strict $\\le 500$ line file limit per file
+- [x] Zero TypeScript errors
+- [x] Automated responsive verification
+`
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Markdown & Math Renderer Inspector
+          </span>
+          <div className="flex items-center gap-1.5">
+            {(['math', 'code', 'alerts'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={docType === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setDocType(t)}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Base Font Size"
+            value={fontSize}
+            onChange={setFontSize}
+            min={12}
+            max={20}
+            step={1}
+            unit="px"
+          />
+          <ParameterSwitch
+            label="Interactive Checklists"
+            checked={interactiveChecklists}
+            onChange={setInteractiveChecklists}
+          />
+        </ParameterGrid>
+      </div>
+
+      <div
+        style={{ fontSize: `${fontSize}px` }}
+        className="p-6 sm:p-10 rounded-2xl bg-surface border border-border min-h-[380px]"
+      >
+        <MarkdownRenderer
+          content={sampleDocs[docType]}
+          interactiveChecklists={interactiveChecklists}
+          onChecklistToggle={(idx, checked) => {
+            addToast({
+              title: 'Checklist Item Toggled',
+              description: `Item #${idx + 1} marked as ${checked ? 'completed' : 'pending'}.`,
+              type: 'info',
+            });
+          }}
         />
       </div>
     </div>

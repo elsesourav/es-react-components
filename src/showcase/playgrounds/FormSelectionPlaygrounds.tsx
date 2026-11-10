@@ -13,6 +13,8 @@ import { Server, Globe } from 'lucide-react';
 export const DropdownPlayground: React.FC = () => {
   const [dropdownVal, setDropdownVal] = useState('us-east');
   const [dropdownDisabled, setDropdownDisabled] = useState(false);
+  const [dropdownFullWidth, setDropdownFullWidth] = useState(true);
+  const [bottomPlacementDemo, setBottomPlacementDemo] = useState(false);
 
   const regionItems = [
     { value: 'us-east', label: 'US East (N. Virginia)', hint: '14ms', icon: <Server className="size-4" /> },
@@ -32,16 +34,30 @@ export const DropdownPlayground: React.FC = () => {
           </span>
         </div>
 
-        <ParameterGrid columns={2}>
+        <ParameterGrid columns={3}>
+          <ParameterSwitch
+            label="Full Width"
+            checked={dropdownFullWidth}
+            onChange={setDropdownFullWidth}
+          />
           <ParameterSwitch
             label="Disabled State"
             checked={dropdownDisabled}
             onChange={setDropdownDisabled}
           />
+          <ParameterSwitch
+            label="Test Flip Up (Collision)"
+            checked={bottomPlacementDemo}
+            onChange={setBottomPlacementDemo}
+          />
         </ParameterGrid>
       </div>
 
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+      <div
+        className={`p-6 rounded-2xl bg-surface border border-border space-y-6 transition-all duration-300 ${
+          bottomPlacementDemo ? 'pt-[420px]' : ''
+        }`}
+      >
         <div className="max-w-md mx-auto space-y-6">
           <div>
             <Dropdown
@@ -50,20 +66,20 @@ export const DropdownPlayground: React.FC = () => {
               value={dropdownVal}
               onChange={setDropdownVal}
               disabled={dropdownDisabled}
-              fullWidth
+              fullWidth={dropdownFullWidth}
             />
           </div>
 
           <div className="p-4 rounded-xl bg-surface-subtle border border-border text-xs space-y-2 font-mono">
             <div className="text-muted-foreground font-semibold uppercase tracking-wider text-[10px]">
-              Active Selection:
+              Active Selection & Collision Diagnostics:
             </div>
             <div className="flex items-center justify-between">
               <span>Value: <strong className="text-primary">{dropdownVal}</strong></span>
-              <span className="text-muted-foreground">Spring physics motion/react</span>
+              <span className="text-muted-foreground">Portaled fixed collision</span>
             </div>
             <p className="text-muted-foreground font-sans text-xs">
-              Supports ArrowUp, ArrowDown, Enter, Esc, and character-key typeahead!
+              Automatically flips upward if bottom space is &lt; 220px, viewport clamped on mobile, portaled into body with spring physics!
             </p>
           </div>
         </div>

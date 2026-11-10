@@ -7,9 +7,11 @@ import {
   useToast,
 } from '@/components/ui';
 import { Sparkles, Monitor, Tablet, Smartphone, RefreshCw } from 'lucide-react';
+import { useTheme } from '@/theme/ThemeContext';
 
 export const AiFineTuneCardPlayground: React.FC = () => {
   const { addToast } = useToast();
+  const { isDark } = useTheme();
   const [fineTuneTheme, setFineTuneTheme] = useState<'auto' | 'light' | 'dark'>('auto');
   const [fineTuneDevice, setFineTuneDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [fineTuneKey, setFineTuneKey] = useState(0);
@@ -119,7 +121,7 @@ export const AiFineTuneCardPlayground: React.FC = () => {
         <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
           <AIFineTuneCard
             key={fineTuneKey}
-            theme={fineTuneTheme === 'auto' ? undefined : fineTuneTheme}
+            theme={fineTuneTheme === 'auto' ? (isDark ? 'dark' : 'light') : fineTuneTheme}
             onChange={(state) => {
               setFineTuneLastState(state);
             }}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   FloatingLabelInput,
+  InlineValidation,
   OtpInput,
   TagInput,
   PasswordInput,
@@ -314,6 +315,77 @@ export const ExpandingSearchPlayground: React.FC = () => {
           <p className="text-xs text-muted-foreground text-center">
             Press <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border font-mono text-[10px]">Esc</kbd> to clear query or collapse back to the trigger icon.
           </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const InlineValidationPlayground: React.FC = () => {
+  const [val, setVal] = useState('developer@company.com');
+  const [validateOn, setValidateOn] = useState<'change' | 'blur'>('change');
+  const [minChars, setMinChars] = useState(6);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+
+  const validateEmail = (inputVal: string) => {
+    if (!inputVal) return 'Email is required';
+    if (inputVal.length < minChars) return `Must be at least ${minChars} characters long`;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputVal)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="border-b border-border/50 pb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Inline Validation Inspector Controls
+          </span>
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Min Chars"
+            value={minChars}
+            onChange={setMinChars}
+            min={3}
+            max={15}
+            step={1}
+            disabled={isDisabled}
+          />
+          <ParameterSwitch
+            label="Validate On Blur"
+            checked={validateOn === 'blur'}
+            onChange={(checked) => setValidateOn(checked ? 'blur' : 'change')}
+            disabled={isDisabled}
+          />
+          <ParameterSwitch
+            label="Disabled"
+            checked={isDisabled}
+            onChange={setIsDisabled}
+          />
+        </ParameterGrid>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="max-w-md mx-auto space-y-4">
+          <div className="text-xs text-muted-foreground mb-2">
+            Dynamic live evaluation with instant optical feedback (green checkmark for pass, red alert with animated slide-in message for fail):
+          </div>
+
+          <InlineValidation
+            label="Verified Business Email"
+            type="email"
+            value={val}
+            onChange={setVal}
+            validate={validateEmail}
+            validateOn={validateOn}
+            hint={showHint ? "Instant syntax & domain validation verification" : undefined}
+            disabled={isDisabled}
+          />
         </div>
       </div>
     </div>

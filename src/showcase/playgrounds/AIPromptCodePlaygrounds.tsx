@@ -7,9 +7,11 @@ import {
   useToast,
 } from '@/components/ui';
 import { Sparkles, Monitor, Tablet, Smartphone, Check } from 'lucide-react';
+import { useTheme } from '@/theme/ThemeContext';
 
 export const AiPromptBarPlayground: React.FC = () => {
   const { addToast } = useToast();
+  const { isDark } = useTheme();
   const [promptTheme, setPromptTheme] = useState<'auto' | 'dark' | 'light'>('auto');
   const [promptDevice, setPromptDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [promptVariant, setPromptVariant] = useState<'Rounded' | 'Pill'>('Rounded');
@@ -133,7 +135,7 @@ export const AiPromptBarPlayground: React.FC = () => {
 
         <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[440px]">
           <AIPromptBar
-            theme={promptTheme === 'auto' ? undefined : promptTheme}
+            theme={promptTheme === 'auto' ? (isDark ? 'dark' : 'light') : promptTheme}
             variant={promptVariant}
             tall={promptTall}
             demo={promptDemo}
@@ -161,6 +163,7 @@ export const AiPromptBarPlayground: React.FC = () => {
 
 export const AiCodeBlockPlayground: React.FC = () => {
   const { addToast } = useToast();
+  const { isDark } = useTheme();
   const [codeTheme, setCodeTheme] = useState<'auto' | 'light' | 'dark'>('auto');
   const [codeDevice, setCodeDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [codeVariant, setCodeVariant] = useState<'auto' | 'Code' | 'Diff'>('auto');
@@ -264,7 +267,7 @@ export const AiCodeBlockPlayground: React.FC = () => {
 
         <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
           <AICodeBlock
-            theme={codeTheme === 'auto' ? undefined : codeTheme}
+            theme={codeTheme === 'auto' ? (isDark ? 'dark' : 'light') : codeTheme}
             variant={codeVariant === 'auto' ? undefined : codeVariant}
             filename="churn.ts"
             onCopy={() => {

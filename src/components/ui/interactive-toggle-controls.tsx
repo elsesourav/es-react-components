@@ -109,7 +109,7 @@ export function MenuDotsExpand({
 
   const buttonThemeClasses = getThemeClasses(
     theme,
-    "bg-[#181818] border-neutral-700 text-white",
+    "bg-surface border-border text-foreground hover:bg-surface-subtle",
     "bg-white border-neutral-200 text-neutral-900",
     "bg-surface border-border text-foreground hover:bg-surface-subtle"
   );
@@ -168,14 +168,14 @@ export function CompactModeSwitch({
 
   const containerThemeClasses = getThemeClasses(
     theme,
-    "bg-[#181818] border-neutral-700",
+    "bg-surface-subtle border-border",
     "bg-neutral-100 border-neutral-200",
     "bg-surface-subtle border-border"
   );
 
   const pillThemeClasses = getThemeClasses(
     theme,
-    "bg-neutral-700",
+    "bg-surface shadow-sm border border-border/50",
     "bg-white shadow-sm",
     "bg-surface shadow-sm border border-border/50"
   );

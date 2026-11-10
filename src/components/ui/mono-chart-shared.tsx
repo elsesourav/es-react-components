@@ -83,9 +83,7 @@ export function MonoChartTooltipContent({
     <div
       className={cn(
         'rounded-xl px-3 py-2 text-xs shadow-xl backdrop-blur-md border font-sans transition-all z-50 pointer-events-none',
-        isDark
-          ? 'bg-[#181818]/95 border-white/10 text-white shadow-[0_8px_32px_rgba(0,0,0,0.6)]'
-          : 'bg-white/95 border-neutral-200 text-neutral-900 shadow-[0_8px_32px_rgba(0,0,0,0.12)]'
+        'bg-surface-elevated/95 border-border text-foreground shadow-2xl',
       )}
     >
       {label && (

@@ -346,13 +346,13 @@ export const App: React.FC = () => {
               onSelectedChange={handleTreeSelect}
               expanded={expandedCategories}
               onExpandedChange={handleExpandedChange}
-              accordion={true}
+              accordion={false}
             />
           </div>
         </div>
       </Modal>
 
-      <div className="flex-1 flex w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-8">
+      <div className="flex-1 flex w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 gap-8">
         <AppSidebar
           treeNodes={treeNodes}
           selectedId={selectedId}
@@ -362,26 +362,28 @@ export const App: React.FC = () => {
           totalComponents={COMPONENTS_DATA.length}
         />
 
-        <main className="flex-1 min-w-0">
-          {activeComponent ? (
-            <ComponentDocView
-              component={activeComponent}
-              onSelectOverview={() => handleSelectComponent(null)}
-            />
-          ) : (
-            <AppHero
-              components={COMPONENTS_DATA}
-              onSelectComponent={handleSelectComponent}
-              onOpenCommand={() => setCommandOpen(true)}
-            />
-          )}
-        </main>
-      </div>
+        <div className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-3.5rem)]">
+          <main className="flex-1 pt-6 pb-12">
+            {activeComponent ? (
+              <ComponentDocView
+                component={activeComponent}
+                onSelectOverview={() => handleSelectComponent(null)}
+              />
+            ) : (
+              <AppHero
+                components={COMPONENTS_DATA}
+                onSelectComponent={handleSelectComponent}
+                onOpenCommand={() => setCommandOpen(true)}
+              />
+            )}
+          </main>
 
-      <AppFooter
-        onSelectComponent={handleSelectComponent}
-        onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
-      />
+          <AppFooter
+            onSelectComponent={handleSelectComponent}
+            onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
+          />
+        </div>
+      </div>
 
       <ThemeCustomizer
         open={themeCustomizerOpen}

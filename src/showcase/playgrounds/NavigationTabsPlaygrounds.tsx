@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Tabs,
   SegmentedControl,
@@ -20,7 +20,7 @@ import { Sparkles, Layers } from 'lucide-react';
 
 export const BranchedMenuPlayground: React.FC = () => {
   const { addToast } = useToast();
-  const { preset, colors } = useTheme();
+  const { preset, colors, isDark } = useTheme();
 
   const [menuActive, setMenuActive] = useState('quick');
   const [menuWidth, setMenuWidth] = useState(240);
@@ -31,9 +31,16 @@ export const BranchedMenuPlayground: React.FC = () => {
   const [menuLineWidth, setMenuLineWidth] = useState(1.5);
   const [menuDrawDuration, setMenuDrawDuration] = useState(400);
   const [menuFoldDuration] = useState(300);
-  const [menuLineColor, setMenuLineColor] = useState('#3f3f46');
-  const [menuAccentColor, setMenuAccentColor] = useState('#6366f1');
-  const [menuTextColor, setMenuTextColor] = useState('#f5f5f5');
+  const [menuLineColor, setMenuLineColor] = useState(colors.border || (isDark ? '#3f3f46' : '#e2e8f0'));
+  const [menuAccentColor, setMenuAccentColor] = useState(colors.primary || '#6366f1');
+  const [menuTextColor, setMenuTextColor] = useState(colors.foreground || (isDark ? '#f5f5f5' : '#0f172a'));
+
+  // Synchronize tree navigation colors with active theme preset
+  useEffect(() => {
+    setMenuAccentColor(colors.primary || '#6366f1');
+    setMenuLineColor(colors.border || (isDark ? '#3f3f46' : '#e2e8f0'));
+    setMenuTextColor(colors.foreground || (isDark ? '#f5f5f5' : '#0f172a'));
+  }, [isDark, preset, colors.primary, colors.border, colors.foreground]);
 
   return (
     <div className="space-y-6">

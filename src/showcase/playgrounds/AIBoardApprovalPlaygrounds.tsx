@@ -6,9 +6,11 @@ import {
   useToast,
 } from '@/components/ui';
 import { Sparkles, Monitor, Tablet, Smartphone, RefreshCw } from 'lucide-react';
+import { useTheme } from '@/theme/ThemeContext';
 
 export const AiApprovalCardPlayground: React.FC = () => {
   const { addToast } = useToast();
+  const { isDark } = useTheme();
   const [approvalTheme, setApprovalTheme] = useState<'auto' | 'light' | 'dark'>('auto');
   const [approvalDevice, setApprovalDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [approvalSubmissions, setApprovalSubmissions] = useState<string | null>(null);
@@ -111,7 +113,7 @@ export const AiApprovalCardPlayground: React.FC = () => {
         <div className="rounded-2xl border border-border overflow-hidden shadow-lg bg-surface-elevated flex items-center justify-center p-6 sm:p-10">
           <AIApprovalCard
             key={approvalKey}
-            theme={approvalTheme === 'auto' ? undefined : approvalTheme}
+            theme={approvalTheme === 'auto' ? (isDark ? 'dark' : 'light') : approvalTheme}
             onSubmitted={(answers) => {
               setApprovalSubmissions('Approved');
               addToast({

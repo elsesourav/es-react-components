@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   TextLoop,
@@ -24,13 +24,20 @@ export const TextLoopPlayground: React.FC = () => {
   const [loopTilt, setLoopTilt] = useState(0);
   const [loopFontSize, setLoopFontSize] = useState(46);
   const [loopRibbon, setLoopRibbon] = useState(true);
-  const [loopRibbonColor, setLoopRibbonColor] = useState('#5227FF');
+  const [loopRibbonColor, setLoopRibbonColor] = useState(colors.primary || '#5227FF');
   const [loopRibbonWidth, setLoopRibbonWidth] = useState(86);
   const [loopCross, setLoopCross] = useState(false);
   const [loopCrossAngle, setLoopCrossAngle] = useState(16);
   const [loopDraggable, setLoopDraggable] = useState(false);
   const [loopOutline, setLoopOutline] = useState(false);
   const [loopPauseOnHover, setLoopPauseOnHover] = useState(true);
+
+  // Synchronize ribbon color with active theme preset
+  useEffect(() => {
+    if (colors.primary) {
+      setLoopRibbonColor(colors.primary);
+    }
+  }, [colors.primary, preset]);
 
   return (
     <div className="space-y-6">

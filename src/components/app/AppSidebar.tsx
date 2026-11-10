@@ -50,7 +50,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   }, [selectedId]);
 
   return (
-    <aside className="w-64 shrink-0 hidden md:block self-start sticky top-14 h-[calc(100vh-3.5rem)] py-4 z-20">
+    <aside className="w-64 shrink-0 hidden md:block self-start sticky top-14 h-[calc(100vh-3.5rem)] pt-6 pb-4 z-20 box-border">
       <div className="h-full flex flex-col gap-2.5 pb-2">
         {/* Pinned Header */}
         <div className="flex items-center justify-between px-1.5 shrink-0">

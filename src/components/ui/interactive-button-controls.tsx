@@ -65,21 +65,21 @@ export function ContextMenuEditDelete({
 
   const buttonThemeClasses = getThemeClasses(
     theme,
-    "bg-[#181818] border-neutral-700 text-white hover:bg-neutral-800",
+    "bg-surface border-border text-foreground hover:bg-surface-subtle",
     "bg-white border-neutral-200 text-neutral-900 hover:bg-neutral-50",
     "bg-surface border-border text-foreground hover:bg-surface-subtle"
   );
 
   const menuThemeClasses = getThemeClasses(
     theme,
-    "bg-[#181818] border-neutral-700",
-    "bg-white border-neutral-200",
-    "bg-surface border-border"
+    "bg-surface-elevated border-border shadow-xl",
+    "bg-white border-neutral-200 shadow-xl",
+    "bg-surface-elevated border-border shadow-xl"
   );
 
   const itemThemeClasses = getThemeClasses(
     theme,
-    "text-white hover:bg-neutral-800",
+    "text-foreground hover:bg-surface-subtle",
     "text-neutral-900 hover:bg-neutral-100",
     "text-foreground hover:bg-surface-subtle"
   );
@@ -161,22 +161,22 @@ export function QuestionTooltip({
 
   const tooltipBoxThemeClasses = getThemeClasses(
     theme,
-    "bg-[#222] border-neutral-700 text-neutral-200",
-    "bg-neutral-900 border-neutral-800 text-white",
+    "bg-surface-elevated border-border text-foreground shadow-lg",
+    "bg-neutral-900 border-neutral-800 text-white shadow-lg",
     "bg-surface-elevated border-border text-foreground shadow-lg"
   );
 
   const tooltipArrowThemeClasses = getThemeClasses(
     theme,
-    "bg-[#222] border-neutral-700",
+    "bg-surface-elevated border-border",
     "bg-neutral-900 border-neutral-800",
     "bg-surface-elevated border-border"
   );
 
   const buttonThemeClasses = getThemeClasses(
     theme,
-    "bg-[#1e1e1e] border-neutral-700 text-[#0a84ff]",
-    "bg-white border-neutral-200 text-[#0071e3]",
+    "bg-surface border-border text-primary hover:bg-surface-subtle",
+    "bg-white border-neutral-200 text-primary hover:bg-neutral-50",
     "bg-surface border-border text-primary hover:bg-surface-subtle"
   );
 
@@ -259,7 +259,7 @@ export function DownloadAnimatedIcons({
 
   const buttonBaseThemeClasses = getThemeClasses(
     theme,
-    "bg-[#181818] border-neutral-700 text-white",
+    "bg-surface border-border text-foreground hover:bg-surface-subtle",
     "bg-white border-neutral-200 text-neutral-900",
     "bg-surface border-border text-foreground hover:bg-surface-subtle"
   );
@@ -342,7 +342,7 @@ export function PipModeIcons({
 
   const buttonBaseThemeClasses = getThemeClasses(
     theme,
-    "bg-[#1e1e1e] border-neutral-700 text-neutral-400",
+    "bg-surface border-border text-muted-foreground hover:bg-surface-subtle",
     "bg-white border-neutral-200 text-neutral-600",
     "bg-surface border-border text-muted-foreground hover:bg-surface-subtle"
   );

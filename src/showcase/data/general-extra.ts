@@ -245,5 +245,23 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
       { name: 'onSelect', type: '(item: LogoMarqueeItem) => void', defaultVal: 'undefined', description: 'Click/selection callback.' },
     ],
     themeTokens: ['--surface', '--border', '--foreground', '--muted-foreground', '--primary', '--radius'],
+  },
+  {
+    id: 'markdown-renderer',
+    name: 'Markdown & LaTeX Renderer',
+    category: 'Typography & Content',
+    description:
+      'Optical markdown engine with full GitHub-flavored spec support, KaTeX client-side mathematical typesetting ($inline$ and $$block$$), fenced code syntax highlighting with copy-to-clipboard, callout alerts, tables, and auto-generated outline navigation.',
+    importCode: `import { MarkdownRenderer } from 'es-react-components';`,
+    usageCode: `<MarkdownRenderer
+  content="# Quantum Mechanics\\n\\nEuler: $e^{i\\pi} + 1 = 0$\\n\\n> [!NOTE]\\n> Pure client-side parsing."
+  showTableOfContents
+/>`,
+    props: [
+      { name: 'content', type: 'string', defaultVal: "''", description: 'Markdown string with inline or block LaTeX KaTeX equations.' },
+      { name: 'className', type: 'string', defaultVal: "''", description: 'Custom CSS container classes.' },
+      { name: 'showTableOfContents', type: 'boolean', defaultVal: 'false', description: 'Renders an interactive floating document outline sidebar.' },
+    ],
+    themeTokens: ['--surface', '--border', '--foreground', '--muted-foreground', '--primary', '--radius'],
   }
 ];

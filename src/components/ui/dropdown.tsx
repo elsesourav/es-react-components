@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useFloatingPosition } from "./dropdown-position";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const EXIT = [0.4, 0, 1, 1] as const;
@@ -52,6 +54,7 @@ export function useDropdown({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const viaKey = useRef(false);
@@ -141,7 +144,10 @@ export function useDropdown({
   useEffect(() => {
     if (!open) return;
     const onDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) close(false);
+      const target = e.target as Node;
+      if (!rootRef.current?.contains(target) && !menuRef.current?.contains(target)) {
+        close(false);
+      }
     };
     const onWindowBlur = () => close(false);
     document.addEventListener("pointerdown", onDown, true);
@@ -249,6 +255,8 @@ export function useDropdown({
     selectedItem: selectedIndex >= 0 ? items[selectedIndex] : null,
     itemId,
     rootRef,
+    triggerRef,
+    menuRef,
     triggerProps,
     listProps,
     getItemProps,
@@ -287,12 +295,19 @@ export function Dropdown({
     selectedIndex,
     selectedItem,
     rootRef,
+    triggerRef,
+    menuRef,
     triggerProps,
     listProps,
     getItemProps,
   } = useDropdown({ items, value, defaultValue, onChange, disabled });
 
   const cell = reduced ? NONE : CELL;
+  const { style: floatingStyle, placement, ready } = useFloatingPosition({
+    triggerRef,
+    open,
+    minWidth: fullWidth ? 0 : 200,
+  });
 
   return (
     <div
@@ -339,107 +354,126 @@ export function Dropdown({
         </motion.svg>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{
-              opacity: 0,
-              scale: 0.97,
-              y: -4,
-              transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
-            }}
-            transition={
-              reduced
-                ? NONE
-                : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }
-            }
-            style={{ transformOrigin: "top" }}
-            className="absolute left-0 top-[calc(100%+6px)] z-50 min-w-full w-max max-w-sm rounded-[var(--radius)] border border-border bg-surface-elevated p-1.5 shadow-xl backdrop-blur-md"
-          >
-            <ul
-              {...listProps}
-              aria-label={label || placeholder}
-              className="relative max-h-60 overflow-y-auto outline-none [scrollbar-gutter:stable]"
-            >
-              {/* Animated active pill */}
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-[34px] rounded-[calc(var(--radius)-4px)] bg-primary/10 dark:bg-primary/20"
-                initial={false}
-                animate={{
-                  y: activeIndex < 0 ? 0 : activeIndex * ROW_H,
-                  opacity: activeIndex < 0 ? 0 : 1,
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {open && ready && (
+              <motion.div
+                ref={menuRef}
+                initial={
+                  reduced
+                    ? { opacity: 0 }
+                    : {
+                        opacity: 0,
+                        scale: 0.96,
+                        y: placement === "top" ? 6 : -6,
+                      }
+                }
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.97,
+                  y: placement === "top" ? 4 : -4,
+                  transition: reduced ? NONE : { duration: 0.12, ease: EXIT },
                 }}
                 transition={
                   reduced
                     ? NONE
-                    : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }
+                    : { ...OPEN, opacity: { duration: 0.12, ease: EASE } }
                 }
-              />
-              {items.map((item, i) => {
-                const active = i === activeIndex && !item.disabled;
-                const picked = i === selectedIndex;
-                return (
-                  <li
-                    key={item.value}
-                    {...getItemProps(i)}
-                    className={`relative flex h-[34px] cursor-pointer select-none items-center rounded-[calc(var(--radius)-4px)] px-3 text-sm transition-colors ${
-                      item.disabled
-                        ? "cursor-not-allowed opacity-40 text-muted-foreground"
-                        : active
-                          ? "text-primary font-medium"
-                          : picked
-                            ? "text-foreground font-medium"
-                            : "text-foreground/90"
-                    }`}
-                  >
-                    <span className="relative flex min-w-0 flex-1 items-center gap-2.5">
-                      {item.icon && (
-                        <span className="size-4 shrink-0 text-muted-foreground">{item.icon}</span>
-                      )}
-                      <span className="truncate">{item.label}</span>
-                      {item.hint && (
-                        <span className="ml-auto shrink-0 font-mono text-[11px] text-muted-foreground/80">
-                          {item.hint}
-                        </span>
-                      )}
-                    </span>
-                    <motion.span
-                      aria-hidden
-                      initial={false}
-                      animate={{ opacity: picked ? 1 : 0, scale: picked ? 1 : 0.6 }}
-                      transition={cell}
-                      className="relative ml-2.5 flex size-4 shrink-0 items-center justify-center text-primary"
-                    >
-                      <svg viewBox="0 0 14 14" className="size-3.5">
-                        <path
-                          d="M2.5 7.2 L5.5 10.2 L11.5 3.8"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </motion.span>
-                  </li>
-                );
-              })}
-
-              {items.length === 0 && (
-                <li
-                  role="presentation"
-                  className="flex h-8 items-center px-3 text-sm text-muted-foreground"
+                style={{
+                  ...floatingStyle,
+                  transformOrigin: placement === "top" ? "bottom" : "top",
+                }}
+                className="fixed z-[9999] rounded-[var(--radius)] border border-border bg-surface-elevated/95 p-1.5 shadow-2xl backdrop-blur-xl flex flex-col"
+              >
+                <ul
+                  {...listProps}
+                  aria-label={label || placeholder}
+                  style={{
+                    maxHeight: `calc(${floatingStyle.maxHeight ?? "240px"} - 12px)`,
+                  }}
+                  className="relative w-full overflow-y-auto outline-none [scrollbar-gutter:stable]"
                 >
-                  {emptyLabel}
-                </li>
-              )}
-            </ul>
-          </motion.div>
+                  {/* Animated active pill */}
+                  <motion.span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 top-0 h-[34px] rounded-[calc(var(--radius)-4px)] bg-primary/10 dark:bg-primary/20"
+                    initial={false}
+                    animate={{
+                      y: activeIndex < 0 ? 0 : activeIndex * ROW_H,
+                      opacity: activeIndex < 0 ? 0 : 1,
+                    }}
+                    transition={
+                      reduced
+                        ? NONE
+                        : { ...SLIDE, opacity: { duration: 0.1, ease: EASE } }
+                    }
+                  />
+                  {items.map((item, i) => {
+                    const active = i === activeIndex && !item.disabled;
+                    const picked = i === selectedIndex;
+                    return (
+                      <li
+                        key={item.value}
+                        {...getItemProps(i)}
+                        className={`relative flex h-[34px] cursor-pointer select-none items-center rounded-[calc(var(--radius)-4px)] px-3 text-sm transition-colors ${
+                          item.disabled
+                            ? "cursor-not-allowed opacity-40 text-muted-foreground"
+                            : active
+                              ? "text-primary font-medium"
+                              : picked
+                                ? "text-foreground font-medium"
+                                : "text-foreground/90"
+                        }`}
+                      >
+                        <span className="relative flex min-w-0 flex-1 items-center gap-2.5">
+                          {item.icon && (
+                            <span className="size-4 shrink-0 text-muted-foreground">{item.icon}</span>
+                          )}
+                          <span className="truncate">{item.label}</span>
+                          {item.hint && (
+                            <span className="ml-auto shrink-0 font-mono text-[11px] text-muted-foreground/80">
+                              {item.hint}
+                            </span>
+                          )}
+                        </span>
+                        <motion.span
+                          aria-hidden
+                          initial={false}
+                          animate={{ opacity: picked ? 1 : 0, scale: picked ? 1 : 0.6 }}
+                          transition={cell}
+                          className="relative ml-2.5 flex size-4 shrink-0 items-center justify-center text-primary"
+                        >
+                          <svg viewBox="0 0 14 14" className="size-3.5">
+                            <path
+                              d="M2.5 7.2 L5.5 10.2 L11.5 3.8"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </motion.span>
+                      </li>
+                    );
+                  })}
+
+                  {items.length === 0 && (
+                    <li
+                      role="presentation"
+                      className="flex h-8 items-center px-3 text-sm text-muted-foreground"
+                    >
+                      {emptyLabel}
+                    </li>
+                  )}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }

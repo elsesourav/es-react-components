@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Button,
@@ -33,9 +33,16 @@ export const SplitFlapTextPlayground: React.FC = () => {
   const [flapDepth, setFlapDepth] = useState(0.5);
   const [flapGlare, setFlapGlare] = useState(0);
   const [flapFontSize, setFlapFontSize] = useState(42);
-  const [flapTileColor, setFlapTileColor] = useState('#111827');
-  const [flapTextColor, setFlapTextColor] = useState('#f8fafc');
-  const [flapBoardBg, setFlapBoardBg] = useState<'dark' | 'surface' | 'slate'>('dark');
+  const [flapTileColor, setFlapTileColor] = useState(isDark ? '#111827' : '#ffffff');
+  const [flapTextColor, setFlapTextColor] = useState(isDark ? '#f8fafc' : '#0f172a');
+  const [flapBoardBg, setFlapBoardBg] = useState<'dark' | 'surface' | 'slate'>(isDark ? 'dark' : 'surface');
+
+  // Synchronize flip tile colors with active theme preset
+  useEffect(() => {
+    setFlapTileColor(isDark ? '#111827' : '#ffffff');
+    setFlapTextColor(isDark ? '#f8fafc' : '#0f172a');
+    setFlapBoardBg(isDark ? 'dark' : 'surface');
+  }, [isDark, preset]);
 
   return (
     <div className="space-y-6">

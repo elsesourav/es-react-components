@@ -253,7 +253,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       : adjustHslLightness(surfaceHsl, -4);
     const surfaceElevatedHsl = dark
       ? adjustHslLightness(surfaceHsl, 4)
-      : '#ffffff';
+      : '0 0% 100%';
     const surfaceSunkenHsl = dark
       ? adjustHslLightness(bgHsl, -2)
       : adjustHslLightness(surfaceHsl, -7);

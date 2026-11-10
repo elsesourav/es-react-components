@@ -220,18 +220,22 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
               </p>
             </div>
             <div className="flex flex-wrap gap-2 pt-2">
-              {component.themeTokens.map((token) => (
-                <div
-                  key={token}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-mono"
-                >
-                  <span
-                    className="size-3 rounded-full border border-border shadow-2xs"
-                    style={{ backgroundColor: (colors as any)[token] || 'var(--primary)' }}
-                  />
-                  <span className="text-foreground">{token}</span>
-                </div>
-              ))}
+              {component.themeTokens.map((token) => {
+                const clean = token.replace(/^--/, '');
+                const directColor = (colors as any)[clean];
+                return (
+                  <div
+                    key={token}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-mono"
+                  >
+                    <span
+                      className="size-3 rounded-full border border-border/80 shadow-2xs shrink-0"
+                      style={{ backgroundColor: directColor || `hsl(var(${token}))` }}
+                    />
+                    <span className="text-foreground">{token}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </Card>

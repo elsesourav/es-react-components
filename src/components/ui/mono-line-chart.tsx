@@ -96,9 +96,7 @@ export function MonoRoundedLineChart({
       className={cn(
         'relative w-full rounded-[24px] transition-all duration-300 group flex flex-col justify-between overflow-hidden p-4 sm:p-5',
         compact ? 'h-[230px] sm:h-[268px]' : 'min-h-[295px]',
-        isDark
-          ? 'bg-[#181818] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_8px_24px_rgba(0,0,0,0.4)] hover:bg-[#1e1e1e] border border-white/5 text-white'
-          : 'bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-neutral-200/80 text-black hover:shadow-[0_8px_28px_rgba(0,0,0,0.07)]',
+        'bg-surface border border-border text-foreground shadow-md transition-colors',
         className
       )}
     >
@@ -167,7 +165,7 @@ export function MonoRoundedLineChart({
       <div
         className={cn(
           'relative w-full flex-1 rounded-[14px] overflow-hidden p-2 transition-colors duration-300 touch-pan-y min-h-[130px]',
-          isDark ? 'bg-[#131313]' : 'bg-[#f4f4f6]'
+          'bg-surface-sunken/60 border border-border/40'
         )}
       >
         <ResponsiveContainer width="100%" height={chartHeight}>
@@ -225,7 +223,7 @@ export function MonoRoundedLineChart({
               dot={{
                 r: 4,
                 fill: isDark ? '#FFFFFF' : '#09090B',
-                stroke: isDark ? '#181818' : '#FFFFFF',
+                stroke: isDark ? '#111322' : '#FFFFFF',
                 strokeWidth: 2,
               }}
               activeDot={{

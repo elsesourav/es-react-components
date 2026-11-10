@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   Button,
@@ -8,13 +8,15 @@ import {
   ParameterGrid,
   useToast,
 } from '@/components/ui';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, Sparkles } from 'lucide-react';
+import { useTheme } from '@/theme/ThemeContext';
 
 export const ParameterSliderPlayground: React.FC = () => {
   const { addToast } = useToast();
+  const { colors, isDark, preset } = useTheme();
 
-  const [paramFill, setParamFill] = useState('#f5f5f5');
-  const [paramTrack, setParamTrack] = useState('#27272a');
+  const [paramFill, setParamFill] = useState(isDark ? '#f5f5f5' : '#4f46e5');
+  const [paramTrack, setParamTrack] = useState(isDark ? '#27272a' : '#f4f4f5');
   const [paramValue, setParamValue] = useState(50);
   const [paramStep, setParamStep] = useState(1);
   const [paramShowValue, setParamShowValue] = useState(true);
@@ -29,6 +31,42 @@ export const ParameterSliderPlayground: React.FC = () => {
   const [paramSmoothing, setParamSmoothing] = useState(100);
   const [paramDisabled, setParamDisabled] = useState(false);
 
+  // Synchronize parameter colors with active theme preset
+  useEffect(() => {
+    if (isDark) {
+      setParamFill('#f5f5f5');
+      setParamTrack('#27272a');
+    } else {
+      setParamFill(colors.primary || '#4f46e5');
+      setParamTrack('#f4f4f5');
+    }
+  }, [isDark, preset, colors.primary]);
+
+  const handleReset = () => {
+    const defaultFill = isDark ? '#f5f5f5' : (colors.primary || '#4f46e5');
+    const defaultTrack = isDark ? '#27272a' : '#f4f4f5';
+    setParamFill(defaultFill);
+    setParamTrack(defaultTrack);
+    setParamValue(50);
+    setParamStep(1);
+    setParamShowValue(true);
+    setParamBars(32);
+    setParamHeight(56);
+    setParamRestHeight(18);
+    setParamGap(4);
+    setParamSensitivity(1);
+    setParamReach(6);
+    setParamSkew(0.6);
+    setParamGlide(0.3);
+    setParamSmoothing(100);
+    setParamDisabled(false);
+    addToast({
+      title: 'Theme & Defaults Restored',
+      description: `Reset all 15 parameters to match active ${preset} theme.`,
+      type: 'info',
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
@@ -42,24 +80,7 @@ export const ParameterSliderPlayground: React.FC = () => {
         <Button
           size="xs"
           variant="outline"
-          onClick={() => {
-            setParamFill('#f5f5f5');
-            setParamTrack('#27272a');
-            setParamValue(50);
-            setParamStep(1);
-            setParamShowValue(true);
-            setParamBars(32);
-            setParamHeight(56);
-            setParamRestHeight(18);
-            setParamGap(4);
-            setParamSensitivity(1);
-            setParamReach(6);
-            setParamSkew(0.6);
-            setParamGlide(0.3);
-            setParamSmoothing(100);
-            setParamDisabled(false);
-            addToast({ title: 'Defaults Restored', description: 'Reset all 15 inspector parameters.', type: 'info' });
-          }}
+          onClick={handleReset}
         >
           Reset All 15 Parameters
         </Button>

@@ -5,6 +5,7 @@ import {
   TextRevealPlayground,
   StreamingTextPlayground,
   MarkdownEditorPlayground,
+  MarkdownRendererPlayground,
   ParameterSliderPlayground,
   ElasticSliderPlayground,
   WakeSliderPlayground,
@@ -24,6 +25,7 @@ import {
   BadgePlayground,
   PeekRatingPlayground,
   FloatingInputPlayground,
+  InlineValidationPlayground,
   OtpInputPlayground,
   TagInputPlayground,
   PasswordInputPlayground,
@@ -84,6 +86,8 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <StreamingTextPlayground />;
     case 'markdown-editor':
       return <MarkdownEditorPlayground />;
+    case 'markdown-renderer':
+      return <MarkdownRendererPlayground />;
     case 'parameter-slider':
       return <ParameterSliderPlayground />;
     case 'elastic-slider':
@@ -121,7 +125,11 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
     case 'peek-rating':
       return <PeekRatingPlayground />;
     case 'floating-input':
+    case 'floating-label-input':
       return <FloatingInputPlayground />;
+    case 'inline-validation':
+    case 'inline-validation-input':
+      return <InlineValidationPlayground />;
     case 'otp-input':
       return <OtpInputPlayground />;
     case 'tag-input':

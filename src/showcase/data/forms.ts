@@ -122,6 +122,29 @@ import {
     ],
     themeTokens: ['--surface', '--border', '--primary', '--destructive', '--radius'],
   },
+  {
+    id: 'inline-validation',
+    name: 'Inline Validation Input',
+    category: 'Inputs & Fields',
+    description:
+      'Live validation form field featuring real-time syntax and business rule checking, dynamic success/error status icons, animated slide-in error messages, and touch blur tracking.',
+    importCode: `import { InlineValidation } from 'es-react-components';`,
+    usageCode: `<InlineValidation
+  label="Work Email"
+  type="email"
+  validate={(val) => !val.includes('@') ? 'Valid email required' : null}
+  validateOn="change"
+  hint="Instant syntax verification"
+/>`,
+    props: [
+      { name: 'label', type: 'string', defaultVal: 'undefined', description: 'Field header label.' },
+      { name: 'validate', type: '(val: string) => string | null', defaultVal: 'undefined', description: 'Validation function returning error text or null for pass.' },
+      { name: 'validateOn', type: "'change' | 'blur'", defaultVal: "'change'", description: 'Whether to validate as the user types or upon loss of focus.' },
+      { name: 'hint', type: 'string', defaultVal: 'undefined', description: 'Supporting guidance text below input.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables user input and dims styling.' },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--destructive', '--success', '--radius'],
+  },
 {
     id: 'otp-input',
     name: 'OTP Input',
