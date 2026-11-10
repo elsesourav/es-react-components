@@ -56,3 +56,7 @@ export * from './poll-results';
 export * from './slider-detents';
 export * from './reorder-list';
 export * from './lightbox';
+export * from './text-reveal';
+export * from './logo-marquee';
+export * from './blur-up-image';
+export * from './show-more';

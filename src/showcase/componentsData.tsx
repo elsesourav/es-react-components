@@ -2620,6 +2620,103 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     ],
     themeTokens: ['--background', '--surface-elevated', '--border', '--foreground', '--radius'],
   },
+  {
+    id: 'text-reveal',
+    name: 'Text Reveal',
+    category: 'General',
+    description:
+      'Staggered blur and fade text reveal animation by word or character with viewport scroll-triggering, duration pacing, and reduced motion fallbacks.',
+    importCode: `import { TextReveal, useTextReveal } from 'es-react-components';`,
+    usageCode: `<TextReveal
+  text="Deploy globally distributed edge functions with zero cold starts."
+  by="word"
+  stagger={0.05}
+  className="text-2xl font-bold"
+/>`,
+    props: [
+      { name: 'text', type: 'string', defaultVal: "''", description: 'Text content to split and animate.' },
+      { name: 'by', type: "'word' | 'character'", defaultVal: "'word'", description: 'Splitting strategy.' },
+      { name: 'stagger', type: 'number', defaultVal: '0.055', description: 'Stagger delay between adjacent units in seconds.' },
+      { name: 'maxDuration', type: 'number', defaultVal: '1.6', description: 'Upper ceiling on total reveal duration in seconds.' },
+      { name: 'startOnView', type: 'boolean', defaultVal: 'true', description: 'Trigger animation when element scrolls into view.' },
+      { name: 'play', type: 'boolean', defaultVal: 'true', description: 'Allows manual play/pause triggering.' },
+      { name: 'once', type: 'boolean', defaultVal: 'true', description: 'Only trigger once when scrolling into view.' },
+    ],
+    themeTokens: ['--foreground', '--muted-foreground'],
+  },
+  {
+    id: 'logo-marquee',
+    name: 'Logo Marquee',
+    category: 'General',
+    description:
+      'Hardware-accelerated continuous ticker carousel with smooth momentum decay, keyboard tab navigation, pause on hover/interaction, and adaptive multi-copy filling.',
+    importCode: `import { LogoMarquee, useLogoMarquee } from 'es-react-components';`,
+    usageCode: `<LogoMarquee
+  items={[
+    { id: '1', label: 'React' },
+    { id: '2', label: 'Next.js' },
+    { id: '3', label: 'Tailwind' },
+    { id: '4', label: 'TypeScript' },
+  ]}
+  speed={44}
+  direction="left"
+/>`,
+    props: [
+      { name: 'items', type: 'LogoMarqueeItem[]', defaultVal: '[]', description: 'Array of brand or logo records.' },
+      { name: 'speed', type: 'number', defaultVal: '44', description: 'Scrolling speed in pixels per second.' },
+      { name: 'direction', type: "'left' | 'right'", defaultVal: "'left'", description: 'Ticker scroll direction.' },
+      { name: 'gap', type: 'number', defaultVal: '40', description: 'Gap spacing between logo items in pixels.' },
+      { name: 'paused', type: 'boolean', defaultVal: 'false', description: 'Whether ticker scrolling is paused.' },
+      { name: 'onSelect', type: '(item: LogoMarqueeItem) => void', defaultVal: 'undefined', description: 'Click/selection callback.' },
+    ],
+    themeTokens: ['--surface', '--border', '--foreground', '--muted-foreground', '--primary', '--radius'],
+  },
+  {
+    id: 'blur-up-image',
+    name: 'Blur-Up Image',
+    category: 'Surfaces & Layout',
+    description:
+      'Progressive image loading component with blurred low-res placeholder, async decode detection, smooth spring unblur reveal, and fallback handling.',
+    importCode: `import { BlurUpImage, useBlurUpImage } from 'es-react-components';`,
+    usageCode: `<BlurUpImage
+  src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200"
+  placeholder="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=32"
+  alt="Gradient mesh artwork"
+  width={16}
+  height={9}
+/>`,
+    props: [
+      { name: 'src', type: 'string', defaultVal: 'undefined', description: 'Full-resolution image source URL.' },
+      { name: 'placeholder', type: 'string', defaultVal: 'undefined', description: 'Low-resolution thumbnail or data URI placeholder.' },
+      { name: 'alt', type: 'string', defaultVal: "''", description: 'Accessible image alternative description.' },
+      { name: 'width', type: 'number', defaultVal: 'required', description: 'Aspect ratio width component.' },
+      { name: 'height', type: 'number', defaultVal: 'required', description: 'Aspect ratio height component.' },
+      { name: 'blur', type: 'number', defaultVal: '14', description: 'Initial Gaussian blur radius in pixels.' },
+      { name: 'loading', type: "'lazy' | 'eager'", defaultVal: "'lazy'", description: 'HTML image loading attribute.' },
+    ],
+    themeTokens: ['--surface-subtle', '--border', '--surface', '--radius'],
+  },
+  {
+    id: 'show-more',
+    name: 'Show More',
+    category: 'Surfaces & Layout',
+    description:
+      'Smooth collapsible content disclosure with dynamic line-height calculation, spring height transitions, gradient fade veil, and full ARIA keyboard control.',
+    importCode: `import { ShowMore, useShowMore } from 'es-react-components';`,
+    usageCode: `<ShowMore lines={3} maxHeight={320} moreLabel="Show more" lessLabel="Show less">
+  <p>Long paragraph or complex dashboard text content...</p>
+</ShowMore>`,
+    props: [
+      { name: 'children', type: 'ReactNode', defaultVal: 'required', description: 'Content to clamp and disclose.' },
+      { name: 'lines', type: 'number', defaultVal: '3', description: 'Number of text lines shown in collapsed state.' },
+      { name: 'maxHeight', type: 'number', defaultVal: '320', description: 'Maximum height ceiling in expanded state before scrolling.' },
+      { name: 'defaultExpanded', type: 'boolean', defaultVal: 'false', description: 'Initial expanded state.' },
+      { name: 'moreLabel', type: 'string', defaultVal: "'Show more'", description: 'Button label when collapsed.' },
+      { name: 'lessLabel', type: 'string', defaultVal: "'Show less'", description: 'Button label when expanded.' },
+      { name: 'onExpandedChange', type: '(expanded: boolean) => void', defaultVal: 'undefined', description: 'State change callback.' },
+    ],
+    themeTokens: ['--foreground', '--surface', '--border', '--primary', '--radius'],
+  },
 ];
 
 

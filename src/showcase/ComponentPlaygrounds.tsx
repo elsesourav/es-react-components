@@ -91,6 +91,14 @@ import {
   useReorderList,
   Lightbox,
   useLightbox,
+  TextReveal,
+  useTextReveal,
+  LogoMarquee,
+  useLogoMarquee,
+  BlurUpImage,
+  useBlurUpImage,
+  ShowMore,
+  useShowMore,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -134,6 +142,10 @@ import {
   GripVertical,
   Maximize2,
   Grid3X3,
+  Play,
+  Pause,
+  RotateCcw,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
@@ -302,6 +314,24 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   // Lightbox State
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const lightboxThumbRef = useRef<HTMLButtonElement>(null);
+
+  // TextReveal State
+  const [textRevealBy, setTextRevealBy] = useState<'word' | 'character'>('word');
+  const [textRevealKey, setTextRevealKey] = useState(0);
+  const [textRevealStagger, setTextRevealStagger] = useState(0.055);
+
+  // LogoMarquee State
+  const [marqueeSpeed, setMarqueeSpeed] = useState(44);
+  const [marqueeDirection, setMarqueeDirection] = useState<'left' | 'right'>('left');
+  const [marqueePaused, setMarqueePaused] = useState(false);
+
+  // BlurUpImage State
+  const [blurUpKey, setBlurUpKey] = useState(0);
+  const [blurUpError, setBlurUpError] = useState(false);
+
+  // ShowMore State
+  const [showMoreExpanded, setShowMoreExpanded] = useState(false);
+  const [showMoreLines, setShowMoreLines] = useState(3);
 
   // Switch State
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -4520,6 +4550,282 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
             originRef={lightboxThumbRef}
             maxScale={5}
           />
+        </div>
+      </div>
+    );
+  }
+
+  // TextReveal Playground
+  if (componentId === 'text-reveal') {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-foreground">Split Mode:</span>
+            <div className="flex items-center gap-1.5">
+              {(['word', 'character'] as const).map((mode) => (
+                <Button
+                  key={mode}
+                  size="xs"
+                  variant={textRevealBy === mode ? 'primary' : 'outline'}
+                  onClick={() => setTextRevealBy(mode)}
+                >
+                  By {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => {
+                setTextRevealKey((k) => k + 1);
+                addToast({ title: 'Replayed Animation', description: `Text reveal triggered (${textRevealBy} split)`, type: 'info' });
+              }}
+            >
+              <RotateCcw className="size-3.5 mr-1" />
+              Replay Animation
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-8 sm:p-14 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center text-center">
+          <div className="max-w-xl space-y-4">
+            <Badge variant="primary" size="sm">
+              Motion Physics Text Pipeline
+            </Badge>
+
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-snug">
+              <TextReveal
+                key={textRevealKey}
+                text="Engineered for mission-critical interfaces with fluid kinetic physics and accessible motion fallback."
+                by={textRevealBy}
+                stagger={textRevealBy === 'character' ? 0.025 : 0.065}
+              />
+            </h2>
+
+            <p className="text-sm text-muted-foreground pt-2">
+              Words fade and blur upward into focus using a cubic-bezier ease with automatic viewport detection and reduced-motion fallback.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // LogoMarquee Playground
+  if (componentId === 'logo-marquee') {
+    const brands = [
+      { id: 'react', label: 'React 19', mark: <Zap className="size-4 text-cyan-400" /> },
+      { id: 'next', label: 'Next.js 15', mark: <Globe className="size-4 text-foreground" /> },
+      { id: 'tailwind', label: 'Tailwind CSS', mark: <Sparkles className="size-4 text-sky-400" /> },
+      { id: 'motion', label: 'Motion React', mark: <Rocket className="size-4 text-purple-400" /> },
+      { id: 'ts', label: 'TypeScript 5.7', mark: <Hash className="size-4 text-blue-400" /> },
+      { id: 'vite', label: 'Vite 6', mark: <Server className="size-4 text-amber-400" /> },
+      { id: 'radix', label: 'Radix Primitives', mark: <Layers className="size-4 text-emerald-400" /> },
+      { id: 'lucide', label: 'Lucide Icons', mark: <Tag className="size-4 text-rose-400" /> },
+    ];
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-foreground">Speed:</span>
+            {[24, 44, 72].map((s) => (
+              <Button
+                key={s}
+                size="xs"
+                variant={marqueeSpeed === s ? 'primary' : 'outline'}
+                onClick={() => setMarqueeSpeed(s)}
+              >
+                {s} px/s
+              </Button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => setMarqueeDirection((d) => (d === 'left' ? 'right' : 'left'))}
+            >
+              Dir: {marqueeDirection === 'left' ? '← Left' : '→ Right'}
+            </Button>
+            <Button
+              size="xs"
+              variant={marqueePaused ? 'primary' : 'outline'}
+              onClick={() => setMarqueePaused((p) => !p)}
+            >
+              {marqueePaused ? <Play className="size-3.5 mr-1" /> : <Pause className="size-3.5 mr-1" />}
+              {marqueePaused ? 'Resume' : 'Pause'}
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border space-y-6">
+          <div className="text-center max-w-md mx-auto space-y-1">
+            <h3 className="text-sm font-semibold text-foreground">Supported Enterprise Platforms</h3>
+            <p className="text-xs text-muted-foreground">
+              Hover to halt scrolling. Click any pill to trigger callback. Focus with Tab to automatically center item.
+            </p>
+          </div>
+
+          <LogoMarquee
+            items={brands}
+            speed={marqueeSpeed}
+            direction={marqueeDirection}
+            paused={marqueePaused}
+            gap={24}
+            onSelect={(b) => {
+              addToast({ title: 'Brand Selected', description: `Interacted with: ${b.label}`, type: 'info' });
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // BlurUpImage Playground
+  if (componentId === 'blur-up-image') {
+    const sampleSrc = blurUpError
+      ? 'https://invalid-broken-domain-url-404.jpg'
+      : `https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1400&q=80&r=${blurUpKey}`;
+    const placeholder = 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=32&q=20';
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-2">
+            <ImageIcon className="size-4 text-primary" />
+            <span className="text-xs font-medium text-foreground">
+              Status: <span className="font-semibold text-primary">{blurUpError ? 'Simulating Error Fallback' : 'Active Decode Loader'}</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant={blurUpError ? 'danger' : 'outline'}
+              onClick={() => {
+                setBlurUpError((err) => !err);
+                setBlurUpKey((k) => k + 1);
+              }}
+            >
+              {blurUpError ? 'Restore Normal Image' : 'Simulate Error'}
+            </Button>
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => {
+                setBlurUpKey((k) => k + 1);
+                addToast({ title: 'Image Reloaded', description: 'Re-triggered progressive decode unblur', type: 'info' });
+              }}
+            >
+              <RotateCcw className="size-3.5 mr-1" />
+              Reload
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-lg space-y-3">
+            <div className="overflow-hidden rounded-2xl border border-border shadow-md">
+              <BlurUpImage
+                key={`${blurUpKey}-${blurUpError}`}
+                src={sampleSrc}
+                placeholder={placeholder}
+                alt="Colorful abstract gradient mesh"
+                width={16}
+                height={9}
+                blur={16}
+                onReady={() => {
+                  addToast({ title: 'Image Decoded', description: 'Progressive spring unblur completed.', type: 'success' });
+                }}
+                onError={() => {
+                  addToast({ title: 'Decode Failed', description: 'Gracefully rendered fallback state.', type: 'error' });
+                }}
+              />
+            </div>
+            <p className="text-center text-xs text-muted-foreground">
+              Loads low-resolution micro-thumbnail first, waits for browser async image decoding, then gracefully unblurs and saturates into focus.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ShowMore Playground
+  if (componentId === 'show-more') {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-foreground">Collapsed Lines:</span>
+            {[2, 3, 5].map((l) => (
+              <Button
+                key={l}
+                size="xs"
+                variant={showMoreLines === l ? 'primary' : 'outline'}
+                onClick={() => setShowMoreLines(l)}
+              >
+                {l} Lines
+              </Button>
+            ))}
+          </div>
+
+          <div className="text-xs text-muted-foreground">
+            Status: <span className="font-semibold text-foreground">{showMoreExpanded ? 'Expanded' : 'Clamped'}</span>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
+          <div className="w-full max-w-xl p-6 rounded-2xl bg-surface border border-border shadow-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <ShieldCheck className="size-4 text-primary" />
+              <h3 className="text-sm font-semibold text-foreground">Global Data Residency & Compliance Policy</h3>
+            </div>
+
+            <ShowMore
+              lines={showMoreLines}
+              maxHeight={340}
+              expanded={showMoreExpanded}
+              onExpandedChange={(exp) => {
+                setShowMoreExpanded(exp);
+                addToast({
+                  title: exp ? 'Disclosed Content' : 'Collapsed Content',
+                  description: `Section ${exp ? 'expanded to full height' : `clamped to ${showMoreLines} lines`}`,
+                  type: 'info',
+                });
+              }}
+              moreLabel="Read Full Compliance Terms"
+              lessLabel="Show Fewer Lines"
+            >
+              <div className="space-y-3 text-sm text-foreground/80 leading-relaxed">
+                <p>
+                  All customer telemetry data, session storage tokens, and encryption payloads are segregated
+                  across isolated sovereign compute zones. Primary relational replicas are deployed across
+                  multi-AZ Frankfurt (eu-central-1), Northern Virginia (us-east-1), and Tokyo (ap-northeast-1)
+                  clusters with automated synchronous mTLS cross-region failover.
+                </p>
+                <p>
+                  Zero-trust identity verification is strictly enforced on every internal RPC boundary using
+                  ephemeral SPIFFE/SPIRE X.509 certificates rotated every 60 minutes. Encryption at rest is
+                  secured using FIPS 140-3 Level 3 Hardware Security Modules (HSMs) with customer-managed keys (BYOK).
+                </p>
+                <p>
+                  Audit logs are immutably streamed to append-only tamper-evident cold storage with WORM (Write Once,
+                  Read Many) retention locks conforming to SOC 2 Type II, ISO 27001, and HIPAA compliance specifications.
+                </p>
+                <p>
+                  Third-party vulnerability assessments and continuous red-team pen testing reports are published
+                  quarterly in the customer trust portal with real-time SOC incident telemetry feeds.
+                </p>
+              </div>
+            </ShowMore>
+          </div>
         </div>
       </div>
     );
