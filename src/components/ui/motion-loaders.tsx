@@ -9,6 +9,7 @@ export interface SquareSnakeProps {
   className?: string;
   duration?: number;
   label?: string;
+  colorClassName?: string;
 }
 
 const SQUARE_COORDINATES: Array<[number, number]> = [
@@ -22,6 +23,7 @@ export const SquareSnake: React.FC<SquareSnakeProps> = ({
   className,
   duration = 1.5,
   label = "Loading...",
+  colorClassName = "bg-primary",
 }) => {
   const sizeClasses = {
     sm: "w-7 h-7 gap-0.5",
@@ -38,8 +40,8 @@ export const SquareSnake: React.FC<SquareSnakeProps> = ({
       {SQUARE_COORDINATES.map(([columnIndex, rowIndex], cellIndex) => (
         <motion.div
           key={cellIndex}
-          className="bg-zinc-800 dark:bg-white rounded-sm w-full h-full"
-          animate={{ opacity: [0.1, 1, 0.1] }}
+          className={cn("rounded-sm w-full h-full", colorClassName)}
+          animate={{ opacity: [0.15, 1, 0.15] }}
           transition={{
             duration,
             repeat: Infinity,
@@ -60,6 +62,7 @@ export interface BobbingDotsProps {
   duration?: number;
   bounceHeight?: number;
   label?: string;
+  colorClassName?: string;
 }
 
 export const BobbingDots: React.FC<BobbingDotsProps> = ({
@@ -69,6 +72,7 @@ export const BobbingDots: React.FC<BobbingDotsProps> = ({
   duration = 1.2,
   bounceHeight = 10,
   label = "Loading...",
+  colorClassName = "bg-primary",
 }) => {
   const dotSizeClasses = {
     sm: "w-2 h-2",
@@ -93,7 +97,7 @@ export const BobbingDots: React.FC<BobbingDotsProps> = ({
       {dotsArray.map((dotIndex) => (
         <motion.div
           key={dotIndex}
-          className={cn("bg-zinc-800 dark:bg-white rounded-full", dotSizeClasses[size])}
+          className={cn("rounded-full", dotSizeClasses[size], colorClassName)}
           animate={{ y: [0, -bounceHeight, 0] }}
           transition={{
             duration,

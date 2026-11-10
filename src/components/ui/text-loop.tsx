@@ -3,231 +3,39 @@
 import React, {
   CSSProperties,
   SVGProps,
-  useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import { gsap } from 'gsap';
+import {
+  type TextLoopShape,
+  type TextLoopDirection,
+  type TextLoopProps,
+  type PathMetrics,
+  type FadeGradientStop,
+  VIEWBOX_WIDTH,
+  VIEWBOX_HEIGHT,
+  CENTER_X,
+  CENTER_Y,
+  useIsomorphicLayoutEffect,
+  resolveCssColor,
+  generateSvgPath,
+  generateFadeStops,
+  lightenColor,
+  calculateContrastingTextColor,
+} from './text-loop-geometry';
+import { useTextLoopEngine } from './use-text-loop-engine';
 
-export type TextLoopShape = 'wave' | 'circle' | 'infinity' | 'arch' | 'line';
-export type TextLoopDirection = 'forward' | 'reverse';
-
-export interface TextLoopProps {
-  text?: string;
-  shape?: TextLoopShape;
-  path?: string;
-  speed?: number;
-  direction?: TextLoopDirection;
-  separator?: string;
-  curviness?: number;
-  tilt?: number;
-  fontSize?: number;
-  fontWeight?: number | string;
-  letterSpacing?: number;
-  uppercase?: boolean;
-  color?: string;
-  ribbon?: boolean;
-  ribbonColor?: string;
-  ribbonWidth?: number;
-  edgeFade?: number;
-  pauseOnHover?: boolean;
-  cross?: boolean;
-  crossColor?: string;
-  crossAngle?: number;
-  draggable?: boolean;
-  scrollBoost?: number;
-  outline?: boolean;
-  outlineWidth?: number;
-  className?: string;
-  style?: CSSProperties;
-}
-
-interface PathMetrics {
-  length: number;
-  reps: number;
-  crossLength: number;
-  crossReps: number;
-}
-
-interface FadeGradientStop {
-  offset: number;
-  opacity: number;
-}
-
-const VIEWBOX_WIDTH = 1200;
-const VIEWBOX_HEIGHT = 520;
-const CENTER_X = VIEWBOX_WIDTH / 2;
-const CENTER_Y = VIEWBOX_HEIGHT / 2;
-const EDGE_PADDING = 6;
-const FADE_RESOLUTION_STEPS = 8;
-const MAX_FLING_VELOCITY = 2600;
-const MAX_SCROLL_BOOST = 1600;
-
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-
-const calculateSmoothStep = (normalizedProgress: number) =>
-  normalizedProgress *
-  normalizedProgress *
-  normalizedProgress *
-  (normalizedProgress * (normalizedProgress * 6 - 15) + 10);
-
-const clampValue = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
-
-const resolveCssColor = (colorString?: string): string => {
-  if (!colorString) return '';
-  const trimmed = colorString.trim();
-  if (trimmed.startsWith('var(--') && !trimmed.startsWith('hsl(')) {
-    return `hsl(${trimmed})`;
-  }
-  return trimmed;
-};
-
-const wrapOffset = (value: number, totalLength: number) =>
-  ((value % totalLength) + totalLength) % totalLength;
-
-const calculateCircleRadius = (curviness: number, ribbonWidth: number) =>
-  Math.min(
-    90 + Math.max(0, curviness) * 0.95,
-    Math.max(20, CENTER_Y - Math.max(0, ribbonWidth) / 2 - EDGE_PADDING)
-  );
-
-const generateSvgPath = (
-  shape: TextLoopShape,
-  curviness: number,
-  ribbonWidth: number,
-  isMirrored = false
-): string => {
-  const curveFactor = Math.max(0, curviness);
-  const verticalAllowance = Math.max(
-    20,
-    CENTER_Y - Math.max(0, ribbonWidth) / 2 - EDGE_PADDING
-  );
-  const mirrorMultiplier = isMirrored ? -1 : 1;
-
-  switch (shape) {
-    case 'circle': {
-      const radius = calculateCircleRadius(curviness, ribbonWidth);
-      if (isMirrored) {
-        const radiusX = radius * 1.22;
-        const radiusY = radius * 0.42;
-        return `M ${CENTER_X - radiusX} ${CENTER_Y} A ${radiusX} ${radiusY} 0 1 1 ${
-          CENTER_X + radiusX
-        } ${CENTER_Y} A ${radiusX} ${radiusY} 0 1 1 ${
-          CENTER_X - radiusX
-        } ${CENTER_Y} Z`;
-      }
-      return `M ${CENTER_X - radius} ${CENTER_Y} A ${radius} ${radius} 0 1 1 ${
-        CENTER_X + radius
-      } ${CENTER_Y} A ${radius} ${radius} 0 1 1 ${CENTER_X - radius} ${CENTER_Y} Z`;
-    }
-    case 'infinity': {
-      const radiusX = 150 + curveFactor * 1.4;
-      const heightY = Math.min(60 + curveFactor * 0.95, verticalAllowance);
-      return [
-        `M ${CENTER_X} ${CENTER_Y}`,
-        `C ${CENTER_X + radiusX * 0.55} ${CENTER_Y - heightY} ${
-          CENTER_X + radiusX
-        } ${CENTER_Y - heightY} ${CENTER_X + radiusX} ${CENTER_Y}`,
-        `C ${CENTER_X + radiusX} ${CENTER_Y + heightY} ${
-          CENTER_X + radiusX * 0.55
-        } ${CENTER_Y + heightY} ${CENTER_X} ${CENTER_Y}`,
-        `C ${CENTER_X - radiusX * 0.55} ${CENTER_Y - heightY} ${
-          CENTER_X - radiusX
-        } ${CENTER_Y - heightY} ${CENTER_X - radiusX} ${CENTER_Y}`,
-        `C ${CENTER_X - radiusX} ${CENTER_Y + heightY} ${
-          CENTER_X - radiusX * 0.55
-        } ${CENTER_Y + heightY} ${CENTER_X} ${CENTER_Y}`,
-        'Z',
-      ].join(' ');
-    }
-    case 'arch': {
-      const riseHeight =
-        Math.min(120 + curveFactor * 1.1, verticalAllowance * 2) *
-        mirrorMultiplier;
-      return `M 120 ${CENTER_Y + riseHeight / 2} Q ${CENTER_X} ${
-        CENTER_Y - riseHeight * 1.5
-      } ${VIEWBOX_WIDTH - 120} ${CENTER_Y + riseHeight / 2}`;
-    }
-    case 'line':
-      return `M -320 ${CENTER_Y} L ${VIEWBOX_WIDTH + 320} ${CENTER_Y}`;
-    case 'wave':
-    default: {
-      const waveAmplitude =
-        Math.min(curveFactor * 2.2, verticalAllowance * 2) * mirrorMultiplier;
-      return `M -320 ${CENTER_Y} Q -160 ${
-        CENTER_Y - waveAmplitude
-      } 0 ${CENTER_Y} T 320 ${CENTER_Y} T 640 ${CENTER_Y} T 960 ${CENTER_Y} T 1280 ${CENTER_Y} T ${
-        VIEWBOX_WIDTH + 320
-      } ${CENTER_Y}`;
-    }
-  }
-};
-
-const generateFadeStops = (edgeFadeRatio: number): FadeGradientStop[] => {
-  const fadeWidth = Math.min(1, Math.max(0, edgeFadeRatio)) * 0.3;
-  if (fadeWidth <= 0) return [];
-  const stops: FadeGradientStop[] = [];
-  for (let i = 0; i <= FADE_RESOLUTION_STEPS; i++) {
-    const progress = i / FADE_RESOLUTION_STEPS;
-    stops.push({
-      offset: progress * fadeWidth,
-      opacity: calculateSmoothStep(progress),
-    });
-  }
-  for (let i = FADE_RESOLUTION_STEPS; i >= 0; i--) {
-    const progress = i / FADE_RESOLUTION_STEPS;
-    stops.push({
-      offset: 1 - progress * fadeWidth,
-      opacity: calculateSmoothStep(progress),
-    });
-  }
-  return stops;
-};
-
-const parseHexRgb = (colorString?: string): [number, number, number] | null => {
-  const match = /^#?([\da-f]{3}|[\da-f]{6})$/i.exec(
-    String(colorString || '').trim()
-  );
-  if (!match) return null;
-  const hex =
-    match[1].length === 3
-      ? match[1].replace(/./g, (ch) => ch + ch)
-      : match[1];
-  return [
-    parseInt(hex.slice(0, 2), 16),
-    parseInt(hex.slice(2, 4), 16),
-    parseInt(hex.slice(4, 6), 16),
-  ];
-};
-
-const lightenColor = (colorHex: string, amount: number): string => {
-  const rgb = parseHexRgb(colorHex);
-  if (!rgb) return colorHex;
-  return `#${rgb
-    .map((channel) =>
-      Math.round(channel + (255 - channel) * amount)
-        .toString(16)
-        .padStart(2, '0')
-    )
-    .join('')}`;
-};
-
-const calculateContrastingTextColor = (bgColorHex: string): string => {
-  const rgb = parseHexRgb(bgColorHex);
-  if (!rgb) return '#ffffff';
-  const [r, g, b] = rgb.map((channel) => {
-    const linear = channel / 255;
-    return linear <= 0.04045
-      ? linear / 12.92
-      : ((linear + 0.055) / 1.055) ** 2.4;
-  });
-  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  return luminance > 0.2 ? '#120f17' : '#ffffff';
+export type { TextLoopShape, TextLoopDirection, TextLoopProps, PathMetrics, FadeGradientStop };
+export {
+  VIEWBOX_WIDTH,
+  VIEWBOX_HEIGHT,
+  CENTER_X,
+  CENTER_Y,
+  generateSvgPath,
+  generateFadeStops,
+  resolveCssColor,
 };
 
 export const TextLoop: React.FC<TextLoopProps> = ({
@@ -394,309 +202,27 @@ export const TextLoop: React.FC<TextLoopProps> = ({
     };
   }, [mainPathData, crossPathData, singleUnitText, fontSize, fontWeight, letterSpacing]);
 
-  useIsomorphicLayoutEffect(() => {
-    const { length: totalPathLength, crossLength: crossPathLength } =
-      pathMetrics;
-    const primaryHead = primaryHeadPathRef.current;
-    const primaryTail = primaryTailPathRef.current;
-    const rootContainer = containerRootRef.current;
-    const svgElement = svgElementRef.current;
-    if (
-      !primaryHead ||
-      !primaryTail ||
-      !rootContainer ||
-      !svgElement ||
-      !totalPathLength
-    )
-      return undefined;
-
-    const crossHead = crossHeadPathRef.current;
-    const crossTail = crossTailPathRef.current;
-    const crossPathElements =
-      cross && crossHead && crossTail && crossPathLength > 0
-        ? [crossHead, crossTail]
-        : null;
-
-    let currentDistance = travelProgressRef.current * totalPathLength;
-
-    const applyOffsets = () => {
-      const wrappedOffset = wrapOffset(currentDistance, totalPathLength);
-      travelProgressRef.current = wrappedOffset / totalPathLength;
-      primaryHead.setAttribute('startOffset', String(wrappedOffset));
-      primaryTail.setAttribute(
-        'startOffset',
-        String(wrappedOffset - totalPathLength)
-      );
-      if (crossPathElements) {
-        const crossWrappedOffset = wrapOffset(
-          -currentDistance,
-          crossPathLength
-        );
-        crossPathElements[0].setAttribute(
-          'startOffset',
-          String(crossWrappedOffset)
-        );
-        crossPathElements[1].setAttribute(
-          'startOffset',
-          String(crossWrappedOffset - crossPathLength)
-        );
-      }
-    };
-    applyOffsets();
-
-    const isReducedMotion = Boolean(
-      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
-    );
-    const motionSign = direction === 'reverse' ? -1 : 1;
-    const baseSpeed = isReducedMotion
-      ? 0
-      : Math.max(0, speed) * motionSign;
-    const hoverScaleTracker = { scale: 1 };
-    const primaryAngleRad = (primaryRotationAngle * Math.PI) / 180;
-    const isCircular = !isCustomPath && shape === 'circle';
-    const circleRad = calculateCircleRadius(curviness, ribbonWidth);
-    const isScrollBoostActive = scrollBoost > 0 && !isReducedMotion;
-
-    let inertialFlingVelocity = 0;
-    let dynamicScrollBoost = 0;
-    let observedScrollVelocity = 0;
-    let lastScrollTimestamp = 0;
-    let lastScrollPosition = 0;
-    let activeScrollSource: EventTarget | null = null;
-    let isCurrentlyDragging = false;
-    let activePointerId: number | null = null;
-    let lastPointerX = 0;
-    let lastPointerY = 0;
-    let lastPointerTimestamp = 0;
-    let dragVelocity = 0;
-    let svgCenterCoordinates = { x: 0, y: 0 };
-    let isTickerActive = false;
-
-    const animationTick = (_: number, deltaMs: number) => {
-      if (isCurrentlyDragging) return;
-      const deltaTimeSeconds = Math.min(0.05, deltaMs / 1000);
-      inertialFlingVelocity *= Math.exp(-deltaTimeSeconds / 0.55);
-
-      if (isScrollBoostActive) {
-        if (performance.now() - lastScrollTimestamp > 90) {
-          observedScrollVelocity *= Math.exp(-deltaTimeSeconds / 0.12);
-        }
-        const boostTarget = clampValue(
-          observedScrollVelocity * scrollBoost * 0.35 * motionSign,
-          -MAX_SCROLL_BOOST,
-          MAX_SCROLL_BOOST
-        );
-        dynamicScrollBoost +=
-          (boostTarget - dynamicScrollBoost) *
-          (1 - Math.exp(-deltaTimeSeconds / 0.18));
-      }
-
-      const totalVelocity =
-        baseSpeed * hoverScaleTracker.scale +
-        inertialFlingVelocity +
-        dynamicScrollBoost;
-      if (Math.abs(totalVelocity) < 0.01) return;
-
-      currentDistance += totalVelocity * deltaTimeSeconds;
-      applyOffsets();
-    };
-
-    const startTicker = () => {
-      if (isTickerActive || isReducedMotion) return;
-      isTickerActive = true;
-      gsap.ticker.add(animationTick);
-    };
-
-    const stopTicker = () => {
-      if (!isTickerActive) return;
-      isTickerActive = false;
-      gsap.ticker.remove(animationTick);
-    };
-
-    const animateHoverGlide = (isHovered: boolean) =>
-      gsap.to(hoverScaleTracker, {
-        scale: isHovered ? 0 : 1,
-        duration: isHovered ? 0.6 : 0.9,
-        ease: isHovered ? 'power2.out' : 'power2.inOut',
-        overwrite: true,
-      });
-
-    const handlePointerEnter = (event: PointerEvent) => {
-      if (event.pointerType !== 'touch') animateHoverGlide(true);
-    };
-
-    const handlePointerLeave = () => animateHoverGlide(false);
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (event.pointerType === 'mouse' && event.button !== 0) return;
-      isCurrentlyDragging = true;
-      activePointerId = event.pointerId;
-      rootContainer.setPointerCapture?.(event.pointerId);
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      lastPointerTimestamp = performance.now();
-      dragVelocity =
-        baseSpeed * hoverScaleTracker.scale +
-        inertialFlingVelocity +
-        dynamicScrollBoost;
-
-      const rect = svgElement.getBoundingClientRect();
-      svgCenterCoordinates = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      };
-      rootContainer.style.cursor = 'grabbing';
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!isCurrentlyDragging || event.pointerId !== activePointerId) return;
-      const now = performance.now();
-      let travelDelta: number;
-
-      if (isCircular) {
-        let angleTurn =
-          Math.atan2(
-            event.clientY - svgCenterCoordinates.y,
-            event.clientX - svgCenterCoordinates.x
-          ) -
-          Math.atan2(
-            lastPointerY - svgCenterCoordinates.y,
-            lastPointerX - svgCenterCoordinates.x
-          );
-        if (angleTurn > Math.PI) angleTurn -= Math.PI * 2;
-        if (angleTurn < -Math.PI) angleTurn += Math.PI * 2;
-        travelDelta = angleTurn * circleRad;
-      } else {
-        const svgBoundingRect = svgElement.getBoundingClientRect();
-        const coordinateScale =
-          VIEWBOX_WIDTH / (svgBoundingRect.width || VIEWBOX_WIDTH);
-        travelDelta =
-          ((event.clientX - lastPointerX) * Math.cos(primaryAngleRad) +
-            (event.clientY - lastPointerY) * Math.sin(primaryAngleRad)) *
-          coordinateScale;
-      }
-
-      currentDistance += travelDelta;
-      applyOffsets();
-
-      const timeDeltaSeconds = Math.max(1, now - lastPointerTimestamp) / 1000;
-      dragVelocity =
-        dragVelocity * 0.6 + (travelDelta / timeDeltaSeconds) * 0.4;
-      lastPointerX = event.clientX;
-      lastPointerY = event.clientY;
-      lastPointerTimestamp = now;
-    };
-
-    const handlePointerUp = (event: PointerEvent) => {
-      if (!isCurrentlyDragging || event.pointerId !== activePointerId) return;
-      isCurrentlyDragging = false;
-      activePointerId = null;
-      rootContainer.style.cursor = '';
-      if (isReducedMotion) return;
-
-      const releaseVelocity =
-        performance.now() - lastPointerTimestamp > 90
-          ? 0
-          : clampValue(dragVelocity, -MAX_FLING_VELOCITY, MAX_FLING_VELOCITY);
-      inertialFlingVelocity =
-        releaseVelocity -
-        (baseSpeed * hoverScaleTracker.scale + dynamicScrollBoost);
-    };
-
-    const handleWindowScroll = (event: Event) => {
-      const scrollTarget = event.target;
-      const isDocumentScroll =
-        scrollTarget === document ||
-        scrollTarget === document.documentElement ||
-        scrollTarget === document.body;
-
-      if (
-        !isDocumentScroll &&
-        !(scrollTarget instanceof Node && scrollTarget.contains(rootContainer))
-      )
-        return;
-
-      const scrollOffsetY = isDocumentScroll
-        ? window.scrollY
-        : (scrollTarget as Element).scrollTop;
-      const currentTime = performance.now();
-
-      if (
-        scrollTarget !== activeScrollSource ||
-        currentTime - lastScrollTimestamp > 200
-      ) {
-        activeScrollSource = scrollTarget;
-        lastScrollPosition = scrollOffsetY;
-        lastScrollTimestamp = currentTime;
-        return;
-      }
-
-      const instantaneousVelocity =
-        (scrollOffsetY - lastScrollPosition) /
-        (Math.max(8, currentTime - lastScrollTimestamp) / 1000);
-      observedScrollVelocity =
-        observedScrollVelocity * 0.5 + instantaneousVelocity * 0.5;
-      lastScrollPosition = scrollOffsetY;
-      lastScrollTimestamp = currentTime;
-    };
-
-    if (pauseOnHover) {
-      rootContainer.addEventListener('pointerenter', handlePointerEnter);
-      rootContainer.addEventListener('pointerleave', handlePointerLeave);
-    }
-    if (draggable) {
-      rootContainer.addEventListener('pointerdown', handlePointerDown);
-      rootContainer.addEventListener('pointermove', handlePointerMove);
-      rootContainer.addEventListener('pointerup', handlePointerUp);
-      rootContainer.addEventListener('pointercancel', handlePointerUp);
-    }
-    if (isScrollBoostActive) {
-      window.addEventListener('scroll', handleWindowScroll, {
-        capture: true,
-        passive: true,
-      });
-    }
-
-    const intersectionObserver =
-      typeof IntersectionObserver !== 'undefined'
-        ? new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) startTicker();
-            else stopTicker();
-          })
-        : null;
-
-    if (intersectionObserver) intersectionObserver.observe(rootContainer);
-    else startTicker();
-
-    return () => {
-      intersectionObserver?.disconnect();
-      stopTicker();
-      gsap.killTweensOf(hoverScaleTracker);
-      rootContainer.style.cursor = '';
-      rootContainer.removeEventListener('pointerenter', handlePointerEnter);
-      rootContainer.removeEventListener('pointerleave', handlePointerLeave);
-      rootContainer.removeEventListener('pointerdown', handlePointerDown);
-      rootContainer.removeEventListener('pointermove', handlePointerMove);
-      rootContainer.removeEventListener('pointerup', handlePointerUp);
-      rootContainer.removeEventListener('pointercancel', handlePointerUp);
-      window.removeEventListener('scroll', handleWindowScroll, {
-        capture: true,
-      });
-    };
-  }, [
-    pathMetrics,
+  useTextLoopEngine({
+    rootContainer: containerRootRef.current,
+    svgElement: svgElementRef.current,
+    primaryHead: primaryHeadPathRef.current,
+    primaryTail: primaryTailPathRef.current,
+    crossHead: crossHeadPathRef.current,
+    crossTail: crossTailPathRef.current,
+    primaryPathLength: pathMetrics.length,
+    crossPathLength: pathMetrics.crossLength,
+    travelProgressRef,
     speed,
     direction,
     pauseOnHover,
     draggable,
     scrollBoost,
-    cross,
+    primaryRotationAngle,
     isCustomPath,
     shape,
-    primaryRotationAngle,
     curviness,
     ribbonWidth,
-  ]);
+  });
 
   const fullRepeatedLoopText = singleUnitText.repeat(pathMetrics.reps);
   const fullRepeatedCrossText = singleUnitText.repeat(pathMetrics.crossReps);

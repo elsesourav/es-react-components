@@ -385,10 +385,10 @@ export const PeekRating: React.FC<PeekRatingProps> = ({
     isInteractive && showTip ? Math.round(size * 0.9) : 0;
 
   const ratingCssVariables = {
-    '--pr-active': resolveCssColor(activeColor),
-    '--pr-idle': resolveCssColor(idleColor),
-    '--pr-tip': resolveCssColor(tipColor),
-    '--pr-tip-text': resolveCssColor(tipTextColor),
+    ...(activeColor ? { '--pr-active': resolveCssColor(activeColor) } : {}),
+    ...(idleColor ? { '--pr-idle': resolveCssColor(idleColor) } : {}),
+    ...(tipColor ? { '--pr-tip': resolveCssColor(tipColor) } : {}),
+    ...(tipTextColor ? { '--pr-tip-text': resolveCssColor(tipTextColor) } : {}),
     '--pr-size': `${size}px`,
     '--pr-gap': `${Math.round(size * 0.22)}px`,
     '--pr-room': `${lift + tooltipVerticalSpacing}px`,

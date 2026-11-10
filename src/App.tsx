@@ -25,6 +25,8 @@ import {
   ShowMore,
   Tooltip,
   Modal,
+  TreeView,
+  TreeNode,
 } from './components/ui';
 import {
   Search,
@@ -33,10 +35,15 @@ import {
   Sun,
   Moon,
   ChevronRight,
+  ChevronDown,
   Palette,
   Menu,
   Zap,
   Globe,
+  SlidersHorizontal,
+  Folder,
+  LayoutGrid,
+  Cpu,
   Rocket,
   Hash,
   Server,
@@ -87,7 +94,17 @@ export const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const { isDark, toggleDark, preset, setPreset } = useTheme();
+
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(() => [
+    'cat-General',
+    'cat-Surfaces & Layout',
+    'cat-Forms',
+    'cat-Feedback',
+    'cat-Navigation',
+    'cat-AI & Agentic UX',
+  ]);
 
   // Global keyboard shortcut ⌘K / Ctrl+K for CommandPalette
   useEffect(() => {
@@ -145,6 +162,65 @@ export const App: React.FC = () => {
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const treeNodes: TreeNode[] = useMemo(() => {
+    const nodes: TreeNode[] = [
+      {
+        id: '__overview__',
+        label: 'Showcase Overview',
+        icon: <LayoutGrid className="size-3.5 text-primary" />,
+        meta: `${COMPONENTS_DATA.length}`,
+      },
+    ];
+
+    const categoryIcons: Record<string, React.ReactNode> = {
+      'General': <Sparkles className="size-3.5 text-primary" />,
+      'Surfaces & Layout': <Layers className="size-3.5 text-indigo-400" />,
+      'Forms': <SlidersHorizontal className="size-3.5 text-amber-400" />,
+      'Feedback': <Zap className="size-3.5 text-rose-400" />,
+      'Navigation': <Globe className="size-3.5 text-emerald-400" />,
+      'AI & Agentic UX': <Cpu className="size-3.5 text-purple-400" />,
+    };
+
+    Array.from(categories.entries()).forEach(([category, items]) => {
+      nodes.push({
+        id: `cat-${category}`,
+        label: category,
+        meta: `${items.length}`,
+        icon: categoryIcons[category] || <Folder className="size-3.5 text-muted-foreground" />,
+        children: items.map((item) => ({
+          id: item.id,
+          label: item.name,
+        })),
+      });
+    });
+
+    return nodes;
+  }, [categories]);
+
+  const handleTreeSelect = (id: string) => {
+    if (id === '__overview__') {
+      handleSelectComponent(null);
+    } else if (!id.startsWith('cat-')) {
+      handleSelectComponent(id);
+      if (mobileMenuOpen) setMobileMenuOpen(false);
+    }
+  };
+
+  // Auto-expand category containing activeComponent
+  useEffect(() => {
+    if (activeComponent) {
+      const catId = `cat-${activeComponent.category}`;
+      setExpandedCategories((prev) => (prev.includes(catId) ? prev : [...prev, catId]));
+    }
+  }, [activeComponent]);
+
+  // When searching, expand all categories with results
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      setExpandedCategories(Array.from(categories.keys()).map((c) => `cat-${c}`));
+    }
+  }, [searchQuery, categories]);
 
   const commandItems: CommandItem[] = useMemo(() => {
     const componentCommands: CommandItem[] = COMPONENTS_DATA.map((c) => ({

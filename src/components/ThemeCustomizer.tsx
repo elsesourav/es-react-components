@@ -23,8 +23,25 @@ import {
   ParameterColor,
 } from '@/components/ui';
 
-export const ThemeCustomizer: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+export interface ThemeCustomizerProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showFloatingTrigger?: boolean;
+}
+
+export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
+  open,
+  onOpenChange,
+  showFloatingTrigger = false,
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setIsOpen = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
+
   const [activeTab, setActiveTab] = useState<'presets' | 'custom' | 'export'>('presets');
   const {
     preset,
@@ -60,18 +77,20 @@ export const ThemeCustomizer: React.FC = () => {
 
   return (
     <>
-      {/* Floating Launcher Trigger */}
-      <Tooltip label="Customize Colors & Theme Tokens" side="top">
-        <Button
-          size="md"
-          variant="primary"
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 shadow-xl shadow-primary/25 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-          leftIcon={<Palette className="size-4 animate-pulse" />}
-        >
-          <span className="hidden sm:inline">Theme Editor</span>
-        </Button>
-      </Tooltip>
+      {/* Optional Floating Launcher Trigger */}
+      {showFloatingTrigger && (
+        <Tooltip label="Customize Colors & Theme Tokens" side="top">
+          <Button
+            size="md"
+            variant="primary"
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 right-6 z-40 shadow-xl shadow-primary/25 rounded-full hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+            leftIcon={<Palette className="size-4 animate-pulse" />}
+          >
+            <span className="hidden sm:inline">Theme Editor</span>
+          </Button>
+        </Tooltip>
+      )}
 
       {/* Backdrop */}
       {isOpen && (

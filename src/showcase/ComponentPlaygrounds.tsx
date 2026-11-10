@@ -109,6 +109,12 @@ import {
   ElasticSlider,
   WakeSlider,
   Slider,
+  MonoRoundedLineChart,
+  MonoRoundedBarChart,
+  MonoRoundedAreaChart,
+  MonoRoundedDonutChart,
+  MonoRoundedStreamChart,
+  MonoChartsSuite,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -117,6 +123,7 @@ import {
   PaintBoardIcon,
 } from '@hugeicons/core-free-icons';
 import { useToast } from '@/components/ui/toast';
+import { useTheme } from '@/theme/ThemeContext';
 import {
   Sparkles,
   ArrowRight,
@@ -159,12 +166,18 @@ import {
   Pause,
   RotateCcw,
   Image as ImageIcon,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Activity,
+  BarChart2,
 } from 'lucide-react';
 
 export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   componentId,
 }) => {
   const { addToast } = useToast();
+  const { preset, colors, isDark } = useTheme();
 
   // Button Playground State
   const [btnVariant, setBtnVariant] = useState<any>('primary');
@@ -386,16 +399,17 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [loopRibbonWidth, setLoopRibbonWidth] = useState(86);
   const [loopCross, setLoopCross] = useState(false);
   const [loopCrossAngle, setLoopCrossAngle] = useState(16);
-  const [loopDraggable, setLoopDraggable] = useState(true);
+  const [loopDraggable, setLoopDraggable] = useState(false);
   const [loopOutline, setLoopOutline] = useState(false);
   const [loopPauseOnHover, setLoopPauseOnHover] = useState(true);
 
   // SplitFlapText State
-  const [flapWords] = useState<string[]>([
+  const [flapWords, setFlapWords] = useState<string[]>([
     'LAUNCH READY',
     'SYNC ONLINE',
     'SIGNAL LIVE',
   ]);
+  const [flapPreset, setFlapPreset] = useState<'launch' | 'terminal' | 'crypto' | 'cities'>('launch');
   const [flapDuration, setFlapDuration] = useState(0.12);
   const [flapStagger, setFlapStagger] = useState(0.06);
   const [flapCycleDelay, setFlapCycleDelay] = useState(2400);
@@ -404,6 +418,10 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [flapTileStyle, setFlapTileStyle] = useState<any>('board');
   const [flapDepth, setFlapDepth] = useState(0.5);
   const [flapGlare, setFlapGlare] = useState(0);
+  const [flapFontSize, setFlapFontSize] = useState(42);
+  const [flapTileColor, setFlapTileColor] = useState('#111827');
+  const [flapTextColor, setFlapTextColor] = useState('#f8fafc');
+  const [flapBoardBg, setFlapBoardBg] = useState<'dark' | 'surface' | 'slate'>('dark');
 
   // BranchedMenu State
   const [menuActive, setMenuActive] = useState('quick');
@@ -413,6 +431,11 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [menuTrunk, setMenuTrunk] = useState(14);
   const [menuRadius, setMenuRadius] = useState(10);
   const [menuLineWidth, setMenuLineWidth] = useState(1.5);
+  const [menuDrawDuration, setMenuDrawDuration] = useState(400);
+  const [menuFoldDuration, setMenuFoldDuration] = useState(300);
+  const [menuLineColor, setMenuLineColor] = useState('#3f3f46');
+  const [menuAccentColor, setMenuAccentColor] = useState('#6366f1');
+  const [menuTextColor, setMenuTextColor] = useState('#f5f5f5');
 
   // PeekRating State
   const [ratingVal, setRatingVal] = useState(4);
@@ -424,12 +447,18 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [ratingPopScale, setRatingPopScale] = useState(1.3);
   const [ratingShowTip, setRatingShowTip] = useState(true);
   const [ratingAllowClear, setRatingAllowClear] = useState(true);
+  const [ratingReadOnly, setRatingReadOnly] = useState(false);
+  const [ratingDisabled, setRatingDisabled] = useState(false);
   const [ratingActiveColor, setRatingActiveColor] = useState('#f5b400');
+  const [ratingIdleColor, setRatingIdleColor] = useState('#52525b');
 
   // LiquidGlassSheet State
   const [glassTitle, setGlassTitle] = useState('Autumn forest');
   const [glassSubtitle, setGlassSubtitle] = useState('Liquid glass sheet');
-  const [glassTheme, setGlassTheme] = useState<'light' | 'dark'>('light');
+  const [glassTheme, setGlassTheme] = useState<'light' | 'dark' | 'auto'>('auto');
+  const [glassImage, setGlassImage] = useState(
+    'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?auto=format&fit=crop&q=80&w=800'
+  );
 
   // CardCoverFlow State
   const [coverflowMonochrome, setCoverflowMonochrome] = useState(false);
@@ -440,7 +469,7 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [carouselIndex, setCarouselIndex] = useState(2);
 
   // Interactive Micro-Controls State
-  const [microTheme, setMicroTheme] = useState<'dark' | 'light'>('dark');
+  const [microTheme, setMicroTheme] = useState<'dark' | 'light' | 'auto'>('auto');
   const [stepperVal, setStepperVal] = useState(3);
   const [counterVal, setCounterVal] = useState(4);
   const [segmentedTabVal, setSegmentedTabVal] = useState<'A' | 'B'>('A');
@@ -450,6 +479,7 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
 
   // Motion Loaders State
   const [loaderSize, setLoaderSize] = useState<'sm' | 'md' | 'lg'>('md');
+  const [loaderColor, setLoaderColor] = useState('bg-primary');
 
   // MarkdownEditor State
   const defaultMarkdownContent = `# Quantum Mechanics & Relativistic Physics
@@ -529,30 +559,46 @@ export function PhysicsNote() {
   const [rangeSliderVal, setRangeSliderVal] = useState<number[]>([25, 75]);
   const [sliderLabelPos, setSliderLabelPos] = useState<'default' | 'bottom' | 'top-floating'>('top-floating');
 
+  // Mono Rounded Charts State
+  const [chartTheme, setChartTheme] = useState<'auto' | 'dark' | 'light'>('auto');
+  const [chartCompact, setChartCompact] = useState(false);
+  const [chartDeviceView, setChartDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [chartActiveTab, setChartActiveTab] = useState<'suite' | 'line' | 'bar' | 'area' | 'donut' | 'stream'>('suite');
+  const [lineActiveSeries, setLineActiveSeries] = useState<'all' | 'value'>('all');
+  const [barActiveLayout, setBarActiveLayout] = useState<'vertical' | 'horizontal'>('vertical');
+  const [areaActiveCurve, setAreaActiveCurve] = useState<'monotone' | 'natural'>('monotone');
+  const [donutHoveredIdx, setDonutHoveredIdx] = useState<number | null>(null);
+
   // ParameterSlider State
   const [paramCutoff, setParamCutoff] = useState(1200);
   const [paramResonance, setParamResonance] = useState(3.4);
   const [paramGain, setParamGain] = useState(0);
 
   // AI & Workspace Components State
-  const [boardTheme, setBoardTheme] = useState<'dark' | 'light'>('dark');
+  const [boardTheme, setBoardTheme] = useState<'auto' | 'dark' | 'light'>('auto');
+  const [boardDevice, setBoardDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [boardKey, setBoardKey] = useState(0);
 
-  const [approvalTheme, setApprovalTheme] = useState<'light' | 'dark'>('light');
+  const [approvalTheme, setApprovalTheme] = useState<'auto' | 'light' | 'dark'>('auto');
+  const [approvalDevice, setApprovalDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [approvalSubmissions, setApprovalSubmissions] = useState<string | null>(null);
   const [approvalKey, setApprovalKey] = useState(0);
 
-  const [promptTheme, setPromptTheme] = useState<'dark' | 'light'>('dark');
+  const [promptTheme, setPromptTheme] = useState<'auto' | 'dark' | 'light'>('auto');
+  const [promptDevice, setPromptDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [promptVariant, setPromptVariant] = useState<'Rounded' | 'Pill'>('Rounded');
   const [promptDemo, setPromptDemo] = useState(true);
   const [promptTall, setPromptTall] = useState(false);
   const [promptLastSent, setPromptLastSent] = useState<string | null>(null);
 
-  const [codeTheme, setCodeTheme] = useState<'light' | 'dark'>('light');
+  const [codeTheme, setCodeTheme] = useState<'auto' | 'light' | 'dark'>('auto');
+  const [codeDevice, setCodeDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [codeVariant, setCodeVariant] = useState<'auto' | 'Code' | 'Diff'>('auto');
   const [codeCopiedNotice, setCodeCopiedNotice] = useState<string | null>(null);
 
-  const [fineTuneTheme, setFineTuneTheme] = useState<'light' | 'dark'>('light');
+  const [fineTuneTheme, setFineTuneTheme] = useState<'auto' | 'light' | 'dark'>('auto');
+  const [fineTuneDevice, setFineTuneDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [fineTuneKey, setFineTuneKey] = useState(0);
   const [fineTuneLastState, setFineTuneLastState] = useState<any>(null);
 
   // Sample dropdown items
@@ -1776,138 +1822,97 @@ export function PhysicsNote() {
     return (
       <div className="space-y-6">
         <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Interactive Path & Ribbon Controls
-            </span>
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loopRibbon}
-                  onChange={(e) => setLoopRibbon(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Ribbon Band
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loopCross}
-                  onChange={(e) => setLoopCross(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Cross Ribbon
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loopDraggable}
-                  onChange={(e) => setLoopDraggable(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Draggable
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loopPauseOnHover}
-                  onChange={(e) => setLoopPauseOnHover(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Pause on Hover
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={loopOutline}
-                  onChange={(e) => setLoopOutline(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Outline Text
-              </label>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-bold text-foreground">Interactive Text Loop Controls</h4>
+              <p className="text-xs text-muted-foreground">Continuous marquee ribbon curving across dynamic SVG vector geometry.</p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Display Text
-              </label>
-              <input
-                type="text"
-                value={loopText}
-                onChange={(e) => setLoopText(e.target.value)}
-                className="w-full h-8 px-2.5 text-xs rounded-md bg-surface-elevated border border-border text-foreground"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Guide Path Shape
-              </label>
-              <select
-                value={loopShape}
-                onChange={(e) => setLoopShape(e.target.value as any)}
-                className="w-full h-8 px-2 text-xs rounded-md bg-surface-elevated border border-border text-foreground"
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setLoopRibbonColor(colors.primary);
+                  addToast({
+                    title: 'Theme Synchronized',
+                    description: `Text loop ribbon color set to theme primary (${colors.primary})`,
+                    type: 'info',
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
               >
-                <option value="wave">Wave</option>
-                <option value="circle">Circle</option>
-                <option value="infinity">Infinity</option>
-                <option value="arch">Arch</option>
-                <option value="line">Line</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Flow Direction
-              </label>
-              <div className="flex gap-1">
-                {(['forward', 'reverse'] as const).map((dir) => (
-                  <button
-                    key={dir}
-                    onClick={() => setLoopDirection(dir)}
-                    className={`flex-1 h-8 rounded-md text-xs font-medium capitalize border transition-all ${
-                      loopDirection === dir
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-surface-elevated text-muted-foreground border-border'
-                    }`}
-                  >
-                    {dir}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Ribbon Color
-              </label>
-              <div className="flex items-center gap-1.5">
-                {['#5227FF', '#6366f1', '#06b6d4', '#10b981', '#f97316', '#ec4899'].map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setLoopRibbonColor(c)}
-                    className={`w-6 h-6 rounded-full border-2 transition-transform ${
-                      loopRibbonColor === c ? 'scale-110 border-white shadow-sm' : 'border-transparent'
-                    }`}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
-              </div>
+                <Sparkles className="size-3.5" />
+                <span>Match Theme ({preset})</span>
+              </button>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-border/40">
-            <ParameterGrid columns={4}>
-              <ParameterSlider
-                label="Speed"
-                value={loopSpeed}
-                onChange={setLoopSpeed}
-                min={20}
-                max={300}
-                step={5}
-                unit="px/s"
+          {/* Section 1: Path & Vector Shape */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Guide Path & Typography
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Display Text
+                </label>
+                <input
+                  type="text"
+                  value={loopText}
+                  onChange={(e) => setLoopText(e.target.value)}
+                  className="w-full h-9 px-3 text-xs rounded-xl bg-surface-elevated border border-border text-foreground focus:border-primary focus:outline-none"
+                  placeholder="Loop text content..."
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Guide Path Shape
+                </label>
+                <select
+                  value={loopShape}
+                  onChange={(e) => setLoopShape(e.target.value as any)}
+                  className="w-full h-9 px-2.5 text-xs rounded-xl bg-surface-elevated border border-border text-foreground focus:border-primary focus:outline-none"
+                >
+                  <option value="wave">Wave</option>
+                  <option value="circle">Circle</option>
+                  <option value="infinity">Infinity</option>
+                  <option value="arch">Arch</option>
+                  <option value="line">Line</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Flow Direction
+                </label>
+                <div className="flex gap-1.5">
+                  {(['forward', 'reverse'] as const).map((dir) => (
+                    <button
+                      key={dir}
+                      onClick={() => setLoopDirection(dir)}
+                      className={cn(
+                        "flex-1 h-9 rounded-xl text-xs font-medium capitalize border transition-all",
+                        loopDirection === dir
+                          ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                          : "bg-surface-elevated text-muted-foreground border-border hover:text-foreground"
+                      )}
+                    >
+                      {dir}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <ParameterColor
+                label="Ribbon Color"
+                value={loopRibbonColor}
+                onChange={setLoopRibbonColor}
+                disabled={!loopRibbon}
               />
+            </div>
+
+            <ParameterGrid columns={4}>
               <ParameterSlider
                 label="Curviness"
                 value={loopCurviness}
@@ -1934,12 +1939,106 @@ export function PhysicsNote() {
                 step={2}
                 unit="px"
               />
+              <ParameterSlider
+                label="Speed"
+                value={loopSpeed}
+                onChange={setLoopSpeed}
+                min={20}
+                max={300}
+                step={5}
+                unit="px/s"
+              />
             </ParameterGrid>
+          </div>
+
+          {/* Section 2: Ribbon Styling & Physics */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Ribbon Band & Motion Parameters
+            </span>
+            <ParameterGrid columns={4}>
+              <ParameterSwitch
+                label="Ribbon Band"
+                checked={loopRibbon}
+                onChange={setLoopRibbon}
+              />
+              <ParameterSwitch
+                label="Pause on Hover"
+                checked={loopPauseOnHover}
+                onChange={setLoopPauseOnHover}
+              />
+              <ParameterSwitch
+                label="Interactive Drag"
+                checked={loopDraggable}
+                onChange={setLoopDraggable}
+              />
+              <ParameterSwitch
+                label="Outline Font"
+                checked={loopOutline}
+                onChange={setLoopOutline}
+              />
+              <ParameterSwitch
+                label="Cross Ribbon"
+                checked={loopCross}
+                onChange={setLoopCross}
+              />
+              <ParameterSlider
+                label="Ribbon Width"
+                value={loopRibbonWidth}
+                onChange={setLoopRibbonWidth}
+                min={40}
+                max={140}
+                step={4}
+                unit="px"
+                disabled={!loopRibbon}
+              />
+              <ParameterSlider
+                label="Cross Angle"
+                value={loopCrossAngle}
+                onChange={setLoopCrossAngle}
+                min={0}
+                max={60}
+                step={2}
+                unit="°"
+                disabled={!loopCross}
+              />
+            </ParameterGrid>
+          </div>
+
+          {/* Color Presets */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/40">
+            <span className="text-xs text-muted-foreground mr-1">Palette Presets:</span>
+            {[
+              { name: 'Theme', color: colors.primary },
+              { name: 'Violet', color: '#5227FF' },
+              { name: 'Cyan', color: '#06b6d4' },
+              { name: 'Emerald', color: '#10b981' },
+              { name: 'Orange', color: '#f97316' },
+              { name: 'Pink', color: '#ec4899' },
+            ].map((swatch) => (
+              <button
+                key={swatch.name}
+                type="button"
+                onClick={() => setLoopRibbonColor(swatch.color)}
+                className={cn(
+                  "h-6 px-2.5 rounded-full text-[11px] font-medium border flex items-center gap-1.5 transition-all",
+                  loopRibbonColor === swatch.color
+                    ? "border-primary ring-2 ring-primary/20 bg-surface-elevated text-foreground"
+                    : "border-border bg-surface-subtle text-muted-foreground hover:bg-surface-elevated hover:text-foreground"
+                )}
+              >
+                <span
+                  className="size-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: swatch.color }}
+                />
+                <span>{swatch.name}</span>
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Live Canvas Box */}
-        <div className="p-6 rounded-2xl bg-surface-sunken/40 border border-border flex items-center justify-center overflow-hidden min-h-[340px]">
+        <div className="p-4 sm:p-8 rounded-2xl bg-surface-sunken/40 border border-border flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[380px]">
           <TextLoop
             text={loopText}
             shape={loopShape}
@@ -1976,164 +2075,270 @@ export function PhysicsNote() {
     return (
       <div className="space-y-6">
         <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Mechanical Split-Tile Controls
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-bold text-foreground">Split-Flap Board Controls</h4>
+              <p className="text-xs text-muted-foreground">Electromechanical flip-tile ticker inspired by classic departure boards.</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setFlapTileColor(isDark ? colors.surface : '#ffffff');
+                  setFlapTextColor(colors.foreground);
+                  setFlapBoardBg('surface');
+                  addToast({
+                    title: 'Theme Synchronized',
+                    description: `Adapted tiles and typography to ${preset} theme!`,
+                    type: 'info',
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Sync Active Theme</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Section 1: Presets & Layout Modes */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Word Sequences & Display Modes
             </span>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-muted-foreground mr-1">Tile Style:</span>
-              {(['board', 'minimal'] as const).map((st) => (
-                <button
-                  key={st}
-                  onClick={() => setFlapTileStyle(st)}
-                  className={`h-7 px-2.5 rounded-md text-xs font-medium capitalize border transition-all ${
-                    flapTileStyle === st
-                      ? 'bg-primary text-primary-foreground border-primary'
-                      : 'bg-surface-elevated text-muted-foreground border-border'
-                  }`}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Message Sequence
+                </label>
+                <select
+                  value={flapPreset}
+                  onChange={(e) => {
+                    const val = e.target.value as any;
+                    setFlapPreset(val);
+                    if (val === 'launch') setFlapWords(['LAUNCH READY', 'SYNC ONLINE', 'SIGNAL LIVE']);
+                    else if (val === 'terminal') setFlapWords(['GATE 14 OPEN', 'BOARDING NOW', 'DEPARTED NYC']);
+                    else if (val === 'crypto') setFlapWords(['BITCOIN 96K', 'ETHEREUM 3K', 'SOLANA 240$']);
+                    else if (val === 'cities') setFlapWords(['TOKYO 23:45', 'PARIS 15:45', 'LONDON 14:45']);
+                  }}
+                  className="w-full h-9 px-2.5 text-xs rounded-xl bg-surface-elevated border border-border text-foreground focus:border-primary focus:outline-none"
                 >
-                  {st}
-                </button>
-              ))}
+                  <option value="launch">Aerospace Launch</option>
+                  <option value="terminal">Airport Terminal</option>
+                  <option value="crypto">Finance Ticker</option>
+                  <option value="cities">World Time Hub</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Tile Style
+                </label>
+                <div className="flex gap-1.5">
+                  {(['board', 'minimal'] as const).map((st) => (
+                    <button
+                      key={st}
+                      onClick={() => setFlapTileStyle(st)}
+                      className={cn(
+                        "flex-1 h-9 rounded-xl text-xs font-medium capitalize border transition-all",
+                        flapTileStyle === st
+                          ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                          : "bg-surface-elevated text-muted-foreground border-border hover:text-foreground"
+                      )}
+                    >
+                      {st}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Cascade Flip Order
+                </label>
+                <div className="grid grid-cols-4 gap-1">
+                  {(['left', 'right', 'center', 'random'] as const).map((ord) => (
+                    <button
+                      key={ord}
+                      onClick={() => setFlapOrder(ord)}
+                      className={cn(
+                        "h-9 rounded-lg text-[11px] font-medium capitalize border transition-all",
+                        flapOrder === ord
+                          ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                          : "bg-surface-elevated text-muted-foreground border-border hover:text-foreground"
+                      )}
+                    >
+                      {ord}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Stage Theme
+                </label>
+                <div className="grid grid-cols-3 gap-1">
+                  {[
+                    { id: 'dark', label: 'Noir' },
+                    { id: 'surface', label: 'Theme' },
+                    { id: 'slate', label: 'Slate' },
+                  ].map((bg) => (
+                    <button
+                      key={bg.id}
+                      onClick={() => {
+                        setFlapBoardBg(bg.id as any);
+                        if (bg.id === 'dark') {
+                          setFlapTileColor('#111827');
+                          setFlapTextColor('#f8fafc');
+                        } else if (bg.id === 'surface') {
+                          setFlapTileColor(isDark ? colors.surface : '#ffffff');
+                          setFlapTextColor(colors.foreground);
+                        } else if (bg.id === 'slate') {
+                          setFlapTileColor('#1e293b');
+                          setFlapTextColor('#f1f5f9');
+                        }
+                      }}
+                      className={cn(
+                        "h-9 rounded-lg text-[11px] font-medium border transition-all",
+                        flapBoardBg === bg.id
+                          ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                          : "bg-surface-elevated text-muted-foreground border-border hover:text-foreground"
+                      )}
+                    >
+                      {bg.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Flip Speed ({flapDuration}s)</span>
-              </div>
-              <input
-                type="range"
-                min="0.05"
-                max="0.3"
-                step="0.01"
+          {/* Section 2: Colors & Tile Dimensions */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Colors & Tile Geometry
+            </span>
+            <ParameterGrid columns={3}>
+              <ParameterColor
+                label="Tile Color"
+                value={flapTileColor}
+                onChange={setFlapTileColor}
+              />
+              <ParameterColor
+                label="Text Color"
+                value={flapTextColor}
+                onChange={setFlapTextColor}
+              />
+              <ParameterSlider
+                label="Font Size"
+                value={flapFontSize}
+                onChange={setFlapFontSize}
+                min={22}
+                max={64}
+                step={2}
+                unit="px"
+              />
+            </ParameterGrid>
+          </div>
+
+          {/* Section 3: Physics & Timing */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Animation Physics & Flip Cadence
+            </span>
+            <ParameterGrid columns={4}>
+              <ParameterSlider
+                label="Flip Speed"
                 value={flapDuration}
-                onChange={(e) => setFlapDuration(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setFlapDuration}
+                min={0.05}
+                max={0.3}
+                step={0.01}
+                unit="s"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Stagger Delay ({flapStagger}s)</span>
-              </div>
-              <input
-                type="range"
-                min="0.01"
-                max="0.15"
-                step="0.01"
+              <ParameterSlider
+                label="Stagger Delay"
                 value={flapStagger}
-                onChange={(e) => setFlapStagger(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setFlapStagger}
+                min={0.01}
+                max={0.15}
+                step={0.01}
+                unit="s"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Cycle Hold ({(flapCycleDelay / 1000).toFixed(1)}s)</span>
-              </div>
-              <input
-                type="range"
-                min="1000"
-                max="5000"
-                step="200"
-                value={flapCycleDelay}
-                onChange={(e) => setFlapCycleDelay(Number(e.target.value))}
-                className="w-full accent-primary"
+              <ParameterSlider
+                label="Cycle Hold"
+                value={flapCycleDelay / 1000}
+                onChange={(val) => setFlapCycleDelay(Math.round(val * 1000))}
+                min={1.0}
+                max={5.0}
+                step={0.2}
+                unit="s"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Flips Per Slot ({flapFlipsPerChar})</span>
-              </div>
-              <input
-                type="range"
-                min="2"
-                max="16"
-                step="1"
+              <ParameterSlider
+                label="Flips / Slot"
                 value={flapFlipsPerChar}
-                onChange={(e) => setFlapFlipsPerChar(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setFlapFlipsPerChar}
+                min={2}
+                max={16}
+                step={1}
               />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-border/40">
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Cascade Transition Order
-              </label>
-              <div className="grid grid-cols-4 gap-1">
-                {(['left', 'right', 'center', 'random'] as const).map((ord) => (
-                  <button
-                    key={ord}
-                    onClick={() => setFlapOrder(ord)}
-                    className={`h-7 rounded-md text-xs font-medium capitalize border transition-all ${
-                      flapOrder === ord
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-surface-elevated text-muted-foreground border-border'
-                    }`}
-                  >
-                    {ord}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Bevel Depth ({flapDepth})</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
+              <ParameterSlider
+                label="Bevel Depth"
                 value={flapDepth}
-                onChange={(e) => setFlapDepth(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setFlapDepth}
+                min={0}
+                max={1}
+                step={0.1}
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Glare Sheen ({flapGlare})</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
+              <ParameterSlider
+                label="Glare Sheen"
                 value={flapGlare}
-                onChange={(e) => setFlapGlare(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setFlapGlare}
+                min={0}
+                max={1}
+                step={0.1}
               />
-            </div>
+            </ParameterGrid>
           </div>
         </div>
 
         {/* Live Flap Display */}
-        <div className="p-8 sm:p-12 rounded-2xl bg-[#090d16] border border-border shadow-inner flex flex-col items-center justify-center overflow-x-auto min-h-[220px]">
-          <SplitFlapText
-            words={flapWords}
-            flipDuration={flapDuration}
-            stagger={flapStagger}
-            cycleDelay={flapCycleDelay}
-            charset="alphanumeric"
-            flipsPerChar={flapFlipsPerChar}
-            order={flapOrder}
-            align="left"
-            tileStyle={flapTileStyle}
-            tileColor="#111827"
-            textColor="#f8fafc"
-            glare={flapGlare}
-            depth={flapDepth}
-            tileRadius={8}
-            gap={6}
-            fontSize={52}
-            loop
-            padTo={12}
-            intro
-          />
-          <span className="text-[11px] text-muted-foreground mt-4 font-mono tracking-wider">
-            AUTOMATIC MECHANICAL SPLIT-FLAP TRANSITION
+        <div
+          className={cn(
+            "p-6 sm:p-10 rounded-2xl border transition-colors flex flex-col items-center justify-center overflow-x-auto min-h-[220px]",
+            flapBoardBg === 'dark'
+              ? "bg-[#090d16] border-[#1e293b]"
+              : flapBoardBg === 'slate'
+              ? "bg-slate-900 border-slate-800 text-slate-100"
+              : "bg-surface border-border shadow-xs"
+          )}
+        >
+          <div className="w-full flex justify-center overflow-x-auto py-2">
+            <SplitFlapText
+              words={flapWords}
+              flipDuration={flapDuration}
+              stagger={flapStagger}
+              cycleDelay={flapCycleDelay}
+              charset="alphanumeric"
+              flipsPerChar={flapFlipsPerChar}
+              order={flapOrder}
+              align="left"
+              tileStyle={flapTileStyle}
+              tileColor={flapTileColor}
+              textColor={flapTextColor}
+              glare={flapGlare}
+              depth={flapDepth}
+              tileRadius={8}
+              gap={6}
+              fontSize={flapFontSize}
+              loop
+              padTo={12}
+              intro
+            />
+          </div>
+          <span className="text-[11px] text-muted-foreground mt-4 font-mono tracking-wider text-center">
+            AUTOMATIC MECHANICAL SPLIT-FLAP TRANSITION • {flapWords.length} PHRASES
           </span>
         </div>
       </div>
@@ -2147,114 +2352,173 @@ export function PhysicsNote() {
     return (
       <div className="space-y-6">
         <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Tree Geometry & Layout Settings
-            </span>
-            <div className="text-xs text-muted-foreground font-mono">
-              Active Value: <span className="text-primary font-semibold">"{menuActive}"</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-bold text-foreground">Branched Tree Navigation</h4>
+              <p className="text-xs text-muted-foreground">Animated curved vector hierarchy with synchronized sliding branch reach.</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuAccentColor(colors.primary);
+                  setMenuLineColor(colors.border);
+                  setMenuTextColor(colors.foreground);
+                  addToast({
+                    title: 'Theme Synchronized',
+                    description: `Tree colors bound to active ${preset} tokens!`,
+                    type: 'info',
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Reset to Theme ({preset})</span>
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Row Height ({menuRowHeight}px)</span>
-              </div>
-              <input
-                type="range"
-                min="28"
-                max="48"
+          {/* Section 1: Color Tokens */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Theme Colors & Token Styling
+            </span>
+            <ParameterGrid columns={3}>
+              <ParameterColor
+                label="Accent (Active)"
+                value={menuAccentColor}
+                onChange={setMenuAccentColor}
+              />
+              <ParameterColor
+                label="Branch Lines"
+                value={menuLineColor}
+                onChange={setMenuLineColor}
+              />
+              <ParameterColor
+                label="Label Text"
+                value={menuTextColor}
+                onChange={setMenuTextColor}
+              />
+            </ParameterGrid>
+          </div>
+
+          {/* Section 2: Tree Geometry & Metrics */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Geometry, Spacing & Curve Radii
+            </span>
+            <ParameterGrid columns={3}>
+              <ParameterSlider
+                label="Menu Width"
+                value={menuWidth}
+                onChange={setMenuWidth}
+                min={180}
+                max={320}
+                step={10}
+                unit="px"
+              />
+              <ParameterSlider
+                label="Row Height"
                 value={menuRowHeight}
-                onChange={(e) => setMenuRowHeight(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setMenuRowHeight}
+                min={28}
+                max={48}
+                step={2}
+                unit="px"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Child Indent ({menuIndent}px)</span>
-              </div>
-              <input
-                type="range"
-                min="24"
-                max="60"
+              <ParameterSlider
+                label="Child Indent"
                 value={menuIndent}
-                onChange={(e) => setMenuIndent(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setMenuIndent}
+                min={24}
+                max={60}
+                step={2}
+                unit="px"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Arc Radius ({menuRadius}px)</span>
-              </div>
-              <input
-                type="range"
-                min="4"
-                max="16"
+              <ParameterSlider
+                label="Arc Radius"
                 value={menuRadius}
-                onChange={(e) => setMenuRadius(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setMenuRadius}
+                min={4}
+                max={16}
+                step={1}
+                unit="px"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Line Width ({menuLineWidth}px)</span>
-              </div>
-              <input
-                type="range"
-                min="1"
-                max="3"
-                step="0.5"
+              <ParameterSlider
+                label="Line Width"
                 value={menuLineWidth}
-                onChange={(e) => setMenuLineWidth(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setMenuLineWidth}
+                min={1}
+                max={3}
+                step={0.5}
+                unit="px"
               />
-            </div>
+              <ParameterSlider
+                label="Draw Duration"
+                value={menuDrawDuration}
+                onChange={setMenuDrawDuration}
+                min={200}
+                max={800}
+                step={50}
+                unit="ms"
+              />
+            </ParameterGrid>
           </div>
         </div>
 
         {/* Live Tree Preview */}
-        <div className="p-8 rounded-2xl bg-surface border border-border flex justify-center min-h-[300px]">
-          <BranchedMenu
-            items={[
-              {
-                label: 'Getting started',
-                children: [
-                  { value: 'install', label: 'Installation', icon: Download04Icon },
-                  { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
-                  { value: 'config', label: 'Configuration', icon: Settings02Icon },
-                  { value: 'theming', label: 'Theming', icon: PaintBoardIcon },
-                ],
-              },
-              {
-                label: 'Components',
-                children: [
-                  { value: 'buttons', label: 'Buttons' },
-                  { value: 'overlays', label: 'Overlays' },
-                  { value: 'forms', label: 'Forms & Inputs' },
-                ],
-              },
-            ]}
-            defaultOpen={[0]}
-            defaultActive={menuActive}
-            onSelect={(val, it) => {
-              setMenuActive(val);
-              addToast({
-                title: 'Item Selected',
-                description: `Navigated to ${it.label} (${val})`,
-                type: 'info',
-              });
-            }}
-            width={menuWidth}
-            rowHeight={menuRowHeight}
-            indent={menuIndent}
-            trunk={menuTrunk}
-            radius={menuRadius}
-            lineWidth={menuLineWidth}
-            fontSize={14}
-            drawDuration={400}
-            foldDuration={300}
-          />
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[340px] space-y-4">
+          <div className="w-full flex justify-center py-2 overflow-x-auto">
+            <BranchedMenu
+              items={[
+                {
+                  label: 'Getting started',
+                  children: [
+                    { value: 'install', label: 'Installation', icon: Download04Icon },
+                    { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
+                    { value: 'config', label: 'Configuration', icon: Settings02Icon },
+                    { value: 'theming', label: 'Theming', icon: PaintBoardIcon },
+                  ],
+                },
+                {
+                  label: 'Components',
+                  children: [
+                    { value: 'buttons', label: 'Buttons' },
+                    { value: 'overlays', label: 'Overlays' },
+                    { value: 'forms', label: 'Forms & Inputs' },
+                  ],
+                },
+              ]}
+              defaultOpen={[0]}
+              defaultActive={menuActive}
+              onSelect={(val, it) => {
+                setMenuActive(val);
+                addToast({
+                  title: 'Item Selected',
+                  description: `Navigated to ${it.label} (${val})`,
+                  type: 'info',
+                });
+              }}
+              color={menuTextColor}
+              accentColor={menuAccentColor}
+              lineColor={menuLineColor}
+              width={menuWidth}
+              rowHeight={menuRowHeight}
+              indent={menuIndent}
+              trunk={menuTrunk}
+              radius={menuRadius}
+              lineWidth={menuLineWidth}
+              fontSize={14}
+              drawDuration={menuDrawDuration}
+              foldDuration={menuFoldDuration}
+            />
+          </div>
+          <div className="text-xs text-muted-foreground font-mono flex items-center gap-2">
+            <span>Active Target:</span>
+            <span className="px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-primary font-semibold">
+              "{menuActive}"
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -2267,149 +2531,186 @@ export function PhysicsNote() {
     return (
       <div className="space-y-6">
         <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Interactive Rating Props
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-bold text-foreground">Peek Rating Controls</h4>
+              <p className="text-xs text-muted-foreground">Physics-lifted interactive rater with spring cursor tracking, pop feedback, and floating badges.</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setRatingActiveColor(colors.accent || colors.primary);
+                  setRatingIdleColor(isDark ? '#3f3f46' : '#d4d4d8');
+                  addToast({
+                    title: 'Theme Synchronized',
+                    description: `Bound rating accent to theme (${colors.accent || colors.primary})!`,
+                    type: 'info',
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Sync Active Theme</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Section 1: Glyphs & Color Parameters */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Shape & Color Styling
             </span>
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={ratingShowTip}
-                  onChange={(e) => setRatingShowTip(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Show Floating Tip
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={ratingAllowClear}
-                  onChange={(e) => setRatingAllowClear(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Allow Clear
-              </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Glyph Shape
+                </label>
+                <div className="flex gap-1.5">
+                  {(['star', 'heart', 'bolt'] as const).map((shp) => (
+                    <button
+                      key={shp}
+                      onClick={() => setRatingShape(shp)}
+                      className={cn(
+                        "flex-1 h-9 rounded-xl text-xs font-medium capitalize border transition-all",
+                        ratingShape === shp
+                          ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                          : "bg-surface-elevated text-muted-foreground border-border hover:text-foreground"
+                      )}
+                    >
+                      {shp}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <ParameterColor
+                label="Active Color"
+                value={ratingActiveColor}
+                onChange={setRatingActiveColor}
+              />
+              <ParameterColor
+                label="Idle Color"
+                value={ratingIdleColor}
+                onChange={setRatingIdleColor}
+              />
+
+              <div>
+                <label className="text-xs font-medium text-foreground block mb-1">
+                  Color Presets
+                </label>
+                <div className="flex items-center gap-1.5 h-9">
+                  {[
+                    { color: '#f5b400', label: 'Gold' },
+                    { color: '#f43f5e', label: 'Ruby' },
+                    { color: '#06b6d4', label: 'Cyan' },
+                    { color: '#10b981', label: 'Emerald' },
+                    { color: colors.primary, label: 'Theme' },
+                  ].map((p) => (
+                    <button
+                      key={p.label}
+                      type="button"
+                      onClick={() => setRatingActiveColor(p.color)}
+                      title={p.label}
+                      className={cn(
+                        "size-6 rounded-full border-2 transition-transform",
+                        ratingActiveColor === p.color
+                          ? "scale-110 border-white shadow-sm ring-2 ring-primary/40"
+                          : "border-transparent hover:scale-105"
+                      )}
+                      style={{ backgroundColor: p.color }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Rating Glyph Shape
-              </label>
-              <div className="flex gap-1">
-                {(['star', 'heart', 'bolt'] as const).map((shp) => (
-                  <button
-                    key={shp}
-                    onClick={() => setRatingShape(shp)}
-                    className={`flex-1 h-8 rounded-md text-xs font-medium capitalize border transition-all ${
-                      ratingShape === shp
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'bg-surface-elevated text-muted-foreground border-border'
-                    }`}
-                  >
-                    {shp}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-foreground block mb-1">
-                Active Fill Color
-              </label>
-              <div className="flex items-center gap-2 pt-1">
-                {['#f5b400', '#f43f5e', '#6366f1', '#10b981', '#06b6d4'].map((col) => (
-                  <button
-                    key={col}
-                    type="button"
-                    onClick={() => setRatingActiveColor(col)}
-                    className={`w-6 h-6 rounded-full border-2 transition-transform ${
-                      ratingActiveColor === col ? 'scale-110 border-white shadow-sm' : 'border-transparent'
-                    }`}
-                    style={{ backgroundColor: col }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Unit Count ({ratingCount})</span>
-              </div>
-              <input
-                type="range"
-                min="3"
-                max="10"
+          {/* Section 2: Metrics & Physics */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Dimensions & Gesture Dynamics
+            </span>
+            <ParameterGrid columns={4}>
+              <ParameterSlider
+                label="Unit Count"
                 value={ratingCount}
-                onChange={(e) => setRatingCount(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setRatingCount}
+                min={3}
+                max={10}
+                step={1}
               />
-            </div>
-
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Icon Size ({ratingSize}px)</span>
-              </div>
-              <input
-                type="range"
-                min="20"
-                max="44"
+              <ParameterSlider
+                label="Icon Size"
                 value={ratingSize}
-                onChange={(e) => setRatingSize(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setRatingSize}
+                min={20}
+                max={44}
+                step={2}
+                unit="px"
               />
-            </div>
+              <ParameterSlider
+                label="Hover Lift"
+                value={ratingLift}
+                onChange={setRatingLift}
+                min={0}
+                max={16}
+                step={1}
+                unit="px"
+              />
+              <ParameterSlider
+                label="Magnify Scale"
+                value={ratingMagnify}
+                onChange={setRatingMagnify}
+                min={1.0}
+                max={1.4}
+                step={0.05}
+                unit="x"
+              />
+              <ParameterSlider
+                label="Commit Bounce"
+                value={ratingPopScale}
+                onChange={setRatingPopScale}
+                min={1.0}
+                max={1.6}
+                step={0.05}
+                unit="x"
+              />
+            </ParameterGrid>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-border/40">
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Hover Lift ({ratingLift}px)</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="16"
-                value={ratingLift}
-                onChange={(e) => setRatingLift(Number(e.target.value))}
-                className="w-full accent-primary"
+          {/* Section 3: Interactive Toggles */}
+          <div className="space-y-3 pt-4 border-t border-border/50">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block">
+              Interaction Flags
+            </span>
+            <ParameterGrid columns={4}>
+              <ParameterSwitch
+                label="Show Floating Tip"
+                checked={ratingShowTip}
+                onChange={setRatingShowTip}
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Magnify Scale ({ratingMagnify}x)</span>
-              </div>
-              <input
-                type="range"
-                min="1.0"
-                max="1.4"
-                step="0.05"
-                value={ratingMagnify}
-                onChange={(e) => setRatingMagnify(Number(e.target.value))}
-                className="w-full accent-primary"
+              <ParameterSwitch
+                label="Allow Clear"
+                checked={ratingAllowClear}
+                onChange={setRatingAllowClear}
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Commit Pop Bounce ({ratingPopScale}x)</span>
-              </div>
-              <input
-                type="range"
-                min="1.0"
-                max="1.6"
-                step="0.05"
-                value={ratingPopScale}
-                onChange={(e) => setRatingPopScale(Number(e.target.value))}
-                className="w-full accent-primary"
+              <ParameterSwitch
+                label="Read Only"
+                checked={ratingReadOnly}
+                onChange={setRatingReadOnly}
               />
-            </div>
+              <ParameterSwitch
+                label="Disabled"
+                checked={ratingDisabled}
+                onChange={setRatingDisabled}
+              />
+            </ParameterGrid>
           </div>
         </div>
 
         {/* Live Rating Box */}
-        <div className="p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
+        <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
           <PeekRating
             value={ratingVal}
             onChange={(val) => {
@@ -2423,8 +2724,8 @@ export function PhysicsNote() {
             count={ratingCount}
             shape={ratingShape}
             activeColor={ratingActiveColor}
-            idleColor="#52525b"
-            tipColor="#27272a"
+            idleColor={ratingIdleColor}
+            tipColor={isDark ? '#27272a' : '#18181b'}
             tipTextColor="#f5f5f5"
             size={ratingSize}
             lift={ratingLift}
@@ -2432,10 +2733,15 @@ export function PhysicsNote() {
             popScale={ratingPopScale}
             showTip={ratingShowTip}
             allowClear={ratingAllowClear}
+            readOnly={ratingReadOnly}
+            disabled={ratingDisabled}
             labels={['Awful', 'Poor', 'Average', 'Great', 'Exceptional', 'Legendary', 'Flawless', 'Supreme', 'Godlike', 'Infinite']}
           />
-          <div className="text-xs text-muted-foreground font-mono">
-            Current Score: <span className="font-semibold text-foreground">{ratingVal}</span> / {ratingCount}
+          <div className="text-xs text-muted-foreground font-mono flex items-center gap-2">
+            <span>Current Score:</span>
+            <span className="px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-foreground font-semibold">
+              {ratingVal} / {ratingCount}
+            </span>
           </div>
         </div>
       </div>
@@ -2444,13 +2750,22 @@ export function PhysicsNote() {
 
   // ───────── LiquidGlassSheet Playground ─────────
   if (componentId === 'liquid-glass-sheet') {
+    const wallpapers = [
+      { id: 'forest', name: 'Autumn Forest', url: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?auto=format&fit=crop&q=80&w=800' },
+      { id: 'nordic', name: 'Nordic Villa', url: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800' },
+      { id: 'tokyo', name: 'Tokyo Neon', url: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800' },
+      { id: 'coast', name: 'Azure Coast', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800' },
+    ];
+
     return (
       <div className="space-y-8">
         {/* Controls */}
         <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-          <div className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <Sparkles className="size-4 text-primary" />
-            Liquid Glass Sheet Configuration
+          <div className="text-sm font-semibold text-foreground flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Sparkles className="size-4 text-primary" />
+              Liquid Glass Sheet Configuration
+            </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
@@ -2477,33 +2792,52 @@ export function PhysicsNote() {
               <label className="text-xs text-muted-foreground block mb-1.5 font-medium">
                 Theme Variant
               </label>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant={glassTheme === 'light' ? 'primary' : 'outline'}
-                  onClick={() => setGlassTheme('light')}
-                  className="flex-1"
-                >
-                  Light
-                </Button>
-                <Button
-                  size="sm"
-                  variant={glassTheme === 'dark' ? 'primary' : 'outline'}
-                  onClick={() => setGlassTheme('dark')}
-                  className="flex-1"
-                >
-                  Dark
-                </Button>
+              <div className="flex gap-1.5">
+                {(['auto', 'light', 'dark'] as const).map((t) => (
+                  <Button
+                    key={t}
+                    size="sm"
+                    variant={glassTheme === t ? 'primary' : 'outline'}
+                    onClick={() => setGlassTheme(t)}
+                    className="flex-1 capitalize text-xs"
+                  >
+                    {t}
+                  </Button>
+                ))}
               </div>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-border/50">
+            <label className="text-xs text-muted-foreground block mb-2 font-medium">
+              Backdrop Wallpaper
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {wallpapers.map((w) => (
+                <button
+                  key={w.id}
+                  type="button"
+                  onClick={() => setGlassImage(w.url)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-xl border text-xs font-medium cursor-pointer transition-all",
+                    glassImage === w.url
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-surface-subtle border-border text-foreground hover:bg-surface"
+                  )}
+                >
+                  {w.name}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Live Preview Container */}
-        <div className="p-8 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[460px] relative overflow-hidden">
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[460px] relative overflow-hidden">
           <LiquidGlassSheet
             title={glassTitle}
             subtitle={glassSubtitle}
+            backgroundImage={glassImage}
             theme={glassTheme}
             defaultOpen={true}
             onShare={() => {
@@ -2617,6 +2951,13 @@ export function PhysicsNote() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground mr-1">Theme:</span>
+            <Button
+              size="sm"
+              variant={microTheme === 'auto' ? 'primary' : 'outline'}
+              onClick={() => setMicroTheme('auto')}
+            >
+              Auto (System)
+            </Button>
             <Button
               size="sm"
               variant={microTheme === 'dark' ? 'primary' : 'outline'}
@@ -2744,6 +3085,14 @@ export function PhysicsNote() {
 
   // ───────── Motion Loaders Playground ─────────
   if (componentId === 'motion-loaders') {
+    const colorOptions = [
+      { label: 'Theme Primary', value: 'bg-primary' },
+      { label: 'Emerald', value: 'bg-emerald-500' },
+      { label: 'Cyan', value: 'bg-cyan-500' },
+      { label: 'Amber', value: 'bg-amber-500' },
+      { label: 'Rose', value: 'bg-rose-500' },
+    ];
+
     return (
       <div className="space-y-8">
         <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
@@ -2751,18 +3100,34 @@ export function PhysicsNote() {
             <Sparkles className="size-4 text-primary" />
             Motion Loaders Configuration
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground mr-1">Size Scale:</span>
-            {(['sm', 'md', 'lg'] as const).map((s) => (
-              <Button
-                key={s}
-                size="sm"
-                variant={loaderSize === s ? 'primary' : 'outline'}
-                onClick={() => setLoaderSize(s)}
-              >
-                {s.toUpperCase()}
-              </Button>
-            ))}
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground mr-1">Size:</span>
+              {(['sm', 'md', 'lg'] as const).map((s) => (
+                <Button
+                  key={s}
+                  size="sm"
+                  variant={loaderSize === s ? 'primary' : 'outline'}
+                  onClick={() => setLoaderSize(s)}
+                >
+                  {s.toUpperCase()}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground mr-1">Color:</span>
+              {colorOptions.map((c) => (
+                <Button
+                  key={c.value}
+                  size="sm"
+                  variant={loaderColor === c.value ? 'primary' : 'outline'}
+                  onClick={() => setLoaderColor(c.value)}
+                >
+                  {c.label}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -2773,7 +3138,7 @@ export function PhysicsNote() {
               SquareSnake (3x3 Staggered Matrix)
             </div>
             <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center">
-              <SquareSnake size={loaderSize} />
+              <SquareSnake size={loaderSize} colorClassName={loaderColor} />
             </div>
             <div className="text-xs text-muted-foreground text-center max-w-xs">
               Fluid opacity wave propagation across a 3x3 matrix based on diagonal coordinate delay.
@@ -2786,7 +3151,7 @@ export function PhysicsNote() {
               BobbingDots (Harmonic Wave)
             </div>
             <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center h-24">
-              <BobbingDots size={loaderSize} />
+              <BobbingDots size={loaderSize} colorClassName={loaderColor} />
             </div>
             <div className="text-xs text-muted-foreground text-center max-w-xs">
               Continuous harmonic sine-bounce wave with staggering and smooth easing.
@@ -3280,22 +3645,64 @@ export function PhysicsNote() {
             <Sparkles className="size-4 text-primary" />
             Issue Board Playground
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Board Theme:</span>
-            <Button
-              size="xs"
-              variant={boardTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setBoardTheme('dark')}
-            >
-              Dark
-            </Button>
-            <Button
-              size="xs"
-              variant={boardTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setBoardTheme('light')}
-            >
-              Light
-            </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted-foreground">Theme:</span>
+            {(['auto', 'dark', 'light'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={boardTheme === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setBoardTheme(t)}
+              >
+                {t === 'auto' ? 'Auto (Preset)' : t}
+              </Button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-1" />
+
+            <div className="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-border">
+              <button
+                type="button"
+                onClick={() => setBoardDevice('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  boardDevice === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setBoardDevice('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  boardDevice === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setBoardDevice('mobile')}
+                title="Mobile Viewport (390px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  boardDevice === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+
             <Button
               size="xs"
               variant="outline"
@@ -3314,18 +3721,36 @@ export function PhysicsNote() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border overflow-hidden shadow-lg bg-surface-elevated">
-          <RudderIssueBoard
-            key={boardKey}
-            theme={boardTheme}
-            onIssuesChange={(next) => {
-              addToast({
-                title: 'Board Updated',
-                description: `${next.length} issues in board`,
-                type: 'success',
-              });
-            }}
-          />
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            boardDevice === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-2 shadow-2xl bg-surface/40',
+            boardDevice === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-3 shadow-xl bg-surface/40',
+            boardDevice === 'desktop' && 'w-full'
+          )}
+        >
+          {boardDevice !== 'desktop' && (
+            <div className="flex items-center justify-between pb-2 mb-2 px-2 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{boardDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {boardTheme}</span>
+            </div>
+          )}
+
+          <div className="rounded-2xl border border-border overflow-hidden shadow-lg bg-surface-elevated">
+            <RudderIssueBoard
+              key={boardKey}
+              theme={boardTheme === 'auto' ? undefined : boardTheme}
+              onIssuesChange={(next) => {
+                addToast({
+                  title: 'Board Updated',
+                  description: `${next.length} issues in board`,
+                  type: 'success',
+                });
+              }}
+            />
+          </div>
         </div>
       </div>
     );
@@ -3340,22 +3765,64 @@ export function PhysicsNote() {
             <Sparkles className="size-4 text-primary" />
             Approval Card Configuration
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-muted-foreground">Theme:</span>
-            <Button
-              size="xs"
-              variant={approvalTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setApprovalTheme('light')}
-            >
-              Light
-            </Button>
-            <Button
-              size="xs"
-              variant={approvalTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setApprovalTheme('dark')}
-            >
-              Dark
-            </Button>
+            {(['auto', 'light', 'dark'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={approvalTheme === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setApprovalTheme(t)}
+              >
+                {t === 'auto' ? 'Auto (Preset)' : t}
+              </Button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-1" />
+
+            <div className="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-border">
+              <button
+                type="button"
+                onClick={() => setApprovalDevice('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  approvalDevice === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setApprovalDevice('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  approvalDevice === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setApprovalDevice('mobile')}
+                title="Mobile Viewport (390px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  approvalDevice === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+
             <Button
               size="xs"
               variant="outline"
@@ -3375,26 +3842,44 @@ export function PhysicsNote() {
           </div>
         </div>
 
-        <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
-          <AIApprovalCard
-            key={approvalKey}
-            theme={approvalTheme}
-            onSubmitted={(answers, custom) => {
-              const summary = JSON.stringify({ answers, custom });
-              setApprovalSubmissions(summary);
-              addToast({
-                title: 'Workflow Approved',
-                description: 'Answers recorded successfully.',
-                type: 'success',
-              });
-            }}
-          />
-          {approvalSubmissions && (
-            <div className="mt-6 p-3 rounded-xl bg-surface border border-border text-xs font-mono text-muted-foreground max-w-sm overflow-x-auto">
-              <span className="font-semibold text-foreground">Submitted Payload:</span>
-              <pre className="mt-1 whitespace-pre-wrap">{approvalSubmissions}</pre>
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            approvalDevice === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+            approvalDevice === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
+            approvalDevice === 'desktop' && 'w-full'
+          )}
+        >
+          {approvalDevice !== 'desktop' && (
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{approvalDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {approvalTheme}</span>
             </div>
           )}
+
+          <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
+            <AIApprovalCard
+              key={approvalKey}
+              theme={approvalTheme === 'auto' ? undefined : approvalTheme}
+              onSubmitted={(answers, custom) => {
+                const summary = JSON.stringify({ answers, custom });
+                setApprovalSubmissions(summary);
+                addToast({
+                  title: 'Workflow Approved',
+                  description: 'Answers recorded successfully.',
+                  type: 'success',
+                });
+              }}
+            />
+            {approvalSubmissions && (
+              <div className="mt-6 p-3 rounded-xl bg-surface border border-border text-xs font-mono text-muted-foreground max-w-sm w-full overflow-x-auto">
+                <span className="font-semibold text-foreground">Submitted Payload:</span>
+                <pre className="mt-1 whitespace-pre-wrap">{approvalSubmissions}</pre>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -3411,21 +3896,63 @@ export function PhysicsNote() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-muted-foreground">Theme:</span>
-            <Button
-              size="xs"
-              variant={promptTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setPromptTheme('dark')}
-            >
-              Dark
-            </Button>
-            <Button
-              size="xs"
-              variant={promptTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setPromptTheme('light')}
-            >
-              Light
-            </Button>
-            <span className="text-xs text-muted-foreground ml-2">Variant:</span>
+            {(['auto', 'dark', 'light'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={promptTheme === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setPromptTheme(t)}
+              >
+                {t === 'auto' ? 'Auto (Preset)' : t}
+              </Button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-1" />
+
+            <div className="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-border">
+              <button
+                type="button"
+                onClick={() => setPromptDevice('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  promptDevice === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPromptDevice('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  promptDevice === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPromptDevice('mobile')}
+                title="Mobile Viewport (390px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  promptDevice === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+
+            <span className="text-xs text-muted-foreground ml-1">Variant:</span>
             <Button
               size="xs"
               variant={promptVariant === 'Rounded' ? 'primary' : 'outline'}
@@ -3445,7 +3972,7 @@ export function PhysicsNote() {
               variant={promptTall ? 'primary' : 'outline'}
               onClick={() => setPromptTall((v) => !v)}
             >
-              Tall Layout
+              Tall
             </Button>
             <Button
               size="xs"
@@ -3457,26 +3984,46 @@ export function PhysicsNote() {
           </div>
         </div>
 
-        <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[440px]">
-          <AIPromptBar
-            theme={promptTheme}
-            variant={promptVariant}
-            tall={promptTall}
-            demo={promptDemo}
-            onSend={(text, details) => {
-              setPromptLastSent(text || 'Sent with attachments');
-              addToast({
-                title: 'Prompt Sent',
-                description: `Model: ${details.model.name} • ${details.files.length} files`,
-                type: 'success',
-              });
-            }}
-          />
-          {promptLastSent && (
-            <div className="mt-4 text-xs text-muted-foreground text-center">
-              Last submission: <span className="font-semibold text-foreground">{promptLastSent}</span>
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            promptDevice === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+            promptDevice === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
+            promptDevice === 'desktop' && 'w-full'
+          )}
+        >
+          {promptDevice !== 'desktop' && (
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{promptDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {promptTheme}</span>
             </div>
           )}
+
+          <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[440px]">
+            <AIPromptBar
+              theme={promptTheme === 'auto' ? undefined : promptTheme}
+              variant={promptVariant}
+              tall={promptTall}
+              demo={promptDemo}
+              onSend={(text, details) => {
+                setPromptLastSent(text || 'Sent with attachments');
+                const modelName = details?.model?.name ?? 'Default';
+                const fileCount = details?.files?.length ?? 0;
+                addToast({
+                  title: 'Prompt Sent',
+                  description: `Model: ${modelName} • ${fileCount} files`,
+                  type: 'success',
+                });
+              }}
+            />
+            {promptLastSent && (
+              <div className="mt-4 text-xs text-muted-foreground text-center">
+                Last submission: <span className="font-semibold text-foreground">{promptLastSent}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -3491,23 +4038,65 @@ export function PhysicsNote() {
             <Sparkles className="size-4 text-primary" />
             Code Block Controls
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-muted-foreground">Theme:</span>
-            <Button
-              size="xs"
-              variant={codeTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setCodeTheme('light')}
-            >
-              Light
-            </Button>
-            <Button
-              size="xs"
-              variant={codeTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setCodeTheme('dark')}
-            >
-              Dark
-            </Button>
-            <span className="text-xs text-muted-foreground ml-2">Mode:</span>
+            {(['auto', 'light', 'dark'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={codeTheme === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setCodeTheme(t)}
+              >
+                {t === 'auto' ? 'Auto (Preset)' : t}
+              </Button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-1" />
+
+            <div className="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-border">
+              <button
+                type="button"
+                onClick={() => setCodeDevice('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  codeDevice === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setCodeDevice('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  codeDevice === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setCodeDevice('mobile')}
+                title="Mobile Viewport (390px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  codeDevice === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+
+            <span className="text-xs text-muted-foreground ml-1">Mode:</span>
             {(['auto', 'Code', 'Diff'] as const).map((m) => (
               <Button
                 key={m}
@@ -3521,26 +4110,44 @@ export function PhysicsNote() {
           </div>
         </div>
 
-        <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
-          <AICodeBlock
-            theme={codeTheme}
-            variant={codeVariant === 'auto' ? undefined : codeVariant}
-            filename="churn.ts"
-            onCopy={() => {
-              setCodeCopiedNotice('Copied snippet to clipboard');
-              addToast({
-                title: 'Copied to Clipboard',
-                description: 'Ready to paste into your editor.',
-                type: 'success',
-              });
-            }}
-          />
-          {codeCopiedNotice && (
-            <div className="mt-4 text-xs text-success flex items-center gap-1.5 font-medium">
-              <Check className="size-3.5" />
-              {codeCopiedNotice}
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            codeDevice === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+            codeDevice === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
+            codeDevice === 'desktop' && 'w-full'
+          )}
+        >
+          {codeDevice !== 'desktop' && (
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{codeDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {codeTheme}</span>
             </div>
           )}
+
+          <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
+            <AICodeBlock
+              theme={codeTheme === 'auto' ? undefined : codeTheme}
+              variant={codeVariant === 'auto' ? undefined : codeVariant}
+              filename="churn.ts"
+              onCopy={() => {
+                setCodeCopiedNotice('Copied snippet to clipboard');
+                addToast({
+                  title: 'Copied to Clipboard',
+                  description: 'Ready to paste into your editor.',
+                  type: 'success',
+                });
+              }}
+            />
+            {codeCopiedNotice && (
+              <div className="mt-4 text-xs text-success flex items-center gap-1.5 font-medium">
+                <Check className="size-3.5" />
+                {codeCopiedNotice}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -3555,44 +4162,121 @@ export function PhysicsNote() {
             <Sparkles className="size-4 text-primary" />
             Fine-Tune Inspector Playground
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs text-muted-foreground">Theme:</span>
+            {(['auto', 'light', 'dark'] as const).map((t) => (
+              <Button
+                key={t}
+                size="xs"
+                variant={fineTuneTheme === t ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setFineTuneTheme(t)}
+              >
+                {t === 'auto' ? 'Auto (Preset)' : t}
+              </Button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-1" />
+
+            <div className="flex items-center bg-surface-subtle p-0.5 rounded-lg border border-border">
+              <button
+                type="button"
+                onClick={() => setFineTuneDevice('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  fineTuneDevice === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setFineTuneDevice('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  fineTuneDevice === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setFineTuneDevice('mobile')}
+                title="Mobile Viewport (390px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  fineTuneDevice === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+
             <Button
               size="xs"
-              variant={fineTuneTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setFineTuneTheme('light')}
+              variant="outline"
+              leftIcon={<RefreshCw className="size-3" />}
+              onClick={() => {
+                setFineTuneKey((k) => k + 1);
+                setFineTuneLastState(null);
+                addToast({
+                  title: 'Inspector Reset',
+                  description: 'Parameters reset to default.',
+                  type: 'info',
+                });
+              }}
             >
-              Light
-            </Button>
-            <Button
-              size="xs"
-              variant={fineTuneTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setFineTuneTheme('dark')}
-            >
-              Dark
+              Reset
             </Button>
           </div>
         </div>
 
-        <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
-          <AIFineTuneCard
-            theme={fineTuneTheme}
-            onChange={(state) => {
-              setFineTuneLastState(state);
-            }}
-          />
-          {fineTuneLastState && (
-            <div className="mt-6 p-3.5 rounded-xl bg-surface border border-border text-xs text-muted-foreground max-w-sm w-full">
-              <div className="font-semibold text-foreground mb-1.5">Live Parameter State:</div>
-              <div className="grid grid-cols-2 gap-1 font-mono text-[11px]">
-                <div>Layout Seg: <span className="text-primary font-bold">{fineTuneLastState.segment}</span></div>
-                <div>Type: <span className="text-primary font-bold">{fineTuneLastState.type}</span></div>
-                {Object.entries(fineTuneLastState.values).map(([k, v]) => (
-                  <div key={k}>{k}: <span className="text-foreground font-semibold">{String(v)}</span></div>
-                ))}
-              </div>
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            fineTuneDevice === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+            fineTuneDevice === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
+            fineTuneDevice === 'desktop' && 'w-full'
+          )}
+        >
+          {fineTuneDevice !== 'desktop' && (
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{fineTuneDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {fineTuneTheme}</span>
             </div>
           )}
+
+          <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
+            <AIFineTuneCard
+              key={fineTuneKey}
+              theme={fineTuneTheme === 'auto' ? undefined : fineTuneTheme}
+              onChange={(state) => {
+                setFineTuneLastState(state);
+              }}
+            />
+            {fineTuneLastState && (
+              <div className="mt-6 p-3.5 rounded-xl bg-surface border border-border text-xs text-muted-foreground max-w-sm w-full">
+                <div className="font-semibold text-foreground mb-1.5">Live Parameter State:</div>
+                <div className="grid grid-cols-2 gap-1 font-mono text-[11px]">
+                  <div>Layout Seg: <span className="text-primary font-bold">{fineTuneLastState.segment}</span></div>
+                  <div>Type: <span className="text-primary font-bold">{fineTuneLastState.type}</span></div>
+                  {Object.entries(fineTuneLastState.values).map(([k, v]) => (
+                    <div key={k}>{k}: <span className="text-foreground font-semibold">{String(v)}</span></div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -5599,7 +6283,7 @@ export function PhysicsNote() {
         </div>
 
         {/* Live Interactive Sliders */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Single Thumb Slider */}
           <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
             <div className="border-b border-border/50 pb-3 flex items-center justify-between">
@@ -5692,6 +6376,259 @@ export function PhysicsNote() {
               </Button>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Mono Rounded Charts Playground ─────────
+  if (componentId === 'mono-charts') {
+    return (
+      <div className="space-y-8">
+        {/* Master Control Bar */}
+        <div className="p-5 sm:p-6 rounded-2xl bg-surface border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Activity className="size-5 text-primary" />
+              Mono Rounded Charts (5 Components + Suite)
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Minimalist monochrome Recharts with rounded corners, theme reactivity, and responsive adaptation.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            {/* Theme Override */}
+            <div className="flex items-center gap-1.5 bg-surface-subtle p-1 rounded-xl border border-border">
+              <span className="text-[11px] font-medium text-muted-foreground px-1.5">Theme:</span>
+              {(['auto', 'dark', 'light'] as const).map((t) => (
+                <Button
+                  key={t}
+                  size="xs"
+                  variant={chartTheme === t ? 'primary' : 'ghost'}
+                  onClick={() => setChartTheme(t)}
+                  className="capitalize"
+                >
+                  {t}
+                </Button>
+              ))}
+            </div>
+
+            {/* Compact Toggle */}
+            <Button
+              size="xs"
+              variant={chartCompact ? 'primary' : 'outline'}
+              onClick={() => setChartCompact(!chartCompact)}
+            >
+              {chartCompact ? 'Compact: On' : 'Compact: Off'}
+            </Button>
+
+            {/* Device Viewport Simulation */}
+            <div className="flex items-center gap-1 bg-surface-subtle p-1 rounded-xl border border-border">
+              <button
+                type="button"
+                onClick={() => setChartDeviceView('desktop')}
+                title="Desktop (Full)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  chartDeviceView === 'desktop'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Monitor className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setChartDeviceView('tablet')}
+                title="Tablet Viewport (768px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  chartDeviceView === 'tablet'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Tablet className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setChartDeviceView('mobile')}
+                title="Mobile Viewport (375px)"
+                className={cn(
+                  'p-1.5 rounded-lg transition-all',
+                  chartDeviceView === 'mobile'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                <Smartphone className="size-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Tabs between Suite view and Individual Chart playgrounds */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
+          {[
+            { id: 'suite', label: 'Suite Grid (All 5)' },
+            { id: 'line', label: '1. Spline Dynamics (Line)' },
+            { id: 'bar', label: '2. Pill Pillars (Bar)' },
+            { id: 'area', label: '3. Curved Wave (Area)' },
+            { id: 'donut', label: '4. Soft Arc (Donut)' },
+            { id: 'stream', label: '5. Fluid Stream Wave' },
+          ].map((tab) => (
+            <Button
+              key={tab.id}
+              size="sm"
+              variant={chartActiveTab === tab.id ? 'primary' : 'outline'}
+              onClick={() => setChartActiveTab(tab.id as any)}
+            >
+              {tab.label}
+            </Button>
+          ))}
+        </div>
+
+        {/* Viewport Simulation Container */}
+        <div
+          className={cn(
+            'transition-all duration-300 mx-auto',
+            chartDeviceView === 'mobile' &&
+              'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+            chartDeviceView === 'tablet' &&
+              'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-5 shadow-xl bg-surface/40',
+            chartDeviceView === 'desktop' && 'w-full'
+          )}
+        >
+          {chartDeviceView !== 'desktop' && (
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span>{chartDeviceView === 'mobile' ? 'Mobile Viewport (375px - 390px)' : 'Tablet Viewport (768px)'}</span>
+              <span className="capitalize">Theme: {chartTheme}</span>
+            </div>
+          )}
+
+          {chartActiveTab === 'suite' && (
+            <MonoChartsSuite theme={chartTheme} compact={chartCompact} />
+          )}
+
+          {chartActiveTab === 'line' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground font-medium">Interactive Controls:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Series Mode:</span>
+                  {(['all', 'value'] as const).map((s) => (
+                    <Button
+                      key={s}
+                      size="xs"
+                      variant={lineActiveSeries === s ? 'primary' : 'outline'}
+                      onClick={() => setLineActiveSeries(s)}
+                    >
+                      {s === 'all' ? 'Dual Series' : 'Single Active'}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <MonoRoundedLineChart
+                theme={chartTheme}
+                compact={chartCompact}
+                activeSeries={lineActiveSeries}
+                onActiveSeriesChange={setLineActiveSeries}
+              />
+            </div>
+          )}
+
+          {chartActiveTab === 'bar' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground font-medium">Interactive Controls:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Bar Orientation:</span>
+                  {(['vertical', 'horizontal'] as const).map((l) => (
+                    <Button
+                      key={l}
+                      size="xs"
+                      variant={barActiveLayout === l ? 'primary' : 'outline'}
+                      onClick={() => setBarActiveLayout(l)}
+                    >
+                      {l === 'vertical' ? 'Vertical (Columns)' : 'Horizontal (Rows)'}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <MonoRoundedBarChart
+                theme={chartTheme}
+                compact={chartCompact}
+                layout={barActiveLayout}
+                onLayoutChange={setBarActiveLayout}
+              />
+            </div>
+          )}
+
+          {chartActiveTab === 'area' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground font-medium">Interactive Controls:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Spline Curve Interpolation:</span>
+                  {(['monotone', 'natural'] as const).map((c) => (
+                    <Button
+                      key={c}
+                      size="xs"
+                      variant={areaActiveCurve === c ? 'primary' : 'outline'}
+                      onClick={() => setAreaActiveCurve(c)}
+                    >
+                      {c === 'monotone' ? 'Monotone' : 'Natural Spline'}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <MonoRoundedAreaChart
+                theme={chartTheme}
+                compact={chartCompact}
+                curve={areaActiveCurve}
+                onCurveChange={setAreaActiveCurve}
+              />
+            </div>
+          )}
+
+          {chartActiveTab === 'donut' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-surface-subtle border border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground font-medium">Interactive Controls:</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Highlight Segment:</span>
+                  <Button
+                    size="xs"
+                    variant={donutHoveredIdx === null ? 'primary' : 'outline'}
+                    onClick={() => setDonutHoveredIdx(null)}
+                  >
+                    Auto (Hover)
+                  </Button>
+                  {['Core', 'UI', 'Assets', 'Other'].map((name, i) => (
+                    <Button
+                      key={name}
+                      size="xs"
+                      variant={donutHoveredIdx === i ? 'primary' : 'outline'}
+                      onClick={() => setDonutHoveredIdx(i)}
+                    >
+                      {name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <MonoRoundedDonutChart
+                theme={chartTheme}
+                compact={chartCompact}
+                hoverIndex={donutHoveredIdx}
+                onHoverIndexChange={setDonutHoveredIdx}
+              />
+            </div>
+          )}
+
+          {chartActiveTab === 'stream' && (
+            <MonoRoundedStreamChart theme={chartTheme} compact={chartCompact} />
+          )}
         </div>
       </div>
     );

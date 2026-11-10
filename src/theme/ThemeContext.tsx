@@ -174,7 +174,7 @@ export function adjustHslLightness(hslStr: string, deltaPercent: number): string
   return `${h} ${s} ${l.toFixed(1)}%`;
 }
 
-interface ThemeContextType {
+export interface ThemeContextType {
   preset: ThemePresetKey;
   setPreset: (preset: ThemePresetKey) => void;
   colors: ThemeColors;
@@ -184,7 +184,7 @@ interface ThemeContextType {
   resetTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [preset, setPresetState] = useState<ThemePresetKey>(() => {

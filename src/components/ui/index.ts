@@ -64,3 +64,4 @@ export * from './blur-up-image';
 export * from './show-more';
 export * from './parameter-slider';
 export * from './slider';
+export * from './mono-charts';

@@ -103,7 +103,7 @@ interface ElasticPointerDragSession {
 }
 
 const ELASTIC_ROOT_CLASS =
-  'group/es flex w-48 touch-none flex-col items-center gap-2 text-inherit select-none [-webkit-tap-highlight-color:transparent] data-[disabled]:pointer-events-none data-[disabled]:opacity-45 data-[orientation=vertical]:h-48 data-[orientation=vertical]:w-auto';
+  'group/es flex w-full max-w-xs touch-none flex-col items-center gap-2 text-inherit select-none [-webkit-tap-highlight-color:transparent] data-[disabled]:pointer-events-none data-[disabled]:opacity-45 data-[orientation=vertical]:h-56 data-[orientation=vertical]:w-auto';
 const ELASTIC_VALUE_LABEL_CLASS = 'text-xs leading-none font-medium tabular-nums opacity-60';
 const ELASTIC_BODY_CLASS =
   'flex min-h-0 w-full flex-1 items-center gap-3 group-data-[orientation=vertical]/es:h-full group-data-[orientation=vertical]/es:w-auto group-data-[orientation=vertical]/es:flex-col-reverse';
@@ -125,10 +125,10 @@ const ELASTIC_TICK_MARK_CLASS =
 const ELASTIC_ACTIVE_TICK_CLASS =
   'absolute top-1/2 -mt-[1.5px] -ml-[1.5px] size-[3px] rounded-full group-data-[orientation=vertical]/es:top-auto group-data-[orientation=vertical]/es:left-1/2 group-data-[orientation=vertical]/es:mt-0 group-data-[orientation=vertical]/es:-mb-[1.5px] [background:var(--elastic-slider-fill-content)] opacity-50';
 const ELASTIC_THUMB_CLASS =
-  'pointer-events-none absolute top-1/2 left-0 mt-[calc(var(--elastic-slider-thumb-size,18px)/-2)] ml-[calc(var(--elastic-slider-thumb-size,18px)/-2)] size-[var(--elastic-slider-thumb-size,18px)] rounded-full [background:var(--elastic-slider-thumb,#ffffff)] shadow-[0_1px_4px_rgba(0,0,0,0.28),0_0_0_0.5px_rgba(0,0,0,0.12)] will-change-transform group-data-[orientation=vertical]/es:top-auto group-data-[orientation=vertical]/es:bottom-0 group-data-[orientation=vertical]/es:left-1/2 group-data-[orientation=vertical]/es:mt-0 group-data-[orientation=vertical]/es:mb-[calc(var(--elastic-slider-thumb-size,18px)/-2)]';
+  'pointer-events-none absolute top-1/2 left-0 mt-[calc(var(--elastic-slider-thumb-size,18px)/-2)] ml-[calc(var(--elastic-slider-thumb-size,18px)/-2)] size-[var(--elastic-slider-thumb-size,18px)] rounded-full [background:var(--elastic-slider-thumb,#ffffff)] shadow-[0_1px_4px_rgba(0,0,0,0.28),0_0_0_0.5px_rgba(0,0,0,0.12)] ring-1 ring-black/15 dark:ring-white/25 will-change-transform group-data-[orientation=vertical]/es:top-auto group-data-[orientation=vertical]/es:bottom-0 group-data-[orientation=vertical]/es:left-1/2 group-data-[orientation=vertical]/es:mt-0 group-data-[orientation=vertical]/es:mb-[calc(var(--elastic-slider-thumb-size,18px)/-2)]';
 const ELASTIC_VALUE_BUBBLE_CLASS =
-  'pointer-events-none absolute bottom-[calc(50%+var(--elastic-slider-bubble-offset,14px))] left-0 origin-bottom rounded-lg px-2 py-[5px] text-xs leading-[1.2] font-semibold whitespace-nowrap tabular-nums opacity-0 [background:var(--elastic-slider-range)] will-change-[transform,opacity] group-data-[orientation=vertical]/es:bottom-0 group-data-[orientation=vertical]/es:left-[calc(50%+var(--elastic-slider-bubble-offset,14px))] group-data-[orientation=vertical]/es:origin-left';
-const ELASTIC_BUBBLE_TEXT_CLASS = 'text-[color:var(--elastic-slider-fill-content)]';
+  'pointer-events-none absolute bottom-[calc(50%+var(--elastic-slider-bubble-offset,14px))] left-0 origin-bottom rounded-lg px-2.5 py-1 text-xs leading-[1.2] font-semibold whitespace-nowrap tabular-nums opacity-0 [background:var(--elastic-slider-range)] shadow-lg ring-1 ring-black/10 dark:ring-white/20 will-change-[transform,opacity] group-data-[orientation=vertical]/es:bottom-0 group-data-[orientation=vertical]/es:left-[calc(50%+var(--elastic-slider-bubble-offset,14px))] group-data-[orientation=vertical]/es:origin-left';
+const ELASTIC_BUBBLE_TEXT_CLASS = 'text-[color:var(--elastic-slider-fill-content)] font-mono text-xs';
 
 const TWO_PI = Math.PI * 2;
 const VALID_VALUE_POSITIONS = ['top', 'bubble', 'inside', 'none'] as const;
@@ -205,8 +205,8 @@ export function ElasticSlider({
   bounce = 0.5,
   jumpToClick = true,
   wheel = false,
-  trackColor = 'color-mix(in srgb, currentColor 18%, transparent)',
-  rangeColor = 'currentColor',
+  trackColor = 'hsl(var(--muted) / 0.65)',
+  rangeColor = 'hsl(var(--primary))',
   iconColor = 'currentColor',
   contentColor = 'currentColor',
   fillContentColor = 'auto',
@@ -872,8 +872,8 @@ export const WakeSlider: React.FC<WakeSliderProps> = ({
   height = 56,
   restHeight = 12,
   gap = 4,
-  fillColor = '#f5f5f5',
-  trackColor = '#27272a',
+  fillColor = 'hsl(var(--primary))',
+  trackColor = 'hsl(var(--muted) / 0.4)',
   crestColor = '',
   sensitivity = 1,
   reach = 6,
@@ -1148,16 +1148,26 @@ export const Slider = ({
       minValue={minValue}
       maxValue={maxValue}
       formatOptions={formatOptions ?? defaultPercentageFormatOptions}
-      className={cn('flex flex-col gap-1.5 w-full select-none touch-none', className)}
+      className={cn(
+        'flex flex-col gap-3 w-full select-none touch-none',
+        labelPosition === 'top-floating' && 'pt-3',
+        className
+      )}
     >
       {label ? (
-        <AriaLabel className="text-xs font-medium text-foreground">{label}</AriaLabel>
+        <AriaLabel className="text-xs font-medium text-foreground block">{label}</AriaLabel>
       ) : (
         <AriaLabel className="sr-only">
           {(sliderRestProps as any)['aria-label'] || 'Slider'}
         </AriaLabel>
       )}
-      <AriaSliderTrack className="relative h-6 w-full flex items-center">
+      <AriaSliderTrack
+        className={cn(
+          'relative h-6 w-full flex items-center',
+          labelPosition === 'top-floating' && 'mt-6',
+          labelPosition === 'bottom' && 'mb-6'
+        )}
+      >
         {({ state: { values, getThumbValue, getThumbPercent, getFormattedValue } }) => {
           const trackFillLeft = values.length === 1 ? 0 : getThumbPercent(0);
           const trackFillWidth = values.length === 1 ? getThumbPercent(0) : getThumbPercent(1) - trackFillLeft;

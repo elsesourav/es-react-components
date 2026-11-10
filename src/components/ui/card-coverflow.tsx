@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface CoverflowImageItem {
   src: string;
@@ -79,11 +80,14 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
 
   return (
     <div
-      className={`w-full h-full min-h-[220px] flex flex-col items-center justify-center relative overflow-hidden select-none bg-zinc-950/40 rounded-2xl p-4 ${className}`}
+      className={cn(
+        "w-full h-full min-h-[240px] flex flex-col items-center justify-center relative overflow-hidden select-none bg-surface-subtle/50 border border-border text-foreground rounded-2xl p-4 sm:p-6 transition-colors",
+        className
+      )}
       style={{ perspective: "1000px" }}
     >
       {/* 3D Coverflow Container */}
-      <div className="w-full flex justify-center items-center relative h-[140px] [transform-style:preserve-3d]">
+      <div className="w-full flex justify-center items-center relative h-[140px] sm:h-[150px] [transform-style:preserve-3d]">
         {images.map((item, index) => {
           const isCurrentActive = activeSlideIndex === index;
           const slideOffset = index - activeSlideIndex;
@@ -93,10 +97,10 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
           return (
             <motion.div
               key={index}
-              className="absolute w-[80px] aspect-[3/4] cursor-pointer"
+              className="absolute w-[75px] sm:w-[85px] aspect-[3/4] cursor-pointer"
               initial={false}
               animate={{
-                x: slideOffset * 32,
+                x: slideOffset * 34,
                 rotateY: isCurrentActive ? 0 : isPreceding ? 38 : -38,
                 z: isCurrentActive ? 50 : -distanceFromCenter * 50,
                 scale: isCurrentActive ? 1.1 : 1 - distanceFromCenter * 0.08,
@@ -107,7 +111,7 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
               onClick={(event) => handleSelectSlide(event, index)}
             >
               {isMonochrome ? (
-                <div className="w-full h-full rounded-xl bg-neutral-400 dark:bg-neutral-800 border border-neutral-200/20 shadow-2xl flex items-center justify-center text-neutral-600 dark:text-neutral-400 font-bold text-sm">
+                <div className="w-full h-full rounded-xl bg-surface border border-border shadow-xl flex items-center justify-center text-foreground font-bold text-sm">
                   {index + 1}
                 </div>
               ) : (
@@ -115,11 +119,11 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
                   src={item.src}
                   alt={item.title}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-xl shadow-2xl border border-white/10"
+                  className="w-full h-full object-cover rounded-xl shadow-xl border border-border/60"
                 />
               )}
               <motion.div
-                className="absolute -bottom-6 left-[-20px] right-[-20px] text-center text-[10px] font-semibold text-white/80 whitespace-nowrap overflow-hidden text-ellipsis"
+                className="absolute -bottom-6 left-[-20px] right-[-20px] text-center text-[10px] sm:text-xs font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-sm"
                 animate={{
                   opacity: isCurrentActive ? 1 : 0,
                   y: isCurrentActive ? 0 : -5,
@@ -133,13 +137,13 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
       </div>
 
       {/* Control pill bar */}
-      <div className="mt-8 w-fit px-2 py-1 flex items-center gap-2 justify-center text-zinc-300 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-sm z-20">
+      <div className="mt-8 w-fit px-2 py-1 flex items-center gap-2 justify-center text-foreground rounded-full bg-surface/90 backdrop-blur-md border border-border shadow-md z-20">
         <button
           type="button"
           onClick={handlePrevSlide}
           aria-label="Previous slide"
           disabled={activeSlideIndex === 0}
-          className="p-1 cursor-pointer hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-neutral-300 hover:text-white"
+          className="p-1 cursor-pointer hover:bg-surface-subtle disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
@@ -151,11 +155,12 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
               key={index}
               onClick={(event) => handleSelectSlide(event, index)}
               aria-label={`Go to slide ${index + 1}`}
-              className={`rounded-full cursor-pointer h-1 border-0 p-0 transition-all duration-300 ${
+              className={cn(
+                "rounded-full cursor-pointer h-1.5 border-0 p-0 transition-all duration-300",
                 activeSlideIndex === index
-                  ? "w-4 bg-white"
-                  : "w-1 bg-white/30 hover:bg-white/50"
-              }`}
+                  ? "w-4 bg-primary"
+                  : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+              )}
             />
           ))}
         </div>
@@ -165,7 +170,7 @@ export const CardCoverFlow = React.memo(function CardCoverFlow({
           onClick={handleNextSlide}
           aria-label="Next slide"
           disabled={activeSlideIndex === images.length - 1}
-          className="p-1 cursor-pointer hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-neutral-300 hover:text-white"
+          className="p-1 cursor-pointer hover:bg-surface-subtle disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-muted-foreground hover:text-foreground"
         >
           <ChevronRight className="w-3.5 h-3.5" />
         </button>

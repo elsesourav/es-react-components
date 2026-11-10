@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface CarouselImageItem {
   src: string;
@@ -49,7 +50,7 @@ export const CardCarousel = React.memo(function CardCarousel({
   images = DEFAULT_CAROUSEL_IMAGES,
   isMonochrome = false,
   initialIndex = 2,
-  slideWidth = 160,
+  slideWidth = 150,
   onIndexChange,
 }: CardCarouselProps) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(
@@ -87,7 +88,10 @@ export const CardCarousel = React.memo(function CardCarousel({
     <div
       onMouseEnter={() => setIsContainerHovered(true)}
       onMouseLeave={() => setIsContainerHovered(false)}
-      className={`w-full h-full min-h-[220px] flex flex-col items-center justify-center relative overflow-hidden select-none p-4 ${className}`}
+      className={cn(
+        "w-full h-full min-h-[250px] flex flex-col items-center justify-center relative overflow-hidden select-none bg-surface-subtle/50 border border-border text-foreground rounded-2xl p-4 sm:p-6 transition-colors",
+        className
+      )}
     >
       {/* Carousel Track Wrapper */}
       <div
@@ -128,10 +132,10 @@ export const CardCarousel = React.memo(function CardCarousel({
               >
                 {/* Title tooltip above card */}
                 <div
-                  className={`text-[10px] md:text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+                  className={`text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all duration-300 drop-shadow-sm ${
                     isCurrentActive
-                      ? "opacity-100 scale-100 text-foreground dark:text-white"
-                      : "opacity-0 scale-75 text-neutral-400"
+                      ? "opacity-100 scale-100 text-foreground"
+                      : "opacity-0 scale-75 text-muted-foreground"
                   }`}
                 >
                   {isMonochrome ? `Card ${index + 1}` : item.title}
@@ -141,7 +145,7 @@ export const CardCarousel = React.memo(function CardCarousel({
                 {isMonochrome ? (
                   <div
                     onClick={(event) => handleSelectSlide(event, index)}
-                    className="w-[110px] h-[110px] rounded-xl bg-neutral-300 dark:bg-neutral-800 border border-neutral-200/20 shadow-lg flex items-center justify-center text-neutral-600 dark:text-neutral-400 font-bold text-sm cursor-pointer"
+                    className="w-[105px] h-[105px] sm:w-[115px] sm:h-[115px] rounded-xl bg-surface border border-border shadow-lg flex items-center justify-center text-foreground font-bold text-sm cursor-pointer"
                   >
                     {index + 1}
                   </div>
@@ -150,7 +154,7 @@ export const CardCarousel = React.memo(function CardCarousel({
                     src={item.src}
                     alt={item.title}
                     referrerPolicy="no-referrer"
-                    className="w-[110px] h-[110px] object-cover rounded-xl shadow-lg border border-white/10 cursor-pointer"
+                    className="w-[105px] h-[105px] sm:w-[115px] sm:h-[115px] object-cover rounded-xl shadow-lg border border-border/60 cursor-pointer"
                     onClick={(event) => handleSelectSlide(event, index)}
                   />
                 )}
@@ -161,13 +165,13 @@ export const CardCarousel = React.memo(function CardCarousel({
       </div>
 
       {/* Navigation Controls */}
-      <div className="mt-4 px-2 py-1 flex items-center gap-2 justify-center text-neutral-400 rounded-full bg-neutral-900/60 backdrop-blur-md border border-white/5 shadow-md z-20">
+      <div className="mt-5 px-2 py-1 flex items-center gap-2 justify-center text-foreground rounded-full bg-surface/90 backdrop-blur-md border border-border shadow-md z-20">
         <button
           type="button"
           onClick={handlePrevSlide}
           aria-label="Previous slide"
           disabled={activeSlideIndex === 0}
-          className="p-1 cursor-pointer hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-neutral-400 hover:text-white"
+          className="p-1 cursor-pointer hover:bg-surface-subtle disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
         </button>
@@ -179,11 +183,12 @@ export const CardCarousel = React.memo(function CardCarousel({
               key={index}
               onClick={(event) => handleSelectSlide(event, index)}
               aria-label={`Go to slide ${index + 1}`}
-              className={`rounded-full cursor-pointer h-1 border-0 p-0 transition-all duration-300 ${
+              className={cn(
+                "rounded-full cursor-pointer h-1.5 border-0 p-0 transition-all duration-300",
                 activeSlideIndex === index
-                  ? "w-4 bg-white"
-                  : "w-1 bg-white/30 hover:bg-white/50"
-              }`}
+                  ? "w-4 bg-primary"
+                  : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+              )}
             />
           ))}
         </div>
@@ -193,7 +198,7 @@ export const CardCarousel = React.memo(function CardCarousel({
           onClick={handleNextSlide}
           aria-label="Next slide"
           disabled={activeSlideIndex === images.length - 1}
-          className="p-1 cursor-pointer hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-neutral-400 hover:text-white"
+          className="p-1 cursor-pointer hover:bg-surface-subtle disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-colors border-0 bg-transparent text-muted-foreground hover:text-foreground"
         >
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
