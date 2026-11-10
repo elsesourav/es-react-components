@@ -10,12 +10,18 @@ import {
   Tooltip,
   Logo,
 } from '@/components/ui';
-import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette, ChevronRight } from 'lucide-react';
+import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette, ChevronRight, Sparkles } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { useTheme } from '@/theme/ThemeContext';
 
-export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
+export interface ComponentDocViewProps {
+  component: ComponentDoc;
+  onSelectOverview?: () => void;
+}
+
+export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
   component,
+  onSelectOverview,
 }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'code' | 'props' | 'theme'>('preview');
   const [copiedImport, setCopiedImport] = useState(false);
@@ -33,51 +39,86 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
     setTimeout(() => setCopiedImport(false), 2000);
   };
 
+  const handleBreadcrumbClick = () => {
+    if (onSelectOverview) {
+      onSelectOverview();
+    } else if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('component');
+      window.history.pushState({}, '', url.toString());
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16">
-      {/* Component Header with Brand Breadcrumbs */}
-      <div className="space-y-3 sm:space-y-4 border-b border-border/80 pb-4 sm:pb-6">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-          <span className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
-            <Logo size={14} variant="badge" className="shrink-0" />
+      {/* Component Hero & Title Section */}
+      <div className="space-y-3 sm:space-y-4 border-b border-border/70 pb-5 sm:pb-7">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium flex-wrap">
+          <button
+            type="button"
+            onClick={handleBreadcrumbClick}
+            className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors cursor-pointer group"
+          >
+            <Logo size={15} variant="badge" className="shrink-0 transition-transform group-hover:scale-110" />
             <span>Components</span>
+          </button>
+          <ChevronRight className="size-3 text-muted-foreground/40 shrink-0" />
+          <span className="text-muted-foreground">
+            {component.category}
           </span>
-          <ChevronRight className="size-3 text-muted-foreground/60" />
-          <span>{component.category}</span>
-          <ChevronRight className="size-3 text-muted-foreground/60" />
-          <span className="text-foreground font-semibold">{component.name}</span>
+          <ChevronRight className="size-3 text-muted-foreground/40 shrink-0" />
+          <span className="text-foreground font-semibold truncate">
+            {component.name}
+          </span>
         </nav>
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-            {component.name}
-          </h1>
-          <Badge variant="primary">{component.category}</Badge>
-          <Badge variant="outline">{component.themeTokens.length} Tokens</Badge>
+        {/* Remade Title & Badges */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+              {component.name}
+            </h1>
+            <Badge variant="primary" size="sm" className="shadow-2xs">
+              {component.category}
+            </Badge>
+            <Badge variant="outline" size="sm" className="font-mono text-[10px]">
+              {component.themeTokens.length} Tokens
+            </Badge>
+            <Badge variant="secondary" size="sm" className="font-mono text-[10px] hidden sm:inline-flex">
+              {component.props.length} Props
+            </Badge>
+            <Badge variant="secondary" size="sm" className="hidden lg:inline-flex">
+              React 19
+            </Badge>
+          </div>
         </div>
+
+        {/* Description */}
         <p className="text-sm sm:text-base text-muted-foreground max-w-3xl leading-relaxed">
           {component.description}
         </p>
 
-        {/* Quick Import Snippet */}
-        <div className="flex items-center justify-between p-2 px-3 sm:px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-xs">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto py-1">
-            <Terminal className="h-4 w-4 text-primary shrink-0" />
-            <span className="text-foreground">{component.importCode}</span>
+        {/* Quick Import Snippet Box */}
+        <div className="flex items-center justify-between gap-2 p-2 px-3 sm:px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-2xs">
+          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto py-0.5">
+            <Terminal className="size-3.5 text-primary shrink-0" />
+            <span className="text-foreground select-all whitespace-nowrap">{component.importCode}</span>
           </div>
           <Tooltip label="Copy import statement">
-            <Button
-              size="xs"
-              variant="ghost"
+            <button
+              type="button"
               onClick={handleCopyImport}
-              className="ml-2 shrink-0"
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-subtle transition-colors shrink-0 cursor-pointer"
+              aria-label="Copy import statement"
             >
               {copiedImport ? (
-                <Check className="h-3.5 w-3.5 text-success" />
+                <Check className="size-3.5 text-success" />
               ) : (
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="size-3.5" />
               )}
-            </Button>
+            </button>
           </Tooltip>
         </div>
       </div>
@@ -100,118 +141,101 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
           },
           {
             id: 'props',
-            label: 'Props & API',
-            icon: <BookOpen className="h-4 w-4" />,
+            label: `Props & API`,
             badge: component.props.length,
+            icon: <BookOpen className="h-4 w-4" />,
           },
           {
             id: 'theme',
-            label: 'Theme Tokens',
-            icon: <Palette className="h-4 w-4" />,
+            label: `Theme Tokens`,
             badge: component.themeTokens.length,
+            icon: <Palette className="h-4 w-4" />,
           },
         ]}
       />
 
       {/* Tab Panels */}
-      <div>
-        {activeTab === 'preview' && (
-          <ComponentPlaygrounds componentId={component.id} />
-        )}
+      {activeTab === 'preview' && (
+        <ComponentPlaygrounds componentId={component.id} />
+      )}
 
-        {activeTab === 'code' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">Production Usage Example</h3>
-                <p className="text-xs text-muted-foreground">Drop-in TypeScript JSX implementation for {component.name}.</p>
-              </div>
+      {activeTab === 'code' && (
+        <div className="space-y-6">
+          <Card>
+            <div className="p-4 sm:p-6 space-y-4">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+                Full Implementation Snippet
+              </h3>
+              <AICodeBlock
+                code={component.usageCode}
+                filename={`${component.id}-example.tsx`}
+              />
             </div>
-            <AICodeBlock
-              filename={`${component.id}.example.tsx`}
-              lines={component.usageCode.split('\n')}
-            />
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'props' && (
+        <Card className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs sm:text-sm border-collapse">
+              <thead>
+                <tr className="border-b border-border bg-surface-subtle/50 text-muted-foreground">
+                  <th className="py-3 px-4 font-semibold">Prop</th>
+                  <th className="py-3 px-4 font-semibold">Type</th>
+                  <th className="py-3 px-4 font-semibold">Default</th>
+                  <th className="py-3 px-4 font-semibold">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {component.props.map((p) => (
+                  <tr key={p.name} className="hover:bg-surface-subtle/30 transition-colors">
+                    <td className="py-3 px-4 font-mono font-medium text-primary">
+                      {p.name}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-muted-foreground">
+                      {p.type}
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs text-foreground/80">
+                      {p.defaultVal || '-'}
+                    </td>
+                    <td className="py-3 px-4 text-foreground/90">
+                      {p.description}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
+        </Card>
+      )}
 
-        {activeTab === 'props' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">Component Properties & Types</h3>
-                <p className="text-xs text-muted-foreground">Comprehensive API interface reference for {component.name}.</p>
-              </div>
-              <Badge variant="outline" size="sm">{component.props.length} Properties</Badge>
-            </div>
-
-            <div className="rounded-2xl border border-border overflow-hidden bg-surface shadow-xs">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-surface-subtle border-b border-border text-muted-foreground uppercase tracking-wider">
-                    <tr>
-                      <th className="py-3 px-4 font-semibold">Prop</th>
-                      <th className="py-3 px-4 font-semibold">Type</th>
-                      <th className="py-3 px-4 font-semibold">Default</th>
-                      <th className="py-3 px-4 font-semibold">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/60">
-                    {component.props.map((p) => (
-                      <tr key={p.name} className="hover:bg-surface-subtle/40 transition-colors">
-                        <td className="py-3 px-4 font-mono font-semibold text-primary">
-                          {p.name}
-                        </td>
-                        <td className="py-3 px-4 font-mono text-muted-foreground">
-                          <Badge variant="secondary" size="sm" className="font-mono text-[11px]">
-                            {p.type}
-                          </Badge>
-                        </td>
-                        <td className="py-3 px-4 font-mono text-foreground/80">
-                          {p.defaultVal}
-                        </td>
-                        <td className="py-3 px-4 text-muted-foreground leading-relaxed">
-                          {p.description}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'theme' && (
+      {activeTab === 'theme' && (
+        <Card className="p-6">
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-semibold text-foreground">Theme Token Dependencies</h3>
-              <p className="text-xs text-muted-foreground">
-                These CSS custom properties govern the rendering of <span className="text-primary font-bold">{component.name}</span>. Modify them dynamically in the Theme Customizer.
+              <h3 className="text-base font-bold text-foreground">Theme Token Dependencies</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                This component dynamically responds to the following design tokens registered in the HSL Engine:
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {component.themeTokens.map((tok) => (
-                <Card key={tok} className="p-3.5 bg-surface border border-border shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <code className="text-xs font-mono font-semibold text-primary">
-                      {tok}
-                    </code>
-                    <Badge variant="outline" size="sm" className="font-mono text-[10px]">
-                      {tok === '--primary'
-                        ? colors.primary
-                        : tok === '--border'
-                        ? colors.border
-                        : tok === '--radius' || tok === '--radius-md' || tok === '--radius-xl'
-                        ? `${colors.radius}px`
-                        : 'HSL Token'}
-                    </Badge>
-                  </div>
-                </Card>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {component.themeTokens.map((token) => (
+                <div
+                  key={token}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-mono"
+                >
+                  <span
+                    className="size-3 rounded-full border border-border shadow-2xs"
+                    style={{ backgroundColor: (colors as any)[token] || 'var(--primary)' }}
+                  />
+                  <span className="text-foreground">{token}</span>
+                </div>
               ))}
             </div>
           </div>
-        )}
-      </div>
+        </Card>
+      )}
     </div>
   );
 };
