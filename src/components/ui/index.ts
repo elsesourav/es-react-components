@@ -47,3 +47,7 @@ export * from './accordion';
 export * from './wizard-steps';
 export * from './pagination';
 export * from './tree-view';
+export * from './sticky-header';
+export * from './reading-progress';
+export * from './scroll-spy';
+export * from './hide-on-scroll';

@@ -73,6 +73,14 @@ import {
   WizardSteps,
   Pagination,
   TreeView,
+  StickyHeader,
+  useCondense,
+  ReadingProgress,
+  useReadingProgress,
+  ScrollSpy,
+  useScrollSpy,
+  HideOnScroll,
+  useHideOnScroll,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -107,6 +115,10 @@ import {
   ListTree,
   Compass,
   Rocket,
+  ScrollText,
+  BookmarkCheck,
+  EyeOff,
+  Navigation2,
 } from 'lucide-react';
 
 export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
@@ -236,6 +248,23 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   // TreeView State
   const [treeSelected, setTreeSelected] = useState<string | null>('button.tsx');
   const [treeExpanded, setTreeExpanded] = useState<string[]>(['src', 'components']);
+
+  // StickyHeader State
+  const [stickyExpandedH, setStickyExpandedH] = useState(68);
+  const [stickyCompactH, setStickyCompactH] = useState(48);
+
+  // ReadingProgress State
+  const readingScrollerRef = useRef<HTMLDivElement>(null);
+  const [readingWords, setReadingWords] = useState(1400);
+  const [readingWpm, setReadingWpm] = useState(220);
+
+  // ScrollSpy State
+  const scrollSpyRootRef = useRef<HTMLDivElement>(null);
+  const [scrollSpyActive, setScrollSpyActive] = useState('section-1');
+
+  // HideOnScroll State
+  const [hidePinned, setHidePinned] = useState(false);
+  const [hideIsHidden, setHideIsHidden] = useState(false);
 
   // Switch State
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -3766,6 +3795,343 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
                 <span className="font-mono font-semibold text-primary">{treeSelected}</span>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Sticky Header Playground ─────────
+  if (componentId === 'sticky-header') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <ScrollText className="size-4 text-primary" />
+            Sticky Header Controls
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Expanded Height:</span>
+            {[68, 84].map((h) => (
+              <Button
+                key={h}
+                size="xs"
+                variant={stickyExpandedH === h ? 'primary' : 'outline'}
+                onClick={() => setStickyExpandedH(h)}
+              >
+                {h}px
+              </Button>
+            ))}
+            <span className="text-xs text-muted-foreground ml-2">Compact Height:</span>
+            {[40, 48].map((h) => (
+              <Button
+                key={h}
+                size="xs"
+                variant={stickyCompactH === h ? 'primary' : 'outline'}
+                onClick={() => setStickyCompactH(h)}
+              >
+                {h}px
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-lg">
+            <StickyHeader
+              title="Deployment Pipelines"
+              subtitle="3 active production clusters in us-east-1 and eu-central-1"
+              expandedHeight={stickyExpandedH}
+              compactHeight={stickyCompactH}
+              maxHeight={320}
+              leading={<Rocket className="size-4 text-primary" />}
+              actions={
+                <Button size="xs" variant="primary" onClick={() => addToast({ title: 'Deploy Triggered', description: 'Queued rollout to edge nodes.', type: 'info' })}>
+                  Rollout
+                </Button>
+              }
+            >
+              <div className="p-4 space-y-3">
+                {[
+                  { name: 'api-gateway', status: 'Healthy', version: 'v2.14.0', uptime: '99.99%', latency: '24ms' },
+                  { name: 'auth-service', status: 'Healthy', version: 'v3.1.2', uptime: '100.0%', latency: '12ms' },
+                  { name: 'billing-worker', status: 'Syncing', version: 'v1.8.6', uptime: '99.95%', latency: '65ms' },
+                  { name: 'event-streaming', status: 'Healthy', version: 'v4.0.0', uptime: '99.98%', latency: '18ms' },
+                  { name: 'search-indexer', status: 'Healthy', version: 'v2.9.1', uptime: '99.91%', latency: '42ms' },
+                  { name: 'recommendation-engine', status: 'Healthy', version: 'v1.4.3', uptime: '99.89%', latency: '54ms' },
+                  { name: 'notification-router', status: 'Healthy', version: 'v2.0.7', uptime: '100.0%', latency: '15ms' },
+                  { name: 'analytics-pipeline', status: 'Healthy', version: 'v5.2.0', uptime: '99.97%', latency: '38ms' },
+                ].map((item) => (
+                  <div
+                    key={item.name}
+                    className="p-3 rounded-xl bg-surface border border-border flex items-center justify-between text-xs"
+                  >
+                    <div>
+                      <div className="font-semibold text-foreground">{item.name}</div>
+                      <div className="text-[11px] text-muted-foreground">{item.version} · {item.uptime} uptime</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[11px] text-muted-foreground">{item.latency}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                        item.status === 'Healthy' ? 'bg-success/15 text-success' : 'bg-warning/15 text-warning'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </StickyHeader>
+
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              Scroll the container above to test spring-interpolated title condensing and header border reveal.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Reading Progress Playground ─────────
+  if (componentId === 'reading-progress') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <BookmarkCheck className="size-4 text-primary" />
+            Reading Progress Benchmark
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Word Count:</span>
+            {[800, 1500, 3000].map((w) => (
+              <Button
+                key={w}
+                size="xs"
+                variant={readingWords === w ? 'primary' : 'outline'}
+                onClick={() => setReadingWords(w)}
+              >
+                {w} words
+              </Button>
+            ))}
+            <span className="text-xs text-muted-foreground ml-2">WPM:</span>
+            {[180, 220, 280].map((spd) => (
+              <Button
+                key={spd}
+                size="xs"
+                variant={readingWpm === spd ? 'primary' : 'outline'}
+                onClick={() => setReadingWpm(spd)}
+              >
+                {spd}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-xl rounded-[var(--radius)] border border-border bg-surface-elevated p-5 shadow-sm space-y-4">
+            {/* Top Reading Progress Bar */}
+            <ReadingProgress
+              scroller={readingScrollerRef}
+              words={readingWords}
+              wordsPerMinute={readingWpm}
+              label="Design System Article"
+              doneLabel="Completed"
+            />
+
+            {/* Scrollable Article Area */}
+            <div
+              ref={readingScrollerRef}
+              className="h-64 overflow-y-auto overscroll-contain pr-2 space-y-3.5 text-xs text-muted-foreground leading-relaxed border-t border-border pt-3"
+            >
+              <h3 className="text-sm font-semibold text-foreground">1. Dynamic Design Token Architecture</h3>
+              <p>
+                Modern component architectures require fluid theming without coupling to a single global stylesheet.
+                In es-react-components, every visual primitive reads from raw HSL CSS variables, allowing real-time
+                color space transformations across dark, light, high-contrast, and custom user palettes.
+              </p>
+              <h3 className="text-sm font-semibold text-foreground">2. Spring Physics & Performance</h3>
+              <p>
+                Unlike CSS keyframe transitions that lock into fixed durations regardless of gesture velocity,
+                spring-based physics calculate acceleration and damping dynamically. This ensures that rapid scroll
+                flicks decelerate naturally while honoring reduced-motion preferences when requested.
+              </p>
+              <h3 className="text-sm font-semibold text-foreground">3. Accessibility as a First-Class Citizen</h3>
+              <p>
+                Screen reader users benefit from live aria-valuetext updates and landmark navigation tags.
+                All progress meters expose standard progressbar roles with min, max, and current numeric attributes.
+              </p>
+              <h3 className="text-sm font-semibold text-foreground">4. Edge Distribution & Zero Layout Shift</h3>
+              <p>
+                By reserving layout height with scroll padding and placeholder geometry, containers avoid
+                cumulative layout shift (CLS) when sticky headers condense or expanding menus open.
+              </p>
+              <div className="p-3 rounded-lg bg-surface-subtle border border-border text-center font-medium text-foreground">
+                🎉 You have reached the end of the article!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Scroll Spy Playground ─────────
+  if (componentId === 'scroll-spy') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Navigation2 className="size-4 text-primary" />
+            Scroll Spy On-Page Navigator
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Active Section: <strong className="text-foreground uppercase font-mono">{scrollSpyActive}</strong>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-xl space-y-4">
+            {/* ScrollSpy Navigation Chip Rail */}
+            <ScrollSpy
+              root={scrollSpyRootRef}
+              offset={40}
+              onChange={setScrollSpyActive}
+              sections={[
+                { id: 'spy-overview', label: 'Overview' },
+                { id: 'spy-architecture', label: 'Architecture' },
+                { id: 'spy-security', label: 'Security' },
+                { id: 'spy-benchmarks', label: 'Benchmarks' },
+              ]}
+            />
+
+            {/* Scroll Container */}
+            <div
+              ref={scrollSpyRootRef}
+              className="h-72 overflow-y-auto overscroll-contain rounded-[var(--radius)] border border-border bg-surface-elevated p-5 space-y-8 scroll-smooth"
+            >
+              <section id="spy-overview" className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary">01</span>
+                  <h4 className="font-semibold text-foreground text-sm">System Overview</h4>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  The design system powers mission-critical edge dashboards and real-time developer workflows.
+                  Components are fully decoupled and export type-safe React 19 primitives with zero external stylesheet dependencies.
+                </p>
+              </section>
+
+              <section id="spy-architecture" className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary">02</span>
+                  <h4 className="font-semibold text-foreground text-sm">Layered Architecture</h4>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Built atop modern CSS custom properties and Motion React. All components isolate side-effects
+                  and utilize ResizeObserver observers for precise layout geometry and responsive adaptations.
+                </p>
+              </section>
+
+              <section id="spy-security" className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary">03</span>
+                  <h4 className="font-semibold text-foreground text-sm">Zero-Trust Security</h4>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Includes strict Content Security Policy (CSP) compatibility, sanitization hooks for rich markup,
+                  and automatic focus-trapping overlays with inert containment for modal dialogs.
+                </p>
+              </section>
+
+              <section id="spy-benchmarks" className="space-y-2 pb-6">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary">04</span>
+                  <h4 className="font-semibold text-foreground text-sm">Performance Benchmarks</h4>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Sub-millisecond input response time, sub-5kb bundle footprints per component, and 60fps hardware-accelerated
+                  compositor transitions even during high-frequency gesture scrolling.
+                </p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Hide On Scroll Playground ─────────
+  if (componentId === 'hide-on-scroll') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <EyeOff className="size-4 text-primary" />
+            Hide On Scroll Configuration
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              size="xs"
+              variant={hidePinned ? 'primary' : 'outline'}
+              onClick={() => setHidePinned(!hidePinned)}
+            >
+              {hidePinned ? 'Pinned (Always Visible)' : 'Auto-Collapse on Scroll'}
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              State: <strong className={hideIsHidden ? 'text-warning' : 'text-success'}>{hideIsHidden ? 'Hidden' : 'Visible'}</strong>
+            </span>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-lg">
+            <HideOnScroll
+              pinned={hidePinned}
+              onHiddenChange={setHideIsHidden}
+              barHeight={44}
+              maxHeight={320}
+              bar={
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2 rounded-full bg-success animate-pulse" />
+                    <span className="text-xs font-semibold text-foreground">Active Feed Monitor</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Button size="xs" variant="outline" onClick={() => addToast({ title: 'Exported Feed', description: 'Downloaded telemetry logs.', type: 'info' })}>
+                      Export
+                    </Button>
+                    <Button size="xs" variant="primary" onClick={() => addToast({ title: 'Refreshed Feed', description: 'Latest telemetry synchronized.', type: 'success' })}>
+                      Sync
+                    </Button>
+                  </div>
+                </div>
+              }
+            >
+              <div className="p-4 space-y-3">
+                {[
+                  { id: 'EVT-101', type: 'Ingress Auth', time: '10:41:02', desc: 'mTLS handshake verified for node us-east-1a' },
+                  { id: 'EVT-102', type: 'Deploy Gate', time: '10:41:15', desc: 'Container image signature verified with cosign' },
+                  { id: 'EVT-103', type: 'Health Probe', time: '10:41:30', desc: 'Liveness check passed across all 12 worker replicas' },
+                  { id: 'EVT-104', type: 'Traffic Split', time: '10:41:48', desc: 'Canary weight increased from 10% to 25%' },
+                  { id: 'EVT-105', type: 'Cache Invalidate', time: '10:42:01', desc: 'Purged edge cache tags for customer portal' },
+                  { id: 'EVT-106', type: 'Database Backup', time: '10:42:19', desc: 'Incremental snapshot completed in 4.2 seconds' },
+                  { id: 'EVT-107', type: 'Rate Limit', time: '10:42:35', desc: 'Throttled 14 requests exceeding 1,000 req/sec threshold' },
+                  { id: 'EVT-108', type: 'Telemetry Sync', time: '10:42:50', desc: 'Exported OpenTelemetry metrics to Prometheus collector' },
+                ].map((item) => (
+                  <div key={item.id} className="p-3 rounded-xl bg-surface border border-border text-xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-primary font-semibold">{item.id}</span>
+                      <span className="text-[11px] text-muted-foreground font-mono">{item.time}</span>
+                    </div>
+                    <div className="font-medium text-foreground">{item.type}</div>
+                    <p className="text-[11px] text-muted-foreground">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </HideOnScroll>
+
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              Scroll down inside the feed to hide the top bar; scroll up slightly to reveal it instantly.
+            </p>
           </div>
         </div>
       </div>

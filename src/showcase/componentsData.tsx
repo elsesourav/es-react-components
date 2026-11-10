@@ -2370,6 +2370,120 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     ],
     themeTokens: ['--primary', '--surface-elevated', '--border', '--foreground', '--radius'],
   },
+  {
+    id: 'sticky-header',
+    name: 'Sticky Header',
+    category: 'Surfaces & Layout',
+    description:
+      'Scroll-condensing responsive header container featuring spring-interpolated title scaling, floating border elevation, leading/trailing action slots, and gradient bottom edge fading.',
+    importCode: `import { StickyHeader, useCondense } from 'es-react-components';`,
+    usageCode: `<StickyHeader
+  title="Deployment Pipelines"
+  subtitle="Production clusters in us-east-1 and eu-central-1"
+  expandedHeight={68}
+  compactHeight={48}
+  maxHeight={320}
+>
+  <div className="p-4 space-y-4">
+    {/* Scrollable list content */}
+  </div>
+</StickyHeader>`,
+    props: [
+      { name: 'title', type: 'string', defaultVal: "''", description: 'Main header title text.' },
+      { name: 'subtitle', type: 'string', defaultVal: 'undefined', description: 'Secondary descriptive caption in expanded state.' },
+      { name: 'leading', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Left prefix icon or badge slot.' },
+      { name: 'actions', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Right action buttons container.' },
+      { name: 'expandedHeight', type: 'number', defaultVal: '68', description: 'Header height in pixels when unscrolled.' },
+      { name: 'compactHeight', type: 'number', defaultVal: '48', description: 'Header height in pixels when condensed.' },
+      { name: 'maxHeight', type: 'number | string', defaultVal: '320', description: 'Scroll container max height constraint.' },
+      { name: 'children', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Scrollable content area.' },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--foreground', '--muted-foreground', '--radius'],
+  },
+  {
+    id: 'reading-progress',
+    name: 'Reading Progress',
+    category: 'Feedback',
+    description:
+      'Scroll-tracked reading progress meter with estimated minutes remaining calculation, spring fill animations, and animated completion checkmark.',
+    importCode: `import { ReadingProgress, useReadingProgress } from 'es-react-components';`,
+    usageCode: `<ReadingProgress
+  words={1200}
+  wordsPerMinute={220}
+  scroller={containerRef}
+  label="Article Progress"
+  doneLabel="Finished"
+/>`,
+    props: [
+      { name: 'words', type: 'number', defaultVal: '0', description: 'Total word count used for reading time estimate.' },
+      { name: 'wordsPerMinute', type: 'number', defaultVal: '220', description: 'Reading speed benchmark.' },
+      { name: 'steps', type: 'number', defaultVal: '24', description: 'Discrete animation milestones.' },
+      { name: 'scroller', type: 'ScrollRef', defaultVal: 'undefined', description: 'Scroll container ref (defaults to window).' },
+      { name: 'target', type: 'ScrollRef', defaultVal: 'undefined', description: 'Specific target element ref to track.' },
+      { name: 'doneLabel', type: 'string', defaultVal: "'Completed'", description: 'Label displayed upon reaching 100% completion.' },
+    ],
+    themeTokens: ['--primary', '--surface-subtle', '--border', '--foreground'],
+  },
+  {
+    id: 'scroll-spy',
+    name: 'Scroll Spy',
+    category: 'Navigation',
+    description:
+      'On-page section tracker with spring-animated sliding pill thumb (layoutId), programmatic smooth scroll with lock suppression, horizontal chip auto-scroll, and ARIA announcements.',
+    importCode: `import { ScrollSpy, useScrollSpy } from 'es-react-components';`,
+    usageCode: `<ScrollSpy
+  sections={[
+    { id: 'overview', label: 'Overview' },
+    { id: 'architecture', label: 'Architecture' },
+    { id: 'security', label: 'Security' },
+    { id: 'benchmarks', label: 'Benchmarks' },
+  ]}
+  root={containerRef}
+  offset={96}
+/>`,
+    props: [
+      { name: 'sections', type: 'ScrollSpySection[]', defaultVal: '[]', description: 'Target sections array with id and label.' },
+      { name: 'offset', type: 'number', defaultVal: '96', description: 'Pixel offset from viewport top for active trigger threshold.' },
+      { name: 'root', type: 'React.RefObject<HTMLElement | null>', defaultVal: 'undefined', description: 'Scroll container ref (defaults to window).' },
+      { name: 'onChange', type: '(id: string) => void', defaultVal: 'undefined', description: 'Callback fired when active section changes.' },
+      { name: 'label', type: 'string', defaultVal: "'On this page'", description: 'Accessible navigation landmark label.' },
+    ],
+    themeTokens: ['--primary', '--primary-foreground', '--surface-subtle', '--border', '--radius'],
+  },
+  {
+    id: 'hide-on-scroll',
+    name: 'Hide On Scroll',
+    category: 'Surfaces & Layout',
+    description:
+      'Dynamic sticky action bar that auto-collapses on downward scroll and reappears on upward scroll, with focus-within auto-pinning for keyboard accessibility.',
+    importCode: `import { HideOnScroll, useHideOnScroll } from 'es-react-components';`,
+    usageCode: `<HideOnScroll
+  barHeight={44}
+  hideAfter={14}
+  revealAfter={10}
+  bar={
+    <div className="flex items-center justify-between w-full">
+      <span className="font-semibold text-xs">Live Actions</span>
+      <button className="px-2 py-1 bg-primary text-white rounded text-xs">Deploy</button>
+    </div>
+  }
+>
+  <div className="p-4 space-y-4">
+    {/* Scrollable feed content */}
+  </div>
+</HideOnScroll>`,
+    props: [
+      { name: 'bar', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Content rendered inside the collapsable sticky bar.' },
+      { name: 'children', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Scrollable content inside container.' },
+      { name: 'barHeight', type: 'number', defaultVal: '44', description: 'Height of sticky bar in pixels.' },
+      { name: 'hideAfter', type: 'number', defaultVal: '14', description: 'Pixels of downward scroll travel before hiding.' },
+      { name: 'revealAfter', type: 'number', defaultVal: '10', description: 'Pixels of upward scroll travel before revealing.' },
+      { name: 'topGuard', type: 'number', defaultVal: '24', description: 'Threshold at top where bar remains permanently visible.' },
+      { name: 'pinned', type: 'boolean', defaultVal: 'false', description: 'Forces bar to stay visible regardless of scroll.' },
+      { name: 'maxHeight', type: 'number | string', defaultVal: '320', description: 'Max height of scroll container.' },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--primary', '--foreground', '--radius'],
+  },
 ];
 
 
