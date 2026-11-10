@@ -185,9 +185,18 @@ export const App: React.FC = () => {
     }
     if (activeComponent) {
       const catId = `cat-${activeComponent.category}`;
-      setExpandedCategories((prev) => (prev.includes(catId) ? prev : [...prev, catId]));
+      setExpandedCategories([catId]);
     }
   }, [activeComponent]);
+
+  const handleExpandedChange = (next: string[]) => {
+    if (next.length > 1) {
+      const newlyAdded = next.find((id) => !expandedCategories.includes(id));
+      setExpandedCategories(newlyAdded ? [newlyAdded] : [next[next.length - 1]]);
+    } else {
+      setExpandedCategories(next);
+    }
+  };
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -312,17 +321,15 @@ export const App: React.FC = () => {
             <span className="text-[11px] font-semibold text-muted-foreground">
               {COMPONENTS_DATA.length} Components
             </span>
-            <button
-              type="button"
-              onClick={() => {
-                const branchIds = Array.from(categories.keys()).map((c) => `cat-${c}`);
-                const isAllExpanded = branchIds.length > 0 && branchIds.every((id) => expandedCategories.includes(id));
-                setExpandedCategories(isAllExpanded ? [] : branchIds);
-              }}
-              className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
-            >
-              {expandedCategories.length >= categories.size ? 'Collapse All' : 'Expand All'}
-            </button>
+            {expandedCategories.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setExpandedCategories([])}
+                className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+              >
+                Collapse
+              </button>
+            )}
           </div>
 
           <div className="max-h-[60vh] overflow-y-auto pr-1">
@@ -332,7 +339,8 @@ export const App: React.FC = () => {
               selected={selectedId || '__overview__'}
               onSelectedChange={handleTreeSelect}
               expanded={expandedCategories}
-              onExpandedChange={setExpandedCategories}
+              onExpandedChange={handleExpandedChange}
+              accordion={true}
             />
           </div>
         </div>
@@ -344,7 +352,7 @@ export const App: React.FC = () => {
           selectedId={selectedId}
           onSelect={handleTreeSelect}
           expandedCategories={expandedCategories}
-          onExpandedChange={setExpandedCategories}
+          onExpandedChange={handleExpandedChange}
           totalComponents={COMPONENTS_DATA.length}
         />
 

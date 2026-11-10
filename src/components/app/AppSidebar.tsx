@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge, TreeView, TreeNode } from '../ui';
-import { ChevronsUpDown, FolderTree } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 
 export interface AppSidebarProps {
   treeNodes: TreeNode[];
@@ -25,13 +25,17 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       .map((n) => n.id);
   }, [treeNodes]);
 
-  const allExpanded = branchIds.length > 0 && branchIds.every((id) => expandedCategories.includes(id));
+  const hasExpanded = expandedCategories.length > 0;
 
-  const handleToggleExpandAll = () => {
-    if (allExpanded) {
+  const handleToggle = () => {
+    if (hasExpanded) {
       onExpandedChange([]);
     } else {
-      onExpandedChange(branchIds);
+      // In accordion mode, expand only the active component's category or first category
+      const activeNode = selectedId
+        ? treeNodes.find((n) => n.children?.some((c) => c.id === selectedId))
+        : null;
+      onExpandedChange(activeNode ? [activeNode.id] : branchIds.length > 0 ? [branchIds[0]] : []);
     }
   };
 
@@ -51,13 +55,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
           <button
             type="button"
-            onClick={handleToggleExpandAll}
+            onClick={handleToggle}
             className="text-[11px] text-muted-foreground hover:text-foreground font-medium flex items-center gap-1 px-2 py-0.5 rounded-md hover:bg-surface border border-transparent hover:border-border/80 transition-colors cursor-pointer select-none"
-            title={allExpanded ? 'Collapse all categories' : 'Expand all categories'}
-            aria-label={allExpanded ? 'Collapse all categories' : 'Expand all categories'}
+            title={hasExpanded ? 'Collapse open category' : 'Expand active category'}
+            aria-label={hasExpanded ? 'Collapse open category' : 'Expand active category'}
           >
             <ChevronsUpDown className="size-3 text-muted-foreground" />
-            <span>{allExpanded ? 'Collapse' : 'Expand'}</span>
+            <span>{hasExpanded ? 'Collapse' : 'Expand'}</span>
           </button>
         </div>
 
@@ -71,6 +75,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               onSelectedChange={onSelect}
               expanded={expandedCategories}
               onExpandedChange={onExpandedChange}
+              accordion={true}
               className="border-none bg-transparent p-0 shadow-none"
             />
           </div>

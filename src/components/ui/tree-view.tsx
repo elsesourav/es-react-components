@@ -66,6 +66,7 @@ export type UseTreeViewOptions = {
   selected?: string | null;
   defaultSelected?: string | null;
   onSelectedChange?: (selected: string) => void;
+  accordion?: boolean;
 };
 
 export function useTreeView({
@@ -76,6 +77,7 @@ export function useTreeView({
   selected,
   defaultSelected = null,
   onSelectedChange,
+  accordion = false,
 }: UseTreeViewOptions) {
   const [internalOpen, setInternalOpen] = useState<string[]>(defaultExpanded);
   const openControlled = expanded !== undefined;
@@ -123,9 +125,13 @@ export function useTreeView({
   const toggle = useCallback(
     (id: string) => {
       const has = openList.includes(id);
-      setOpen(has ? openList.filter((v) => v !== id) : [...openList, id]);
+      if (accordion) {
+        setOpen(has ? [] : [id]);
+      } else {
+        setOpen(has ? openList.filter((v) => v !== id) : [...openList, id]);
+      }
     },
-    [openList, setOpen],
+    [accordion, openList, setOpen],
   );
 
   const select = useCallback(
@@ -243,6 +249,7 @@ export type TreeViewProps = {
   selected?: string | null;
   defaultSelected?: string | null;
   onSelectedChange?: (selected: string) => void;
+  accordion?: boolean;
   className?: string;
 };
 
@@ -255,6 +262,7 @@ export function TreeView({
   selected,
   defaultSelected,
   onSelectedChange,
+  accordion = false,
   className = "",
 }: TreeViewProps) {
   const tree = useTreeView({
@@ -265,6 +273,7 @@ export function TreeView({
     selected,
     defaultSelected,
     onSelectedChange,
+    accordion,
   });
   const reduced = useReducedMotion();
   const hintId = useId();
