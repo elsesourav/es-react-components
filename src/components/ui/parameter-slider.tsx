@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useId, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type ParameterSliderProps = {
@@ -26,13 +26,12 @@ export function ParameterSlider({
   step = 1,
   unit = "",
   format,
-  ticks = 9,
+  ticks = 11,
   disabled = false,
   className = "",
 }: ParameterSliderProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const id = useId();
 
   const clampValue = useCallback(
     (val: number) => {
@@ -45,25 +44,28 @@ export function ParameterSlider({
     [min, max, step]
   );
 
-  const thumbWidth = 4;
+  const thumbWidth = 5;
+  const inset = 14; // px-3.5 matches padding
 
   const updateFromPosition = useCallback(
     (clientX: number) => {
-      if (!trackRef.current || disabled) return;
-      const rect = trackRef.current.getBoundingClientRect();
-      const availableWidth = Math.max(1, rect.width - thumbWidth);
-      const relativeX = clientX - rect.left - thumbWidth / 2;
+      if (!containerRef.current || disabled) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const availableWidth = Math.max(1, rect.width - 2 * inset);
+      const relativeX = clientX - rect.left - inset;
       const ratio = Math.min(1, Math.max(0, relativeX / availableWidth));
       const rawValue = min + ratio * (max - min);
       onChange(clampValue(rawValue));
     },
-    [min, max, clampValue, onChange, disabled]
+    [min, max, clampValue, onChange, disabled, inset]
   );
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (disabled) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {}
     e.currentTarget.focus({ preventScroll: true });
     setIsDragging(true);
     updateFromPosition(e.clientX);
@@ -78,7 +80,7 @@ export function ParameterSlider({
     if (!isDragging) return;
     setIsDragging(false);
     try {
-      e.currentTarget.releasePointerCapture?.(e.pointerId);
+      e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {}
   };
 
@@ -106,67 +108,58 @@ export function ParameterSlider({
 
   return (
     <div
+      ref={containerRef}
+      role="slider"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
+      aria-valuetext={displayVal}
+      aria-disabled={disabled}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onKeyDown={handleKeyDown}
       className={cn(
-        "group relative flex items-center justify-between gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border border-border shadow-xs transition-all duration-150 select-none",
-        isDragging && "border-primary/50 shadow-sm",
-        disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
+        "group relative flex items-center justify-between h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-ew-resize outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/50 overflow-hidden",
+        isDragging && "border-primary/60 shadow-sm ring-1 ring-primary/20",
+        disabled ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:border-border-strong",
         className
       )}
     >
-      {/* Parameter Label */}
-      <label
-        htmlFor={id}
-        className="text-xs font-medium text-foreground/80 shrink-0 min-w-[68px] max-w-[120px] truncate cursor-pointer"
-      >
-        {label}
-      </label>
-
-      {/* Ruler Detents Track */}
-      <div
-        ref={trackRef}
-        id={id}
-        role="slider"
-        tabIndex={disabled ? -1 : 0}
-        aria-label={label}
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={value}
-        aria-valuetext={displayVal}
-        aria-disabled={disabled}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onKeyDown={handleKeyDown}
-        className="relative flex-1 h-7 mx-1.5 flex items-center cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/40 rounded-md"
-      >
-        {/* Ruler Tick Marks */}
-        <div className="absolute inset-x-0.5 h-full flex items-center justify-between pointer-events-none">
-          {Array.from({ length: ticks }).map((_, i) => (
-            <span
-              key={i}
-              className="w-[1px] h-2.5 rounded-full bg-foreground/15 dark:bg-white/12 transition-colors"
-            />
-          ))}
-        </div>
-
-        {/* Needle Thumb Indicator Bar */}
-        <div
-          style={{
-            left: `calc(${percent * 100}% - ${percent * thumbWidth}px)`,
-          }}
-          className={cn(
-            "absolute top-1/2 -translate-y-1/2 h-5 w-1 rounded-full pointer-events-none transition-transform duration-75",
-            "bg-foreground dark:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.3)] dark:shadow-[0_0_8px_rgba(255,255,255,0.45)]",
-            isDragging && "scale-y-110 shadow-[0_0_12px_rgba(255,255,255,0.7)]"
-          )}
-        />
+      {/* Layer 1: Ruler Detents / Ticks spanning the WHOLE card width */}
+      <div className="absolute inset-x-3.5 inset-y-0 flex items-center justify-between pointer-events-none z-0">
+        {Array.from({ length: ticks }).map((_, i) => (
+          <span
+            key={i}
+            className="w-[1px] h-2.5 rounded-full bg-foreground/15 dark:bg-white/12 transition-colors"
+          />
+        ))}
       </div>
 
-      {/* Value Readout */}
-      <span className="text-xs font-mono font-bold text-foreground text-right shrink-0 min-w-[42px] tabular-nums">
-        {displayVal}
-      </span>
+      {/* Layer 2: Labels and Value Overlay */}
+      <div className="relative z-10 w-full flex items-center justify-between pointer-events-none">
+        <span className="text-xs font-medium text-foreground/75 dark:text-zinc-400 truncate max-w-[55%]">
+          {label}
+        </span>
+        <span className="text-xs font-mono font-bold text-foreground dark:text-zinc-100 tabular-nums shrink-0">
+          {displayVal}
+        </span>
+      </div>
+
+      {/* Layer 3: Needle Thumb Indicator Bar travelling across the WHOLE card */}
+      <div
+        style={{
+          left: `calc(${inset}px - ${thumbWidth / 2}px + ${percent} * (100% - ${2 * inset}px))`,
+        }}
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 h-7 w-[5px] rounded-full pointer-events-none z-20 transition-transform duration-75",
+          "bg-foreground dark:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.45)]",
+          isDragging && "scale-y-105 shadow-[0_0_12px_rgba(255,255,255,0.7)] dark:shadow-[0_0_14px_rgba(255,255,255,0.85)]"
+        )}
+      />
     </div>
   );
 }
@@ -190,12 +183,12 @@ export function ParameterSwitch({
     <div
       onClick={() => !disabled && onChange(!checked)}
       className={cn(
-        "group relative flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-surface border border-border shadow-xs transition-all duration-150 select-none cursor-pointer",
+        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer",
         disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
         className
       )}
     >
-      <span className="text-xs font-medium text-foreground/85 shrink-0 truncate">
+      <span className="text-xs font-medium text-foreground/75 dark:text-zinc-400 shrink-0 truncate">
         {label}
       </span>
 
@@ -243,12 +236,12 @@ export function ParameterColor({
     <div
       onClick={() => !disabled && inputRef.current?.click()}
       className={cn(
-        "group relative flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-surface border border-border shadow-xs transition-all duration-150 select-none cursor-pointer",
+        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer",
         disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
         className
       )}
     >
-      <span className="text-xs font-medium text-foreground/85 shrink-0 truncate">
+      <span className="text-xs font-medium text-foreground/75 dark:text-zinc-400 shrink-0 truncate">
         {label}
       </span>
 
@@ -260,7 +253,7 @@ export function ParameterColor({
         />
 
         {/* Hex Text Box */}
-        <span className="font-mono text-xs font-semibold text-foreground uppercase px-2 py-0.5 rounded-md bg-surface-subtle border border-border/60">
+        <span className="font-mono text-xs font-semibold text-foreground dark:text-zinc-100 uppercase px-2 py-0.5 rounded-md bg-surface-subtle border border-border/60">
           {value}
         </span>
 

@@ -1,46 +1,21 @@
 "use client";
 
 import React, {
-  Fragment,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useId,
-  type CSSProperties,
+  useEffect, useMemo, useRef, useState, useId,
   type PointerEvent as ReactPointerEvent,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import {
-  Plus,
-  Filter,
-  List,
-  Columns3,
-  SlidersHorizontal,
-  ArrowUpDown,
-  Check,
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { AI_THEME_STYLES } from "../ai-theme-styles";
 import { BOARD_SCOPED_STYLES } from "./styles";
 import {
-  type BoardStatus,
-  type BoardIssue,
-  type RudderIssueBoardProps,
-  type DisplayField,
-  BOARD_STATUSES,
-  STATUS_META,
-  DEFAULT_ISSUES,
-  DISPLAY_FIELDS,
-  DisplayContext,
+  type BoardStatus, type BoardIssue, type RudderIssueBoardProps, type DisplayField,
+  BOARD_STATUSES, STATUS_META, DEFAULT_ISSUES, DISPLAY_FIELDS, DisplayContext,
 } from "./types";
-import { StatusIcon } from "./icons";
-import {
-  IssueListRow,
-  IssueCardBody,
-  LocalSortableIssueCard,
-  ToolbarPopover,
-} from "./card";
+import { IssueListRow, IssueCardBody } from "./card";
+import { BoardToolbar, BoardCreateForm } from "./toolbar";
+import { KanbanBoardLanes } from "./lanes";
 
 export function RudderIssueBoard({
   theme = "dark",
@@ -374,6 +349,31 @@ export function RudderIssueBoard({
     }
   };
 
+  const handleCreateSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!draft.trim() || !creating) return;
+    let sequence = issues.length + 1;
+    while (issues.some((issue) => issue.id === `ISS-${sequence}`)) sequence++;
+    const next: BoardIssue[] = [
+      ...issues,
+      {
+        id: `ISS-${sequence}`,
+        title: draft.trim(),
+        status: creating,
+        priority: "medium" as const,
+        assignee: "Unassigned",
+        project: "No project",
+        labels: [],
+        created: new Date().toISOString().slice(0, 10),
+      },
+    ];
+    setIssues(next);
+    onIssuesChange?.(next);
+    setStatusFilter("all");
+    closeCreate();
+    setAnnouncement("Issue created.");
+  };
+
   return (
     <section
       ref={rootRef}
@@ -387,209 +387,33 @@ export function RudderIssueBoard({
       </p>
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--mova-ai-border,#dedede)] px-4 py-3 text-xs text-[color:var(--mova-ai-ink-secondary,#666)]">
-        <h2 className="mr-auto text-xs font-medium uppercase tracking-[0.16em] text-[color:var(--mova-ai-ink-secondary,#666)]">
-          Issues
-        </h2>
-        <div className="flex flex-wrap items-center justify-end gap-1">
-          <button
-            type="button"
-            aria-label="Show working issues"
-            aria-pressed={statusFilter === "in_progress"}
-            onClick={() =>
-              setStatusFilter((value) =>
-                value === "in_progress" ? "all" : "in_progress"
-              )
-            }
-            className={`mr-1 rounded-md border border-[var(--mova-ai-border,#dedede)] px-2.5 py-1.5 tabular-nums transition-colors hover:bg-[var(--mova-ai-hover,#f1f1f1)] ${
-              statusFilter === "in_progress"
-                ? "bg-[var(--mova-ai-hover-strong,#e9e9e9)] text-[color:var(--mova-ai-ink,#202020)]"
-                : ""
-            }`}
-          >
-            {issues.filter((issue) => issue.status === "in_progress").length} working
-          </button>
-          <div className="mr-1 flex rounded-md border border-[var(--mova-ai-border,#dedede)] p-0.5">
-            <button
-              type="button"
-              aria-label="List view"
-              aria-pressed={view === "list"}
-              onClick={() => setView("list")}
-              className={`rounded p-1 transition-colors ${
-                view === "list"
-                  ? "bg-[var(--mova-ai-hover-strong,#e9e9e9)] text-[color:var(--mova-ai-ink,#202020)]"
-                  : ""
-              }`}
-            >
-              <List className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              aria-label="Board view"
-              aria-pressed={view === "board"}
-              onClick={() => setView("board")}
-              className={`rounded p-1 transition-colors ${
-                view === "board"
-                  ? "bg-[var(--mova-ai-hover-strong,#e9e9e9)] text-[color:var(--mova-ai-ink,#202020)]"
-                  : ""
-              }`}
-            >
-              <Columns3 className="h-3.5 w-3.5" />
-            </button>
-          </div>
-          <ToolbarPopover
-            label="Filter"
-            triggerRef={statusFilterRef}
-            icon={<Filter className="h-3 w-3" />}
-          >
-            <div role="radiogroup" aria-label="Issue status">
-              {["all", ...BOARD_STATUSES].map((status) => (
-                <label
-                  key={status}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-[var(--mova-ai-hover,#f1f1f1)]"
-                >
-                  <input
-                    type="radio"
-                    className="accent-[var(--mova-ai-accent,#454545)]"
-                    name={`${sortGroupId}-status`}
-                    checked={statusFilter === status}
-                    onChange={() => setStatusFilter(status)}
-                  />
-                  {status === "all" ? "All statuses" : STATUS_META[status as BoardStatus].label}
-                </label>
-              ))}
-            </div>
-          </ToolbarPopover>
-          <ToolbarPopover label="Sort" icon={<ArrowUpDown className="h-3 w-3" />}>
-            <div role="radiogroup" aria-label="Sort field">
-              {["Manual", "Status", "Priority", "Title", "Created", "Updated"].map(
-                (value) => (
-                  <label
-                    key={value}
-                    className={`flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-[var(--mova-ai-hover,#f1f1f1)] ${
-                      sort === value
-                        ? "bg-[var(--mova-ai-hover,#f1f1f1)] text-[color:var(--mova-ai-ink,#202020)]"
-                        : ""
-                    }`}
-                  >
-                    <input
-                      className="accent-[var(--mova-ai-accent,#454545)]"
-                      type="radio"
-                      name={sortGroupId}
-                      checked={sort === value}
-                      onChange={() => setSort(value)}
-                    />
-                    {value}
-                    {sort === value ? <Check className="ml-auto h-3 w-3" /> : null}
-                  </label>
-                )
-              )}
-            </div>
-            <button
-              type="button"
-              disabled={sort === "Manual"}
-              onClick={() => setDescending((value) => !value)}
-              aria-label="Toggle sort direction"
-              className="flex w-full items-center gap-2 border-t border-[var(--mova-ai-border,#dedede)] px-2 py-2 text-left disabled:opacity-40"
-            >
-              <ArrowUpDown className="h-3 w-3" />
-              {descending ? "Descending" : "Ascending"}
-            </button>
-          </ToolbarPopover>
-          <ToolbarPopover
-            label="Display"
-            icon={<SlidersHorizontal className="h-3 w-3" />}
-          >
-            {DISPLAY_FIELDS.map((field) => (
-              <label
-                key={field}
-                className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-[var(--mova-ai-hover,#f1f1f1)]"
-              >
-                <input
-                  className="accent-[var(--mova-ai-accent,#454545)]"
-                  type="checkbox"
-                  checked={display.includes(field)}
-                  onChange={() =>
-                    setDisplay((fields) =>
-                      fields.includes(field)
-                        ? fields.filter((value) => value !== field)
-                        : [...fields, field]
-                    )
-                  }
-                />
-                {field}
-              </label>
-            ))}
-          </ToolbarPopover>
-        </div>
-      </div>
+      <BoardToolbar
+        issues={issues}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        view={view}
+        setView={setView}
+        sort={sort}
+        setSort={setSort}
+        descending={descending}
+        setDescending={setDescending}
+        display={display}
+        setDisplay={setDisplay}
+        sortGroupId={sortGroupId}
+        statusFilterRef={statusFilterRef}
+      />
 
       {/* Creation form */}
       {creating ? (
-        <form
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              event.preventDefault();
-              closeCreate();
-            }
-          }}
-          className="flex flex-wrap items-center gap-2 border-b border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-hover,#f1f1f1)] p-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (!draft.trim()) return;
-            let sequence = issues.length + 1;
-            while (issues.some((issue) => issue.id === `ISS-${sequence}`)) sequence++;
-            const next = [
-              ...issues,
-              {
-                id: `ISS-${sequence}`,
-                title: draft.trim(),
-                status: creating,
-                priority: "medium" as const,
-                assignee: "Unassigned",
-                project: "No project",
-                labels: [],
-                created: new Date().toISOString().slice(0, 10),
-              },
-            ];
-            setIssues(next);
-            onIssuesChange?.(next);
-            setStatusFilter("all");
-            closeCreate();
-            setAnnouncement("Issue created.");
-          }}
-        >
-          <input
-            ref={createInputRef}
-            required
-            aria-label="New issue title"
-            placeholder="Issue title"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            className="min-w-0 flex-1 rounded border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-field,#f6f6f6)] px-2 py-1.5 text-sm"
-          />
-          <select
-            aria-label="New issue status"
-            value={creating}
-            onChange={(event) => setCreating(event.target.value as BoardStatus)}
-            className="rounded bg-[var(--mova-ai-canvas,#f4f4f4)] p-1 text-xs"
-          >
-            {BOARD_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {STATUS_META[status].label}
-              </option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="rounded bg-[var(--mova-ai-accent,#454545)] px-3 py-1.5 text-xs text-[color:var(--mova-ai-accent-foreground,#fff)]"
-          >
-            Create
-          </button>
-          <button type="button" onClick={closeCreate} className="px-2 text-xs">
-            Cancel
-          </button>
-        </form>
+        <BoardCreateForm
+          creating={creating}
+          draft={draft}
+          setDraft={setDraft}
+          setCreating={setCreating}
+          createInputRef={createInputRef}
+          closeCreate={closeCreate}
+          onSubmit={handleCreateSubmit}
+        />
       ) : null}
 
       <DisplayContext.Provider value={display}>
@@ -627,132 +451,16 @@ export function RudderIssueBoard({
                 </button>
               </div>
             ) : (
-              <div className="overflow-x-auto overscroll-x-contain p-3 sm:p-4">
-                <div className="flex min-h-[520px] min-w-max items-stretch gap-3">
-                  {visibleStatuses.map((status) => {
-                    const meta = STATUS_META[status];
-                    const isLaneOver = overStatus === status;
-                    const laneIssues = grouped[status];
-                    return (
-                      <div
-                        key={status}
-                        data-status={status}
-                        className="flex min-h-0 w-[260px] min-w-[260px] shrink-0 flex-col"
-                      >
-                        <div className="mb-1 flex items-center gap-2 px-2 py-2">
-                          <StatusIcon status={status} />
-                          <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--mova-ai-ink-secondary,#666)]">
-                            {meta.label}
-                          </span>
-                          <span className="ml-auto text-xs tabular-nums text-[color:var(--mova-ai-ink-muted,#858585)]">
-                            {laneIssues.length}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(event) => openCreate(status, event.currentTarget)}
-                            aria-label={`Create issue in ${meta.label}`}
-                            className="rounded p-1 hover:bg-[var(--mova-ai-hover-strong,#e9e9e9)] focus-visible:ring-2 focus-visible:ring-[var(--mova-ai-border-strong,#c8c8c8)]"
-                          >
-                            <Plus
-                              className="h-3.5 w-3.5 text-[color:var(--mova-ai-ink-muted,#858585)]"
-                              aria-hidden="true"
-                            />
-                          </button>
-                        </div>
-                        <div
-                          className={`motion-kanban-lane min-h-[160px] flex-1 space-y-1.5 overflow-y-auto rounded-[9px] border p-1.5 transition-colors motion-reduce:transition-none ${
-                            isLaneOver ? meta.laneOver : meta.lane
-                          }`}
-                          data-over={isLaneOver ? "true" : "false"}
-                          data-status={status}
-                          style={
-                            {
-                              "--lane-status": meta.color,
-                              "--lane-tint": meta.tint,
-                            } as CSSProperties
-                          }
-                          data-testid={`kanban-column-${status}`}
-                        >
-                          {laneIssues.map((issue) => (
-                            <Fragment key={issue.id}>
-                              <LocalSortableIssueCard
-                                issue={issue}
-                                isDragging={activeId === issue.id}
-                                onPointerDownCard={handlePointerDownCard}
-                                onKeyDownCard={handleKeyDownCard}
-                              />
-                            </Fragment>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                  {hiddenStatuses.length > 0 ? (
-                    <div
-                      className={`motion-kanban-lane flex min-h-0 w-[228px] min-w-[228px] shrink-0 flex-col rounded-[10px] border p-2 transition-colors motion-reduce:transition-none ${
-                        overStatus && hiddenStatuses.includes(overStatus)
-                          ? "border-[var(--mova-ai-border-strong,#c8c8c8)] bg-[var(--mova-ai-hover,#f1f1f1)]"
-                          : "border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-canvas,#f4f4f4)]"
-                      }`}
-                      data-testid="kanban-hidden-columns"
-                    >
-                      <div className="mb-2 flex items-center gap-2 px-1">
-                        <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--mova-ai-ink-muted,#858585)]">
-                          Hidden columns
-                        </span>
-                        <span className="ml-auto text-xs tabular-nums text-[color:var(--mova-ai-ink-muted,#858585)]">
-                          {hiddenStatuses.length}
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        {hiddenStatuses.map((status) => {
-                          const meta = STATUS_META[status];
-                          const isOver = overStatus === status;
-                          return (
-                            <div
-                              key={status}
-                              data-status={status}
-                              className={`motion-kanban-lane flex items-center gap-2 rounded-[9px] border px-2 py-2 transition-colors motion-reduce:transition-none ${
-                                isOver ? meta.laneOver : meta.lane
-                              }`}
-                              data-over={isOver ? "true" : "false"}
-                              style={
-                                {
-                                  "--lane-status": meta.color,
-                                  "--lane-tint": meta.tint,
-                                } as CSSProperties
-                              }
-                              data-testid={`kanban-hidden-column-${status}`}
-                            >
-                              <StatusIcon status={status} />
-                              <span className="min-w-0 flex-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--mova-ai-ink-secondary,#666)]">
-                                {meta.label}
-                              </span>
-                              <span className="text-xs tabular-nums text-[color:var(--mova-ai-ink-muted,#858585)]">
-                                0
-                              </span>
-                              <button
-                                type="button"
-                                onClick={(event) =>
-                                  openCreate(status, event.currentTarget)
-                                }
-                                aria-label={`Create issue in ${meta.label}`}
-                                className="rounded p-1 hover:bg-[var(--mova-ai-hover-strong,#e9e9e9)] focus-visible:ring-2 focus-visible:ring-[var(--mova-ai-border-strong,#c8c8c8)]"
-                              >
-                                <Plus
-                                  className="h-3.5 w-3.5 text-[color:var(--mova-ai-ink-muted,#858585)]"
-                                  aria-hidden="true"
-                                />
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
+              <KanbanBoardLanes
+                visibleStatuses={visibleStatuses}
+                hiddenStatuses={hiddenStatuses}
+                grouped={grouped}
+                overStatus={overStatus}
+                activeId={activeId}
+                handlePointerDownCard={handlePointerDownCard}
+                handleKeyDownCard={handleKeyDownCard}
+                openCreate={openCreate}
+              />
             )}
           </motion.div>
         </AnimatePresence>
