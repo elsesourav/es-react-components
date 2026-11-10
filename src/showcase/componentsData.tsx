@@ -1,0 +1,2205 @@
+export interface ComponentPropDoc {
+  name: string;
+  type: string;
+  defaultVal: string;
+  description: string;
+}
+
+export interface ComponentDoc {
+  id: string;
+  name: string;
+  category: 'General' | 'Forms' | 'Surfaces & Layout' | 'Feedback' | 'Navigation' | 'AI & Agentic UX';
+  description: string;
+  importCode: string;
+  usageCode: string;
+  props: ComponentPropDoc[];
+  themeTokens: string[];
+}
+
+export const COMPONENTS_DATA: ComponentDoc[] = [
+  {
+    id: 'button',
+    name: 'Button',
+    category: 'General',
+    description:
+      'Interactive button primitive supporting 7 semantic variants, 5 sizes, loading spinners, and icon slots.',
+    importCode: `import { Button } from 'es-react-components';`,
+    usageCode: `<Button variant="primary" size="md" onClick={() => console.log('Clicked!')}>
+  Get Started
+</Button>
+
+<Button variant="outline" size="sm" isLoading>
+  Deploying...
+</Button>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'primary' | 'secondary' | 'outline' | 'subtle' | 'ghost' | 'danger' | 'success'`,
+        defaultVal: `'primary'`,
+        description: 'Visual appearance variant mapped to HSL design tokens.',
+      },
+      {
+        name: 'size',
+        type: `'xs' | 'sm' | 'md' | 'lg' | 'icon'`,
+        defaultVal: `'md'`,
+        description: 'Dimension scale and padding.',
+      },
+      {
+        name: 'isLoading',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Displays an animated spinner and disables pointer events.',
+      },
+      {
+        name: 'leftIcon',
+        type: 'React.ReactNode',
+        defaultVal: 'undefined',
+        description: 'Optional leading icon element.',
+      },
+      {
+        name: 'rightIcon',
+        type: 'React.ReactNode',
+        defaultVal: 'undefined',
+        description: 'Optional trailing icon element.',
+      },
+    ],
+    themeTokens: [
+      '--primary',
+      '--primary-foreground',
+      '--radius',
+      '--border',
+      '--surface',
+    ],
+  },
+  {
+    id: 'badge',
+    name: 'Badge',
+    category: 'General',
+    description:
+      'Compact status indicator pill with optional pulsing presence dot and 8 semantic variants.',
+    importCode: `import { Badge } from 'es-react-components';`,
+    usageCode: `<Badge variant="primary" dot size="md">
+  Production v2.4
+</Badge>
+
+<Badge variant="success" size="sm">
+  Operational
+</Badge>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'default' | 'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger' | 'info'`,
+        defaultVal: `'default'`,
+        description: 'Color scheme styling.',
+      },
+      {
+        name: 'size',
+        type: `'sm' | 'md' | 'lg'`,
+        defaultVal: `'md'`,
+        description: 'Height and typography scale.',
+      },
+      {
+        name: 'dot',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders a circular status dot preceding the label.',
+      },
+    ],
+    themeTokens: ['--primary', '--success', '--warning', '--destructive', '--radius'],
+  },
+  {
+    id: 'avatar',
+    name: 'Avatar',
+    category: 'General',
+    description:
+      'Profile image representation with automatic fallback initials and online/offline status ring indicators.',
+    importCode: `import { Avatar } from 'es-react-components';`,
+    usageCode: `<Avatar
+  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb"
+  fallback="SC"
+  status="online"
+  size="lg"
+/>`,
+    props: [
+      {
+        name: 'src',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Image URL source.',
+      },
+      {
+        name: 'fallback',
+        type: 'string',
+        defaultVal: "''",
+        description: 'Initials displayed if image fails to load or is omitted.',
+      },
+      {
+        name: 'size',
+        type: `'xs' | 'sm' | 'md' | 'lg' | 'xl'`,
+        defaultVal: `'md'`,
+        description: 'Pixel diameter.',
+      },
+      {
+        name: 'status',
+        type: `'online' | 'offline' | 'busy' | 'away'`,
+        defaultVal: 'undefined',
+        description: 'Presence indicator badge on avatar perimeter.',
+      },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--success', '--primary'],
+  },
+  {
+    id: 'card',
+    name: 'Card',
+    category: 'Surfaces & Layout',
+    description:
+      'Structured content container with compound components: CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.',
+    importCode: `import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter
+} from 'es-react-components';`,
+    usageCode: `<Card variant="default">
+  <CardHeader>
+    <CardTitle>Distributed Database Cluster</CardTitle>
+    <CardDescription>Multi-region replicated Postgres instance.</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Read replica healthy in ap-southeast-1.</p>
+  </CardContent>
+  <CardFooter>
+    <Button size="sm">Manage Replicas</Button>
+  </CardFooter>
+</Card>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'default' | 'elevated' | 'glass' | 'outline' | 'subtle'`,
+        defaultVal: `'default'`,
+        description: 'Elevation, border, and backdrop blur characteristics.',
+      },
+    ],
+    themeTokens: [
+      '--card',
+      '--card-foreground',
+      '--border',
+      '--radius',
+      '--surface-elevated',
+    ],
+  },
+  {
+    id: 'stat',
+    name: 'Stat',
+    category: 'Surfaces & Layout',
+    description:
+      'Dashboard metric indicator showing numeric figures, positive/negative delta trend indicators, and caption notes.',
+    importCode: `import { Stat } from 'es-react-components';`,
+    usageCode: `<Stat
+  title="Monthly Recurring Revenue"
+  value="$148,200"
+  trend={{ value: 12.4, isPositive: true }}
+  description="vs last billing cycle"
+/>`,
+    props: [
+      {
+        name: 'title',
+        type: 'string',
+        defaultVal: '""',
+        description: 'Metric category header.',
+      },
+      {
+        name: 'value',
+        type: 'string | number',
+        defaultVal: '""',
+        description: 'Primary highlighted figure.',
+      },
+      {
+        name: 'trend',
+        type: '{ value: number, isPositive: boolean }',
+        defaultVal: 'undefined',
+        description: 'Percentage change trend with up/down arrows.',
+      },
+      {
+        name: 'description',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Contextual sub-label.',
+      },
+    ],
+    themeTokens: ['--card', '--foreground', '--success', '--destructive', '--muted-foreground'],
+  },
+  {
+    id: 'input',
+    name: 'Input (All Variants)',
+    category: 'Forms',
+    description:
+      'Universal Form Input component supporting all standard & advanced variants: standard, floating, inline-validation, password-strength, otp, tag, and expanding-search.',
+    importCode: `// Unified Component syntax:
+import { Input } from 'es-react-components';
+
+// Or dedicated individual imports:
+import {
+  FloatingLabelInput,
+  InlineValidation,
+  PasswordInput,
+  OtpInput,
+  TagInput,
+  ExpandingSearch,
+} from 'es-react-components';`,
+    usageCode: `// 1. Unified syntax with variant prop:
+<Input variant="floating" label="Work Email" type="email" />
+<Input variant="password" label="Master Password" showStrengthMeter />
+<Input variant="otp" length={6} onComplete={(code) => console.log(code)} />
+<Input variant="tag" label="Topics" value={['react', 'tailwind']} />
+<Input variant="search" placeholder="Quick search..." />
+
+// 2. Standard Input:
+<Input
+  label="API Key"
+  placeholder="sk-live-..."
+  helperText="Stored in encrypted vault."
+/>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'standard' | 'floating' | 'inline-validation' | 'password' | 'otp' | 'tag' | 'search'`,
+        defaultVal: `'standard'`,
+        description: 'Input variation mode.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Field label displayed above or as floating placeholder.',
+      },
+      {
+        name: 'error',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Validation error text displayed below input.',
+      },
+      {
+        name: 'leftIcon / rightIcon',
+        type: 'React.ReactNode',
+        defaultVal: 'undefined',
+        description: 'Slots for leading and trailing iconography.',
+      },
+      {
+        name: 'sizeVariant',
+        type: `'sm' | 'md' | 'lg'`,
+        defaultVal: `'md'`,
+        description: 'Height scale for standard inputs.',
+      },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--destructive', '--radius'],
+  },
+  {
+    id: 'floating-input',
+    name: 'Floating Label Input',
+    category: 'Forms',
+    description:
+      'Animated input field with a floating label that smoothly scales up and floats to the top edge when focused or filled. Includes invalid states and character counters.',
+    importCode: `import { FloatingLabelInput } from 'es-react-components';`,
+    usageCode: `<FloatingLabelInput
+  label="Work email"
+  type="email"
+  value={email}
+  onChange={setEmail}
+  invalid={isInvalid}
+  hint={isInvalid ? "Must be a valid email." : "Receipts are sent here."}
+/>
+
+<FloatingLabelInput
+  label="Invoice reference"
+  value={refCode}
+  onChange={setRefCode}
+  maxLength={16}
+/>`,
+    props: [
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: '""',
+        description: 'Floating label text that animates on focus/value.',
+      },
+      {
+        name: 'value / defaultValue',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Controlled or uncontrolled text value.',
+      },
+      {
+        name: 'invalid',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders border and hint text in theme destructive color.',
+      },
+      {
+        name: 'hint',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Helpful guidance or error message below input.',
+      },
+      {
+        name: 'maxLength',
+        type: 'number',
+        defaultVal: 'undefined',
+        description: 'Enforces character limit and renders live count.',
+      },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--destructive', '--radius'],
+  },
+  {
+    id: 'otp-input',
+    name: 'OTP Input',
+    category: 'Forms',
+    description:
+      'Segmented multi-cell verification code input with auto-advance on typing, backspace return, full-code clipboard paste, and error vibration animation.',
+    importCode: `import { OtpInput } from 'es-react-components';`,
+    usageCode: `<OtpInput
+  length={6}
+  autoFocus
+  status={isError ? "error" : "idle"}
+  errorMessage="Incorrect code. Please re-enter."
+  hint="Paste the entire code into any box."
+  onChange={(code) => setCode(code)}
+  onComplete={(code) => verifyCode(code)}
+/>`,
+    props: [
+      {
+        name: 'length',
+        type: 'number',
+        defaultVal: '6',
+        description: 'Number of individual digit cells.',
+      },
+      {
+        name: 'status',
+        type: `'idle' | 'error' | 'success'`,
+        defaultVal: `'idle'`,
+        description: 'Visual status indicator. "error" triggers shake animation.',
+      },
+      {
+        name: 'onComplete',
+        type: '(code: string) => void',
+        defaultVal: 'undefined',
+        description: 'Callback fired when all cells are completely filled.',
+      },
+      {
+        name: 'masked',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Masks typed digits for high-security credentials.',
+      },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--destructive', '--success'],
+  },
+  {
+    id: 'tag-input',
+    name: 'Tag Input',
+    category: 'Forms',
+    description:
+      'Token and tag manager input supporting customizable separator keys (Enter, comma, semicolon), max tag limits, duplicate rejection, and two-stage backspace delete.',
+    importCode: `import { TagInput } from 'es-react-components';`,
+    usageCode: `<TagInput
+  label="Topics"
+  value={tags}
+  onChange={setTags}
+  max={8}
+  separators={[',', ';']}
+  hint="Press Enter or comma to add · Backspace removes"
+/>`,
+    props: [
+      {
+        name: 'value / defaultValue',
+        type: 'string[]',
+        defaultVal: '[]',
+        description: 'Array of active tag tokens.',
+      },
+      {
+        name: 'onChange',
+        type: '(tags: string[]) => void',
+        defaultVal: 'undefined',
+        description: 'Callback triggered whenever tags are added or removed.',
+      },
+      {
+        name: 'max',
+        type: 'number',
+        defaultVal: 'undefined',
+        description: 'Maximum allowable tag count.',
+      },
+      {
+        name: 'separators',
+        type: 'string[]',
+        defaultVal: "[';', ',']",
+        description: 'Key characters that commit the current input as a tag.',
+      },
+    ],
+    themeTokens: ['--surface', '--surface-elevated', '--border', '--primary', '--destructive'],
+  },
+  {
+    id: 'password-input',
+    name: 'Password Input & Strength',
+    category: 'Forms',
+    description:
+      'Password field with show/hide password eye toggle and integrated real-time password strength meter checking character variety and length requirements.',
+    importCode: `import {
+  PasswordInput,
+  PasswordStrength,
+  usePasswordStrength
+} from 'es-react-components';`,
+    usageCode: `<PasswordInput
+  label="New Password"
+  value={password}
+  onChange={setPassword}
+  showStrengthMeter
+  showRequirements
+/>
+
+// Or standalone strength meter:
+<PasswordStrength value={password} showRequirements />`,
+    props: [
+      {
+        name: 'showStrengthMeter',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders the 4-segment reactive strength bar.',
+      },
+      {
+        name: 'showRequirements',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Displays the checklist of security criteria.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Field header label.',
+      },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--success', '--warning', '--destructive'],
+  },
+  {
+    id: 'expanding-search',
+    name: 'Expanding Search',
+    category: 'Forms',
+    description:
+      'Collapsible search bar powered by spring physics (motion/react). Smoothly expands from an icon on focus, features live debounced query updates, ESC dismiss, and result counter.',
+    importCode: `import { ExpandingSearch, useExpandingSearch } from 'es-react-components';`,
+    usageCode: `<ExpandingSearch
+  label="Global Search"
+  placeholder="Search resources..."
+  value={query}
+  onChange={setQuery}
+  resultCount={results.length}
+  align="right"
+/>`,
+    props: [
+      {
+        name: 'value / defaultValue',
+        type: 'string',
+        defaultVal: '""',
+        description: 'Current search text value.',
+      },
+      {
+        name: 'resultCount',
+        type: 'number',
+        defaultVal: 'undefined',
+        description: 'Optional count badge shown on right edge.',
+      },
+      {
+        name: 'align',
+        type: `'left' | 'right'`,
+        defaultVal: `'right'`,
+        description: 'Anchor side for expanding motion animation.',
+      },
+      {
+        name: 'debounce',
+        type: 'number',
+        defaultVal: '220',
+        description: 'Debounce timeout in milliseconds.',
+      },
+    ],
+    themeTokens: ['--surface', '--surface-elevated', '--border', '--primary', '--radius'],
+  },
+  {
+    id: 'textarea',
+    name: 'Textarea',
+    category: 'Forms',
+    description:
+      'Multi-line text editor with auto-resizing, character count counters, error states, and theme border focus rings.',
+    importCode: `import { Textarea } from 'es-react-components';`,
+    usageCode: `<Textarea
+  label="Project Description"
+  placeholder="Enter notes..."
+  maxLength={300}
+  characterCount
+  rows={4}
+/>`,
+    props: [
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Header label.',
+      },
+      {
+        name: 'characterCount',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Displays current length against maxLength.',
+      },
+      {
+        name: 'error',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Validation error text.',
+      },
+    ],
+    themeTokens: ['--surface', '--border', '--primary', '--radius'],
+  },
+  {
+    id: 'select',
+    name: 'Select',
+    category: 'Forms',
+    description:
+      'Unified Select supporting both Native HTML5 options and Spring-Animated Dropdown with icons, hints, and sliding indicator pill.',
+    importCode: `// Unified syntax:
+import { Select } from 'es-react-components';
+
+// Native HTML5 Select:
+<Select
+  label="Region"
+  options={[
+    { label: 'US East', value: 'us-east' },
+    { label: 'Europe', value: 'eu-west' },
+  ]}
+/>
+
+// Spring Animated Dropdown:
+<Select
+  variant="animated"
+  label="Region"
+  items={[
+    { label: 'US East', value: 'us-east', hint: '14ms' },
+    { label: 'Europe', value: 'eu-west', hint: '82ms' },
+  ]}
+/>`,
+    usageCode: `<Select
+  label="Deployment Region"
+  variant="animated"
+  items={[
+    { value: 'us-east-1', label: 'US East (N. Virginia)', hint: '14ms' },
+    { value: 'eu-central-1', label: 'Europe Central (Frankfurt)', hint: '82ms' },
+  ]}
+/>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'native' | 'animated'`,
+        defaultVal: `'native'`,
+        description: 'Select between native browser popup or animated floating dropdown.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Field label.',
+      },
+      {
+        name: 'items / options',
+        type: 'Array<{ label: string, value: string, hint?: string, icon?: React.ReactNode, disabled?: boolean }>',
+        defaultVal: '[]',
+        description: 'Selectable items list.',
+      },
+    ],
+    themeTokens: ['--surface', '--surface-elevated', '--border', '--primary', '--radius'],
+  },
+  {
+    id: 'dropdown',
+    name: 'Dropdown (Animated Select)',
+    category: 'Forms',
+    description:
+      'Rich floating dropdown menu powered by motion/react spring physics. Features active sliding indicator pill, keyboard navigation (ArrowUp, ArrowDown, Enter, Esc), typeahead search, hints, and HSL theme tokens.',
+    importCode: `import { Dropdown, useDropdown } from 'es-react-components';`,
+    usageCode: `<Dropdown
+  label="Region Selection"
+  value={region}
+  onChange={setRegion}
+  items={[
+    { value: 'us-east', label: 'US East (N. Virginia)', hint: '14ms' },
+    { value: 'us-west', label: 'US West (Oregon)', hint: '38ms' },
+    { value: 'eu-west', label: 'Europe (Frankfurt)', hint: '82ms' },
+    { value: 'sa-east', label: 'South America (São Paulo)', disabled: true },
+  ]}
+/>`,
+    props: [
+      {
+        name: 'items',
+        type: 'DropdownItem[]',
+        defaultVal: '[]',
+        description: 'List of items with value, label, optional hint, icon, and disabled flag.',
+      },
+      {
+        name: 'value / defaultValue',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Controlled or uncontrolled value string.',
+      },
+      {
+        name: 'onChange',
+        type: '(value: string) => void',
+        defaultVal: 'undefined',
+        description: 'Triggered when an item is selected.',
+      },
+      {
+        name: 'fullWidth',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Expands trigger button to fill 100% of container width.',
+      },
+    ],
+    themeTokens: [
+      '--surface',
+      '--surface-elevated',
+      '--border',
+      '--primary',
+      '--radius',
+    ],
+  },
+  {
+    id: 'switch',
+    name: 'Switch',
+    category: 'Forms',
+    description:
+      'Accessible toggle switch primitive with smooth sliding thumb and keyboard spacebar activation.',
+    importCode: `import { Switch } from 'es-react-components';`,
+    usageCode: `<Switch
+  label="Realtime Streaming"
+  description="Deliver WebSocket events to browser sessions."
+  defaultChecked
+/>`,
+    props: [
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Primary setting title.',
+      },
+      {
+        name: 'description',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Optional explanatory subtitle.',
+      },
+      {
+        name: 'checked / defaultChecked',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Active state toggle.',
+      },
+    ],
+    themeTokens: ['--primary', '--surface-sunken', '--border', '--surface-elevated'],
+  },
+  {
+    id: 'checkbox',
+    name: 'Checkbox',
+    category: 'Forms',
+    description:
+      'High-contrast accessible checkbox with custom SVG checkmark and title/description layout slots.',
+    importCode: `import { Checkbox } from 'es-react-components';`,
+    usageCode: `<Checkbox
+  label="Automatic Daily Snapshots"
+  description="Retains rolling 30-day backups."
+  defaultChecked
+/>`,
+    props: [
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Checkbox text label.',
+      },
+      {
+        name: 'description',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Supplementary explanation text.',
+      },
+    ],
+    themeTokens: ['--primary', '--primary-foreground', '--border', '--radius-sm'],
+  },
+  {
+    id: 'dialog',
+    name: 'Dialog',
+    category: 'Feedback',
+    description:
+      'Accessible modal overlay with backdrop blur, keyboard ESC dismissal, and focus trapping.',
+    importCode: `import { Dialog } from 'es-react-components';`,
+    usageCode: `<Dialog
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Confirm Deployment"
+  description="Roll out v2.4.0 to worldwide edge cluster?"
+>
+  <Button onClick={() => setIsOpen(false)}>Proceed</Button>
+</Dialog>`,
+    props: [
+      {
+        name: 'isOpen',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Controls modal visibility.',
+      },
+      {
+        name: 'onClose',
+        type: '() => void',
+        defaultVal: '() => {}',
+        description: 'Invoked on backdrop click or ESC press.',
+      },
+      {
+        name: 'title',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Modal header heading.',
+      },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--radius-xl', '--foreground'],
+  },
+  {
+    id: 'alert',
+    name: 'Alert',
+    category: 'Feedback',
+    description:
+      'Banner callout for critical user feedback across 4 semantic states: info, success, warning, danger.',
+    importCode: `import { Alert } from 'es-react-components';`,
+    usageCode: `<Alert variant="success" title="Backup Complete">
+  32.4 GB archived to distributed object storage.
+</Alert>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'info' | 'success' | 'warning' | 'danger'`,
+        defaultVal: `'info'`,
+        description: 'Visual accent and status iconography.',
+      },
+      {
+        name: 'title',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Bold callout title.',
+      },
+      {
+        name: 'onClose',
+        type: '() => void',
+        defaultVal: 'undefined',
+        description: 'Adds an inline close/dismiss button.',
+      },
+    ],
+    themeTokens: [
+      '--info',
+      '--success',
+      '--warning',
+      '--destructive',
+      '--border-subtle',
+    ],
+  },
+  {
+    id: 'toast',
+    name: 'Toast',
+    category: 'Feedback',
+    description:
+      'Lightweight floating notification queue managed via the imperative useToast hook.',
+    importCode: `import { ToastProvider, useToast } from 'es-react-components';`,
+    usageCode: `const { addToast } = useToast();
+
+addToast({
+  title: 'Repository Forked',
+  description: 'Created remote fork under org/demo.',
+  type: 'success',
+});`,
+    props: [
+      {
+        name: 'title',
+        type: 'string',
+        defaultVal: '""',
+        description: 'Notification headline.',
+      },
+      {
+        name: 'type',
+        type: `'info' | 'success' | 'danger'`,
+        defaultVal: `'info'`,
+        description: 'Accent border and status icon.',
+      },
+      {
+        name: 'duration',
+        type: 'number',
+        defaultVal: '4000',
+        description: 'Auto-dismiss timeout in ms.',
+      },
+    ],
+    themeTokens: [
+      '--surface-elevated',
+      '--border',
+      '--foreground',
+      '--primary',
+      '--radius',
+    ],
+  },
+  {
+    id: 'spinner',
+    name: 'Spinner & Skeleton',
+    category: 'Feedback',
+    description:
+      'Animated loading indicators including continuous radial CSS spinner and shimmer skeleton pulses.',
+    importCode: `import { Spinner, Skeleton } from 'es-react-components';`,
+    usageCode: `<Spinner size="md" />
+
+<Skeleton className="h-4 w-3/4 rounded" />`,
+    props: [
+      {
+        name: 'size',
+        type: `'sm' | 'md' | 'lg' | 'xl'`,
+        defaultVal: `'md'`,
+        description: 'Spinner diameter scale.',
+      },
+    ],
+    themeTokens: ['--primary', '--border', '--surface-subtle'],
+  },
+  {
+    id: 'tabs',
+    name: 'Tabs',
+    category: 'Navigation',
+    description:
+      'Segmented content view navigation supporting pills, underline, and boxed tab appearances with mobile horizontal scrollbar protection.',
+    importCode: `import { Tabs } from 'es-react-components';`,
+    usageCode: `<Tabs
+  variant="pills"
+  activeId="tab1"
+  onChange={(id) => console.log(id)}
+  items={[
+    { id: 'tab1', label: 'Overview', content: <p>Metrics...</p> },
+    { id: 'tab2', label: 'Security', content: <p>Tokens...</p> },
+  ]}
+/>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'pills' | 'underline' | 'boxed'`,
+        defaultVal: `'pills'`,
+        description: 'Indicator tab presentation mode.',
+      },
+      {
+        name: 'items',
+        type: 'Array<{ id: string, label: string, content: React.ReactNode }>',
+        defaultVal: '[]',
+        description: 'Tab buttons and respective pane bodies.',
+      },
+      {
+        name: 'activeId',
+        type: 'string',
+        defaultVal: '""',
+        description: 'ID of the selected tab.',
+      },
+    ],
+    themeTokens: ['--primary', '--border', '--surface-subtle', '--radius'],
+  },
+  {
+    id: 'text-loop',
+    name: 'Text Loop (Curved Ribbon Marquee)',
+    category: 'General',
+    description:
+      'Continuous SVG text marquee scrolling along customizable wave, circle, infinity, arch, or line paths. Features ribbon bands, intersecting cross-ribbons, inertia drag gestures, scroll velocity boosts, and edge fade gradients.',
+    importCode: `import { TextLoop } from 'es-react-components';`,
+    usageCode: `<TextLoop
+  text="React ✦ Bits"
+  shape="wave"
+  speed={90}
+  direction="forward"
+  separator="✦"
+  curviness={90}
+  tilt={0}
+  fontSize={46}
+  fontWeight={800}
+  letterSpacing={2}
+  uppercase
+  ribbon
+  ribbonColor="#5227FF"
+  ribbonWidth={86}
+  edgeFade={0}
+  cross={false}
+  crossAngle={16}
+  draggable={false}
+  scrollBoost={0}
+  outline={false}
+  pauseOnHover
+  outlineWidth={1.5}
+/>`,
+    props: [
+      {
+        name: 'text',
+        type: 'string',
+        defaultVal: `'React ✦ Bits'`,
+        description: 'Text string displayed and looped along the path.',
+      },
+      {
+        name: 'shape',
+        type: `'wave' | 'circle' | 'infinity' | 'arch' | 'line'`,
+        defaultVal: `'wave'`,
+        description: 'Geometric SVG guide path for the repeating text.',
+      },
+      {
+        name: 'speed',
+        type: 'number',
+        defaultVal: '90',
+        description: 'Scrolling animation speed in pixels per second.',
+      },
+      {
+        name: 'direction',
+        type: `'forward' | 'reverse'`,
+        defaultVal: `'forward'`,
+        description: 'Movement flow direction along the path.',
+      },
+      {
+        name: 'separator',
+        type: 'string',
+        defaultVal: `'✦'`,
+        description: 'Separator glyph placed between repeating text iterations.',
+      },
+      {
+        name: 'curviness',
+        type: 'number',
+        defaultVal: '90',
+        description: 'Amplitude or radius intensity of the wave/curve path.',
+      },
+      {
+        name: 'tilt',
+        type: 'number',
+        defaultVal: '0',
+        description: 'Rotation tilt angle in degrees.',
+      },
+      {
+        name: 'fontSize',
+        type: 'number',
+        defaultVal: '46',
+        description: 'Text font size in pixels.',
+      },
+      {
+        name: 'fontWeight',
+        type: 'number | string',
+        defaultVal: '800',
+        description: 'Font weight specification.',
+      },
+      {
+        name: 'letterSpacing',
+        type: 'number',
+        defaultVal: '2',
+        description: 'Character tracking space in pixels.',
+      },
+      {
+        name: 'uppercase',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Transforms string to uppercase.',
+      },
+      {
+        name: 'ribbon',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Renders a solid colored background tape behind text.',
+      },
+      {
+        name: 'ribbonColor',
+        type: 'string',
+        defaultVal: `'#5227FF'`,
+        description: 'Background fill color for the ribbon band.',
+      },
+      {
+        name: 'ribbonWidth',
+        type: 'number',
+        defaultVal: '86',
+        description: 'Thickness / height of the ribbon band.',
+      },
+      {
+        name: 'edgeFade',
+        type: 'number',
+        defaultVal: '0',
+        description: 'Vignette gradient opacity mask at SVG edges (0 to 1).',
+      },
+      {
+        name: 'cross',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders an intersecting counter-looping ribbon ribbon.',
+      },
+      {
+        name: 'crossAngle',
+        type: 'number',
+        defaultVal: '16',
+        description: 'Angular divergence between intersecting ribbons in degrees.',
+      },
+      {
+        name: 'draggable',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Enables pointer dragging with momentum and inertial fling.',
+      },
+      {
+        name: 'scrollBoost',
+        type: 'number',
+        defaultVal: '0',
+        description: 'Accelerates speed dynamically proportional to page scroll velocity.',
+      },
+      {
+        name: 'outline',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Outlines text with transparent interior fill.',
+      },
+      {
+        name: 'pauseOnHover',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Smoothly decelerates loop to a halt on pointer hover.',
+      },
+      {
+        name: 'outlineWidth',
+        type: 'number',
+        defaultVal: '1.5',
+        description: 'Stroke thickness for outlined text.',
+      },
+    ],
+    themeTokens: ['--primary', '--primary-foreground', '--foreground', '--border'],
+  },
+  {
+    id: 'split-flap-text',
+    name: 'Split Flap Text (Mechanical Departure Board)',
+    category: 'General',
+    description:
+      'Retro mechanical split-flap ticker replicating vintage airport and train arrival boards. Features 3D split-tile flipping physics, cascading character staggering, specular glare reflections, custom charsets, and reduced-motion fallback.',
+    importCode: `import { SplitFlapText } from 'es-react-components';`,
+    usageCode: `<SplitFlapText
+  words={["LAUNCH READY", "SYNC ONLINE", "SIGNAL LIVE"]}
+  flipDuration={0.12}
+  stagger={0.06}
+  cycleDelay={2400}
+  charset="alphanumeric"
+  flipsPerChar={8}
+  order="left"
+  align="left"
+  tileStyle="board"
+  tileColor="#111827"
+  textColor="#f8fafc"
+  glare={0}
+  depth={0.5}
+  tileRadius={8}
+  gap={6}
+  fontSize={52}
+  loop
+  padTo={12}
+  intro
+/>`,
+    props: [
+      {
+        name: 'words',
+        type: 'string[]',
+        defaultVal: `['LAUNCH READY', 'SYNC ONLINE', 'SIGNAL LIVE']`,
+        description: 'List of phrases to cycle through with mechanical flip transitions.',
+      },
+      {
+        name: 'flipDuration',
+        type: 'number',
+        defaultVal: '0.12',
+        description: 'Single tile half-flip duration in seconds.',
+      },
+      {
+        name: 'stagger',
+        type: 'number',
+        defaultVal: '0.06',
+        description: 'Delay interval between adjacent character flip starts.',
+      },
+      {
+        name: 'cycleDelay',
+        type: 'number',
+        defaultVal: '2400',
+        description: 'Hold duration in milliseconds before switching to the next word.',
+      },
+      {
+        name: 'charset',
+        type: `'alphanumeric' | 'alpha' | 'numeric' | string`,
+        defaultVal: `'alphanumeric'`,
+        description: 'Pool of characters cycled during intermediary flipping states.',
+      },
+      {
+        name: 'flipsPerChar',
+        type: 'number',
+        defaultVal: '8',
+        description: 'Number of random intermediary character flips before settling.',
+      },
+      {
+        name: 'order',
+        type: `'left' | 'right' | 'center' | 'random'`,
+        defaultVal: `'left'`,
+        description: 'Cascade direction or order across character slots.',
+      },
+      {
+        name: 'align',
+        type: `'left' | 'center' | 'right'`,
+        defaultVal: `'left'`,
+        description: 'Text alignment within padded character slots.',
+      },
+      {
+        name: 'tileStyle',
+        type: `'board' | 'minimal'`,
+        defaultVal: `'board'`,
+        description: 'Physical departure board with bevels/hinges or flat minimal typography.',
+      },
+      {
+        name: 'tileColor',
+        type: 'string',
+        defaultVal: `'#111827'`,
+        description: 'Split tile surface background color (supports CSS variables).',
+      },
+      {
+        name: 'textColor',
+        type: 'string',
+        defaultVal: `'#f8fafc'`,
+        description: 'Embossed glyph character color.',
+      },
+      {
+        name: 'glare',
+        type: 'number',
+        defaultVal: '0',
+        description: 'Specular lighting gloss reflection intensity (0 to 1).',
+      },
+      {
+        name: 'depth',
+        type: 'number',
+        defaultVal: '0.5',
+        description: 'Physical bevel depth, hinge shade, and drop shadow factor (0 to 1).',
+      },
+      {
+        name: 'tileRadius',
+        type: 'number | string',
+        defaultVal: '8',
+        description: 'Border radius of individual split tiles in pixels.',
+      },
+      {
+        name: 'gap',
+        type: 'number | string',
+        defaultVal: '6',
+        description: 'Spacing between adjacent character tiles in pixels.',
+      },
+      {
+        name: 'fontSize',
+        type: 'number | string',
+        defaultVal: '52',
+        description: 'Base font size in pixels determining tile dimensions.',
+      },
+      {
+        name: 'loop',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Continuously loops through the word list indefinitely.',
+      },
+      {
+        name: 'padTo',
+        type: 'number',
+        defaultVal: '12',
+        description: 'Minimum tile column slot count, padded with blank split tiles.',
+      },
+      {
+        name: 'intro',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Begins with blank tiles and flips in the initial word on mount.',
+      },
+    ],
+    themeTokens: ['--surface-elevated', '--foreground', '--border', '--radius-md'],
+  },
+  {
+    id: 'branched-menu',
+    name: 'Branched Menu (Tree Navigation)',
+    category: 'Navigation',
+    description:
+      'Tree structure navigation menu with curved SVG vector branches and animated path stroke drawing. Features sliding section indicator pills, accordion folding, and responsive custom dimensions.',
+    importCode: `import { BranchedMenu } from 'es-react-components';
+import { Download04Icon, Rocket01Icon, Settings02Icon } from '@hugeicons/core-free-icons';`,
+    usageCode: `<BranchedMenu
+  items={[
+    {
+      label: 'Getting started',
+      children: [
+        { value: 'install', label: 'Installation', icon: Download04Icon },
+        { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
+        { value: 'config', label: 'Configuration', icon: Settings02Icon },
+      ],
+    },
+    {
+      label: 'Components',
+      children: [
+        { value: 'buttons', label: 'Buttons' },
+        { value: 'overlays', label: 'Overlays' },
+      ],
+    },
+  ]}
+  defaultOpen={[0]}
+  defaultActive="quick"
+  onSelect={(value, item) => console.log(value, item)}
+  color="#f5f5f5"
+  accentColor="#f5f5f5"
+  lineColor="#3f3f46"
+  width={240}
+  rowHeight={36}
+  indent={40}
+  trunk={14}
+  radius={10}
+  lineWidth={1.5}
+  fontSize={14}
+  drawDuration={400}
+  foldDuration={300}
+/>`,
+    props: [
+      {
+        name: 'items',
+        type: 'BranchedMenuItem[]',
+        defaultVal: 'DEFAULT_ITEMS',
+        description: 'Hierarchical navigation items with label, value, children, and icons.',
+      },
+      {
+        name: 'defaultOpen',
+        type: 'number | number[]',
+        defaultVal: '0',
+        description: 'Index or indices of sections expanded initially.',
+      },
+      {
+        name: 'defaultActive',
+        type: 'string',
+        defaultVal: `''`,
+        description: 'Value of the initially highlighted active leaf child item.',
+      },
+      {
+        name: 'onSelect',
+        type: '(value: string, item: BranchedMenuItem | BranchedMenuItemChild) => void',
+        defaultVal: 'undefined',
+        description: 'Callback fired when a leaf or section item is clicked.',
+      },
+      {
+        name: 'onToggle',
+        type: '(index: number, isOpen: boolean) => void',
+        defaultVal: 'undefined',
+        description: 'Callback fired when a parent section is expanded or collapsed.',
+      },
+      {
+        name: 'color',
+        type: 'string',
+        defaultVal: `'var(--foreground, #f5f5f5)'`,
+        description: 'Standard text ink color for header and item labels.',
+      },
+      {
+        name: 'accentColor',
+        type: 'string',
+        defaultVal: `'var(--primary, #6366f1)'`,
+        description: 'Highlight color for active branch strokes, icons, and marker pill.',
+      },
+      {
+        name: 'lineColor',
+        type: 'string',
+        defaultVal: `'var(--border, #3f3f46)'`,
+        description: 'Subtle inactive tree branch connector stroke color.',
+      },
+      {
+        name: 'width',
+        type: 'number',
+        defaultVal: '240',
+        description: 'Maximum container width in pixels.',
+      },
+      {
+        name: 'rowHeight',
+        type: 'number',
+        defaultVal: '36',
+        description: 'Vertical height of each child item row in pixels.',
+      },
+      {
+        name: 'indent',
+        type: 'number',
+        defaultVal: '40',
+        description: 'Horizontal indentation distance for nested child items in pixels.',
+      },
+      {
+        name: 'trunk',
+        type: 'number',
+        defaultVal: '14',
+        description: 'X coordinate of the main vertical stem line in pixels.',
+      },
+      {
+        name: 'radius',
+        type: 'number',
+        defaultVal: '10',
+        description: 'Corner radius for branched curve arcs in pixels.',
+      },
+      {
+        name: 'lineWidth',
+        type: 'number',
+        defaultVal: '1.5',
+        description: 'SVG stroke thickness for branch lines.',
+      },
+      {
+        name: 'fontSize',
+        type: 'number',
+        defaultVal: '14',
+        description: 'Font size in pixels for navigation labels.',
+      },
+      {
+        name: 'drawDuration',
+        type: 'number',
+        defaultVal: '400',
+        description: 'Animation duration in milliseconds for the active line draw stroke.',
+      },
+      {
+        name: 'foldDuration',
+        type: 'number',
+        defaultVal: '300',
+        description: 'Accordion fold/unfold animation duration in milliseconds.',
+      },
+    ],
+    themeTokens: ['--foreground', '--primary', '--border', '--surface-subtle'],
+  },
+  {
+    id: 'peek-rating',
+    name: 'Peek Rating (Interactive Star & Shape Rater)',
+    category: 'Forms',
+    description:
+      'Fluid gesture-driven rating selector with spring hover elevation, floating value tooltip, haptic pop animation, and keyboard accessibility. Supports stars, hearts, bolts, and custom icons.',
+    importCode: `import { PeekRating } from 'es-react-components';`,
+    usageCode: `<PeekRating
+  value={rating}
+  onChange={setRating}
+  count={5}
+  shape="star"
+  activeColor="#f5b400"
+  idleColor="#52525b"
+  tipColor="#27272a"
+  tipTextColor="#f5f5f5"
+  size={28}
+  lift={6}
+  magnify={1.15}
+  riseDuration={320}
+  popScale={1.3}
+  showTip={true}
+  allowClear={true}
+/>`,
+    props: [
+      {
+        name: 'value / defaultValue',
+        type: 'number',
+        defaultVal: '0',
+        description: 'Controlled or uncontrolled active rating score (0 to count).',
+      },
+      {
+        name: 'onChange',
+        type: '(value: number) => void',
+        defaultVal: 'undefined',
+        description: 'Fired when a user selects a rating via click, drag, or keyboard.',
+      },
+      {
+        name: 'onPreview',
+        type: '(value: number | null) => void',
+        defaultVal: 'undefined',
+        description: 'Fired during pointer hovering/scrubbing before commit.',
+      },
+      {
+        name: 'count',
+        type: 'number',
+        defaultVal: '5',
+        description: 'Total rating units / icons displayed in the row.',
+      },
+      {
+        name: 'shape',
+        type: `'star' | 'heart' | 'bolt'`,
+        defaultVal: `'star'`,
+        description: 'Predefined glyph iconography preset.',
+      },
+      {
+        name: 'icon',
+        type: 'React.ReactNode',
+        defaultVal: 'undefined',
+        description: 'Custom icon element replacing default shapes.',
+      },
+      {
+        name: 'labels',
+        type: 'string[]',
+        defaultVal: '[]',
+        description: 'Descriptive text shown in the tooltip (e.g. ["Poor", "Fair", "Good", ...]).',
+      },
+      {
+        name: 'activeColor',
+        type: 'string',
+        defaultVal: `'#f5b400'`,
+        description: 'Color of filled / illuminated rating units.',
+      },
+      {
+        name: 'idleColor',
+        type: 'string',
+        defaultVal: `'#52525b'`,
+        description: 'Color of unfilled / inactive rating units.',
+      },
+      {
+        name: 'tipColor',
+        type: 'string',
+        defaultVal: `'#27272a'`,
+        description: 'Background color of the floating preview tooltip.',
+      },
+      {
+        name: 'tipTextColor',
+        type: 'string',
+        defaultVal: `'#f5f5f5'`,
+        description: 'Text color inside the floating preview tooltip.',
+      },
+      {
+        name: 'size',
+        type: 'number',
+        defaultVal: '28',
+        description: 'Icon diameter in pixels.',
+      },
+      {
+        name: 'lift',
+        type: 'number',
+        defaultVal: '6',
+        description: 'Vertical lift displacement in pixels on hover.',
+      },
+      {
+        name: 'magnify',
+        type: 'number',
+        defaultVal: '1.15',
+        description: 'Scale multiplier applied to hovered rating unit.',
+      },
+      {
+        name: 'riseDuration',
+        type: 'number',
+        defaultVal: '320',
+        description: 'Spring rise and tooltip translation transition duration in milliseconds.',
+      },
+      {
+        name: 'popScale',
+        type: 'number',
+        defaultVal: '1.3',
+        description: 'Keyframe pop bounce scale on selection commit.',
+      },
+      {
+        name: 'showTip',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Displays sliding numerical or label tooltip above hovered unit.',
+      },
+      {
+        name: 'allowClear',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Clicking the active score clears rating back to 0.',
+      },
+      {
+        name: 'readOnly / disabled',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Disables user interactions and pointer gesture events.',
+      },
+    ],
+    themeTokens: ['--warning', '--muted-foreground', '--surface-elevated', '--foreground'],
+  },
+  {
+    id: 'liquid-glass-sheet',
+    name: 'Liquid Glass Sheet',
+    category: 'Surfaces & Layout',
+    description:
+      'Ultra-smooth iOS liquid glass bottom drawer with optical normal-map refraction, chromatic dispersion, spring physics, touch drag-to-dismiss, and animated action rows.',
+    importCode: `import { LiquidGlassSheet } from 'es-react-components';`,
+    usageCode: `<LiquidGlassSheet
+  title="Autumn Forest"
+  subtitle="Liquid Glass Experience"
+  link="https://liquid-glass-react-studio.vercel.app"
+  linkLabel="liquid-glass-studio"
+  defaultOpen={true}
+  onShare={() => console.log('Share clicked')}
+  onSaveChange={(saved) => console.log('Saved:', saved)}
+/>`,
+    props: [
+      {
+        name: 'title',
+        type: 'string',
+        defaultVal: `'Autumn forest'`,
+        description: 'Main sheet title headline.',
+      },
+      {
+        name: 'subtitle',
+        type: 'string',
+        defaultVal: `'Liquid glass sheet'`,
+        description: 'Secondary subtitle meta text.',
+      },
+      {
+        name: 'backgroundImage',
+        type: 'string',
+        defaultVal: 'Unsplash Forest CDN',
+        description: 'Background wallpaper refracted behind the liquid glass pane.',
+      },
+      {
+        name: 'link',
+        type: 'string',
+        defaultVal: `'https://liquid-glass-react-studio.vercel.app/components'`,
+        description: 'URL target copied when user clicks the copy link action row.',
+      },
+      {
+        name: 'linkLabel',
+        type: 'string',
+        defaultVal: `'liquid-glass-react-studio'`,
+        description: 'Human-readable label preview for the link row.',
+      },
+      {
+        name: 'defaultOpen',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Initial drawer open visibility.',
+      },
+      {
+        name: 'open',
+        type: 'boolean',
+        defaultVal: 'undefined',
+        description: 'Controlled visibility state.',
+      },
+      {
+        name: 'onOpenChange',
+        type: '(open: boolean) => void',
+        defaultVal: 'undefined',
+        description: 'Callback when sheet opens or closes.',
+      },
+      {
+        name: 'onSaveChange',
+        type: '(saved: boolean) => void',
+        defaultVal: 'undefined',
+        description: 'Callback when user toggles bookmark save state.',
+      },
+      {
+        name: 'onShare',
+        type: '() => void',
+        defaultVal: 'undefined',
+        description: 'Callback when user clicks the share action.',
+      },
+      {
+        name: 'theme',
+        type: `'light' | 'dark' | 'auto'`,
+        defaultVal: `'light'`,
+        description: 'Theme variation for color contrast.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--primary', '--border'],
+  },
+  {
+    id: 'card-coverflow',
+    name: 'Card Coverflow',
+    category: 'Surfaces & Layout',
+    description:
+      '3D perspective coverflow carousel featuring Spring physics, distinct architectural imagery, depth offsets, interactive slide clicks, and pill dot navigation.',
+    importCode: `import { CardCoverFlow, DEFAULT_COVERFLOW_IMAGES } from 'es-react-components';`,
+    usageCode: `<CardCoverFlow
+  images={DEFAULT_COVERFLOW_IMAGES}
+  initialIndex={2}
+  isMonochrome={false}
+  onIndexChange={(idx) => console.log('Active slide:', idx)}
+/>`,
+    props: [
+      {
+        name: 'images',
+        type: 'Array<{ src: string; title: string; subtitle?: string }>',
+        defaultVal: 'DEFAULT_COVERFLOW_IMAGES (5 architectural photos)',
+        description: 'List of slide images and titles.',
+      },
+      {
+        name: 'initialIndex',
+        type: 'number',
+        defaultVal: '2',
+        description: 'Initial focused active slide index.',
+      },
+      {
+        name: 'isMonochrome',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders minimalist numbered slate cards instead of photo textures.',
+      },
+      {
+        name: 'onIndexChange',
+        type: '(index: number) => void',
+        defaultVal: 'undefined',
+        description: 'Callback triggered when active slide changes.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--primary', '--border'],
+  },
+  {
+    id: 'card-carousel',
+    name: 'Card Carousel',
+    category: 'Surfaces & Layout',
+    description:
+      'Fan-out stack card carousel featuring angular tilt on hover, depth scaling, track translation, and dot controls with curated landscapes.',
+    importCode: `import { CardCarousel, DEFAULT_CAROUSEL_IMAGES } from 'es-react-components';`,
+    usageCode: `<CardCarousel
+  images={DEFAULT_CAROUSEL_IMAGES}
+  initialIndex={2}
+  slideWidth={160}
+  onIndexChange={(idx) => console.log('Active slide:', idx)}
+/>`,
+    props: [
+      {
+        name: 'images',
+        type: 'Array<{ src: string; title: string; subtitle?: string }>',
+        defaultVal: 'DEFAULT_CAROUSEL_IMAGES (5 landscape photos)',
+        description: 'List of carousel card items.',
+      },
+      {
+        name: 'initialIndex',
+        type: 'number',
+        defaultVal: '2',
+        description: 'Initial focused card index.',
+      },
+      {
+        name: 'slideWidth',
+        type: 'number',
+        defaultVal: '160',
+        description: 'Width of each card column in pixels.',
+      },
+      {
+        name: 'hovered',
+        type: 'boolean',
+        defaultVal: 'undefined',
+        description: 'Manual override for hover fan-out state.',
+      },
+      {
+        name: 'isMonochrome',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders minimalist numbered slate cards instead of photo textures.',
+      },
+      {
+        name: 'onIndexChange',
+        type: '(index: number) => void',
+        defaultVal: 'undefined',
+        description: 'Callback triggered when active card changes.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--primary', '--border'],
+  },
+  {
+    id: 'interactive-controls',
+    name: 'Interactive Micro-Controls',
+    category: 'General',
+    description:
+      'Suite of 11 interactive micro-components: ContextMenuEditDelete, QuestionTooltip, DownloadAnimatedIcons, PipModeIcons, SimplePlusMinusBtn, SegmentedABTabs, QuantityCounter, ListColumnToggle, FollowCheckButton, MenuDotsExpand, and CompactModeSwitch.',
+    importCode: `import {
+  ContextMenuEditDelete,
+  QuestionTooltip,
+  DownloadAnimatedIcons,
+  PipModeIcons,
+  SimplePlusMinusBtn,
+  SegmentedABTabs,
+  QuantityCounter,
+  ListColumnToggle,
+  FollowCheckButton,
+  MenuDotsExpand,
+  CompactModeSwitch,
+} from 'es-react-components';`,
+    usageCode: `<div className="flex flex-wrap items-center gap-4">
+  <ContextMenuEditDelete theme="dark" />
+  <QuestionTooltip theme="dark" text="Helpful tooltip preview" />
+  <DownloadAnimatedIcons theme="dark" />
+  <PipModeIcons theme="dark" />
+  <SimplePlusMinusBtn theme="dark" />
+  <SegmentedABTabs theme="dark" />
+  <QuantityCounter theme="dark" />
+  <ListColumnToggle theme="dark" />
+  <FollowCheckButton theme="dark" />
+  <MenuDotsExpand theme="dark" />
+  <CompactModeSwitch theme="dark" />
+</div>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'dark' | 'light'`,
+        defaultVal: `'dark'`,
+        description: 'Color theme styling for micro-controls.',
+      },
+      {
+        name: 'onChange / onToggle / onClick',
+        type: 'Function',
+        defaultVal: 'undefined',
+        description: 'Event callbacks specific to each interactive control.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--primary', '--border'],
+  },
+  {
+    id: 'motion-loaders',
+    name: 'Motion Loaders',
+    category: 'Feedback',
+    description:
+      'Smooth, accessible motion loaders powered by Framer Motion: SquareSnake 3x3 staggered wave matrix and BobbingDots harmonic bounce wave.',
+    importCode: `import { SquareSnake, BobbingDots } from 'es-react-components';`,
+    usageCode: `<div className="flex items-center gap-8">
+  <SquareSnake size="md" />
+  <BobbingDots size="md" />
+</div>`,
+    props: [
+      {
+        name: 'size',
+        type: `'sm' | 'md' | 'lg'`,
+        defaultVal: `'md'`,
+        description: 'Scale dimension of the loader indicator.',
+      },
+      {
+        name: 'duration',
+        type: 'number',
+        defaultVal: '1.5 (SquareSnake) / 1.2 (BobbingDots)',
+        description: 'Full cycle animation duration in seconds.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: `'Loading...'`,
+        description: 'Accessible screen-reader announcement label.',
+      },
+    ],
+    themeTokens: ['--foreground', '--primary'],
+  },
+  {
+    id: 'issue-board',
+    name: 'Issue Board (Kanban)',
+    category: 'Surfaces & Layout',
+    description:
+      'High-performance drag-and-drop Kanban board with lane status management, card sorting, keyboard accessibility, popover filters, and board/list views.',
+    importCode: `import { RudderIssueBoard, BoardIssue } from 'es-react-components';`,
+    usageCode: `<RudderIssueBoard
+  theme="dark"
+  initialIssues={issues}
+  onIssuesChange={(updated) => console.log('Board updated:', updated)}
+/>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'light' | 'dark'`,
+        defaultVal: `'dark'`,
+        description: 'Color theme override for the issue board.',
+      },
+      {
+        name: 'initialIssues',
+        type: 'readonly BoardIssue[]',
+        defaultVal: 'DEFAULT_ISSUES',
+        description: 'Initial array of board issues to populate lanes.',
+      },
+      {
+        name: 'onIssuesChange',
+        type: '(issues: BoardIssue[]) => void',
+        defaultVal: 'undefined',
+        description: 'Callback invoked when cards are moved, sorted, or created.',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        defaultVal: `''`,
+        description: 'Optional additional CSS classes for the board container.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--border', '--primary'],
+  },
+  {
+    id: 'ai-approval-card',
+    name: 'AI Approval Card',
+    category: 'Feedback',
+    description:
+      'Human-in-the-loop approval workflow card with sliding questions, rolling digit odometer counters, glide hover highlights, and single/multi-choice controls.',
+    importCode: `import { AIApprovalCard, ApprovalQuestion } from 'es-react-components';`,
+    usageCode: `<AIApprovalCard
+  theme="light"
+  questions={[
+    { q: 'How many flavors?', type: 'radio', options: ['Three', 'Five', 'One'] },
+    { q: 'Which mix-ins?', type: 'check', options: ['Chips', 'Waffle', 'Sprinkles'] }
+  ]}
+  onSubmitted={(answers, custom) => console.log('Approved:', answers, custom)}
+/>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'light' | 'dark'`,
+        defaultVal: `'light'`,
+        description: 'Card color scheme theme.',
+      },
+      {
+        name: 'questions',
+        type: 'ApprovalQuestion[]',
+        defaultVal: 'DEFAULT_APPROVAL_QUESTIONS',
+        description: 'Array of interactive approval questions.',
+      },
+      {
+        name: 'labels',
+        type: 'Partial<ApprovalLabels>',
+        defaultVal: 'DEFAULT_APPROVAL_LABELS',
+        description: 'Customizable button and message labels.',
+      },
+      {
+        name: 'onSubmitted',
+        type: '(answers: Record<number, number[]>, custom: Record<number, string>) => void',
+        defaultVal: 'undefined',
+        description: 'Callback triggered when all approval questions are completed.',
+      },
+      {
+        name: 'resettable',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Allows starting over once submitted.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--border', '--success'],
+  },
+  {
+    id: 'ai-prompt-bar',
+    name: 'AI Prompt Bar',
+    category: 'Forms',
+    description:
+      'Feature-packed AI input composer with @ mentions, / commands, model picker, voice dictation, file attachments, and local rainbow canvas sweep.',
+    importCode: `import { AIPromptBar } from 'es-react-components';`,
+    usageCode: `<AIPromptBar
+  theme="dark"
+  variant="Rounded"
+  placeholder="Ask anything or type / for commands..."
+  onSend={(text, details) => console.log('Sent prompt:', text, details)}
+/>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'light' | 'dark'`,
+        defaultVal: `'dark'`,
+        description: 'Light or dark theme mode.',
+      },
+      {
+        name: 'variant',
+        type: `'Rounded' | 'Pill'`,
+        defaultVal: `'Rounded'`,
+        description: 'Border radius styling for the prompt composer.',
+      },
+      {
+        name: 'demo',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Enables self-running autoplay tutorial on mount.',
+      },
+      {
+        name: 'tall',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Hero expanded multi-line layout with separated control row.',
+      },
+      {
+        name: 'onSend',
+        type: '(text: string, details: { files: File[]; sources: any[]; model: any }) => void',
+        defaultVal: 'undefined',
+        description: 'Submit callback with message text, attachments, and model info.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--border', '--accent'],
+  },
+  {
+    id: 'ai-code-block',
+    name: 'AI Code & Diff Block',
+    category: 'Surfaces & Layout',
+    description:
+      'Editor panel with live syntax highlighting, line numbers, unified diff comparison with word-level changes, diff stat counters, and copy feedback.',
+    importCode: `import { AICodeBlock, DiffRow } from 'es-react-components';`,
+    usageCode: `<AICodeBlock
+  theme="light"
+  filename="churn.ts"
+  lines={["export async function churn() {", "  return true;", "}"]}
+/>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'light' | 'dark'`,
+        defaultVal: `'light'`,
+        description: 'Light or dark color scheme.',
+      },
+      {
+        name: 'filename',
+        type: 'string',
+        defaultVal: `'churn.ts'`,
+        description: 'Filename displayed in header bar.',
+      },
+      {
+        name: 'lines',
+        type: 'string[]',
+        defaultVal: 'DEFAULT_CODE_LINES',
+        description: 'Array of code lines for Code view.',
+      },
+      {
+        name: 'diff',
+        type: 'DiffRow[]',
+        defaultVal: 'DEFAULT_DIFF_ROWS',
+        description: 'Unified diff rows with added, deleted, or context pieces.',
+      },
+      {
+        name: 'variant',
+        type: `'Code' | 'Diff'`,
+        defaultVal: 'undefined (switchable)',
+        description: 'Forces specific view mode or enables toggle control.',
+      },
+      {
+        name: 'onCopy',
+        type: '(text: string) => void',
+        defaultVal: 'undefined',
+        description: 'Callback when code is successfully copied to clipboard.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--border', '--success', '--destructive'],
+  },
+  {
+    id: 'ai-fine-tune-card',
+    name: 'AI Fine-Tune Card',
+    category: 'Forms',
+    description:
+      'Compact interactive parameter inspector with scrubbable number sliders (drag label ↔ or use arrow keys), segmented layout selector, and dropdown menu.',
+    importCode: `import { AIFineTuneCard, FineTuneField } from 'es-react-components';`,
+    usageCode: `<AIFineTuneCard
+  theme="light"
+  onChange={(state) => console.log('Parameters changed:', state)}
+/>`,
+    props: [
+      {
+        name: 'theme',
+        type: `'light' | 'dark'`,
+        defaultVal: `'light'`,
+        description: 'Visual theme mode.',
+      },
+      {
+        name: 'fields',
+        type: 'FineTuneField[]',
+        defaultVal: 'DEFAULT_FINE_TUNE_FIELDS',
+        description: 'Array of scrubbable numeric properties.',
+      },
+      {
+        name: 'options',
+        type: 'string[]',
+        defaultVal: `['Seasonal', 'Classic', 'Limited']`,
+        description: 'Type selector dropdown options.',
+      },
+      {
+        name: 'onChange',
+        type: '(state: FineTuneState) => void',
+        defaultVal: 'undefined',
+        description: 'Callback emitted when any property or layout changes.',
+      },
+    ],
+    themeTokens: ['--surface', '--foreground', '--border', '--primary'],
+  },
+  {
+    id: 'load-more',
+    name: 'Load More',
+    category: 'Surfaces & Layout',
+    description:
+      'IntersectionObserver-powered sentinel for infinite lists and feeds with automatic page triggering, loading spinners, retry controls, and exhaustion labels.',
+    importCode: `import { LoadMore } from 'es-react-components';`,
+    usageCode: `<LoadMore
+  onLoad={async () => {
+    const hasNext = await fetchNextPage();
+    return hasNext;
+  }}
+  rootRef={containerRef}
+  rootMargin="600px 0px"
+  onError={(err) => console.error(err)}
+/>`,
+    props: [
+      { name: 'onLoad', type: '() => Promise<boolean>', defaultVal: 'undefined', description: 'Async function returning whether more items exist.' },
+      { name: 'rootRef', type: 'React.RefObject<HTMLElement | null>', defaultVal: 'undefined', description: 'Scrollable container element reference.' },
+      { name: 'rootMargin', type: 'string', defaultVal: "'400px 0px'", description: 'Viewport intersection margin triggering early preloading.' },
+      { name: 'onError', type: '(error: unknown) => void', defaultVal: 'undefined', description: 'Error callback when page fetch throws.' },
+    ],
+    themeTokens: ['--surface', '--muted-foreground', '--destructive', '--primary'],
+  },
+  {
+    id: 'streaming-text',
+    name: 'Streaming Text',
+    category: 'AI & Agentic UX',
+    description:
+      'Real-time token typewriter animation for LLM and assistant responses. Features configurable token pacing, pulsing cursor, click-to-skip, and status callbacks.',
+    importCode: `import { StreamingText, useStreamingText } from 'es-react-components';`,
+    usageCode: `<StreamingText
+  text="Deploying neural weights to 14 distributed edge regions..."
+  tokensPerSecond={22}
+  label="AI generation"
+  onDone={() => setSettled(true)}
+/>
+
+// Or hook:
+const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 });`,
+    props: [
+      { name: 'text', type: 'string', defaultVal: "''", description: 'Full text response to stream.' },
+      { name: 'tokensPerSecond', type: 'number', defaultVal: '20', description: 'Pacing speed for token generation.' },
+      { name: 'onDone', type: '() => void', defaultVal: 'undefined', description: 'Fired when the entire text finishes streaming.' },
+      { name: 'allowSkipOnClick', type: 'boolean', defaultVal: 'true', description: 'Instantly reveals full text when clicked.' },
+    ],
+    themeTokens: ['--foreground', '--primary', '--surface'],
+  },
+  {
+    id: 'task-steps',
+    name: 'Task Steps',
+    category: 'Feedback',
+    description:
+      'Multi-stage pipeline indicator with connected track lines, completed badges, active pulsating rings, and failure state alerts.',
+    importCode: `import { TaskSteps } from 'es-react-components';`,
+    usageCode: `<TaskSteps
+  steps={[
+    { id: 'queue', label: 'Queued' },
+    { id: 'build', label: 'Building' },
+    { id: 'test', label: 'Running checks' },
+    { id: 'deploy', label: 'Deploying' },
+  ]}
+  current={2}
+  failed={false}
+  label="Deployment pipeline"
+/>`,
+    props: [
+      { name: 'steps', type: 'TaskStepItem[]', defaultVal: '[]', description: 'Stage items with id, label, and description.' },
+      { name: 'current', type: 'number', defaultVal: '0', description: '0-based index of the currently active stage.' },
+      { name: 'failed', type: 'boolean', defaultVal: 'false', description: 'Marks the current stage as failed with destructive alert styling.' },
+      { name: 'orientation', type: "'horizontal' | 'vertical'", defaultVal: "'horizontal'", description: 'Layout axis.' },
+    ],
+    themeTokens: ['--primary', '--primary-foreground', '--border', '--destructive', '--surface'],
+  },
+  {
+    id: 'collapsible-banner',
+    name: 'Collapsible Banner',
+    category: 'Feedback',
+    description:
+      'Foldable announcement and incident banner with spring accordion height collapse, inline action triggers, and dismissal controls.',
+    importCode: `import { CollapsibleBanner } from 'es-react-components';`,
+    usageCode: `<CollapsibleBanner
+  title="Payments are degraded"
+  description="Charges are queued and settle automatically once the provider recovers."
+  dismissible={false}
+  variant="warning"
+/>
+
+<CollapsibleBanner
+  title="Your card was declined"
+  description="Invoices stay open until it clears."
+  variant="destructive"
+  action={<Button size="xs">Update method</Button>}
+/>`,
+    props: [
+      { name: 'title', type: 'React.ReactNode', defaultVal: "''", description: 'Banner headline.' },
+      { name: 'description', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Foldable details text.' },
+      { name: 'variant', type: "'default' | 'warning' | 'destructive' | 'info' | 'success'", defaultVal: "'warning'", description: 'Color scheme and status icon.' },
+      { name: 'dismissible', type: 'boolean', defaultVal: 'true', description: 'Shows close button.' },
+      { name: 'action', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Inline trailing button slot.' },
+    ],
+    themeTokens: ['--warning', '--destructive', '--info', '--success', '--border', '--surface'],
+  },
+  {
+    id: 'presence-avatars',
+    name: 'Presence Avatars',
+    category: 'Surfaces & Layout',
+    description:
+      'Spring-animated active user rail with image loading states, fallback initials, overflow +N chip button, and live screen-reader announcements.',
+    importCode: `import { PresenceAvatars, usePresence } from 'es-react-components';`,
+    usageCode: `<PresenceAvatars
+  people={[
+    { id: '1', name: 'Elena Rostova', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' },
+    { id: '2', name: 'Marcus Sterling' },
+    { id: '3', name: 'Devin Vance' },
+  ]}
+  max={4}
+  size={32}
+  onOverflowSelect={(hidden) => console.log(hidden)}
+/>`,
+    props: [
+      { name: 'people', type: 'PresencePerson[]', defaultVal: '[]', description: 'List of active users with id, name, and optional src.' },
+      { name: 'max', type: 'number', defaultVal: '5', description: 'Maximum visible avatar slots before collapsing into +N.' },
+      { name: 'size', type: 'number', defaultVal: '32', description: 'Avatar diameter in pixels.' },
+      { name: 'overlap', type: 'number', defaultVal: '10', description: 'Horizontal overlap spacing between avatars.' },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--primary', '--muted-foreground', '--radius'],
+  },
+  {
+    id: 'modal',
+    name: 'Modal',
+    category: 'Feedback',
+    description:
+      'Accessible dialog window with backdrop blur, scroll locking, Escape key stacking, outside-click detection, and spring scale entrance.',
+    importCode: `import { Modal, useModal } from 'es-react-components';`,
+    usageCode: `<Modal
+  open={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Confirm Action"
+  description="Are you sure you want to proceed?"
+  footer={<Button onClick={() => setIsOpen(false)}>Done</Button>}
+>
+  <p>Modal body content...</p>
+</Modal>`,
+    props: [
+      { name: 'open', type: 'boolean', defaultVal: 'false', description: 'Visibility state.' },
+      { name: 'onClose', type: '() => void', defaultVal: 'undefined', description: 'Callback fired on close or dismissal.' },
+      { name: 'title', type: 'React.ReactNode', defaultVal: "''", description: 'Modal title heading.' },
+      { name: 'description', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Supplementary description.' },
+      { name: 'footer', type: 'React.ReactNode', defaultVal: 'undefined', description: 'Action buttons container.' },
+    ],
+    themeTokens: ['--surface', '--border', '--foreground', '--radius', '--primary'],
+  },
+  {
+    id: 'tooltip',
+    name: 'Tooltip',
+    category: 'Feedback',
+    description:
+      'High-performance warm-start tooltips with spring glide transitions, grouping contexts, keyboard focus detection, and blur reveal.',
+    importCode: `import { Tooltip, TooltipGroup, useTooltip } from 'es-react-components';`,
+    usageCode: `<Tooltip label="Copy API Key" side="top">
+  <button className="p-2 border rounded">Copy</button>
+</Tooltip>
+
+// Grouped tooltips with instant warm-travel:
+<TooltipGroup openDelay={200} skipDelay={400}>
+  <Tooltip label="Bold"><button>B</button></Tooltip>
+  <Tooltip label="Italic"><button>I</button></Tooltip>
+</TooltipGroup>`,
+    props: [
+      { name: 'label', type: 'React.ReactNode', defaultVal: "''", description: 'Tooltip text or element.' },
+      { name: 'side', type: "'top' | 'bottom'", defaultVal: "'top'", description: 'Placement relative to trigger.' },
+      { name: 'openDelay', type: 'number', defaultVal: '200', description: 'Hover delay in milliseconds.' },
+      { name: 'children', type: 'React.ReactElement', defaultVal: 'undefined', description: 'Trigger child element.' },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--foreground', '--radius'],
+  },
+  {
+    id: 'command-palette',
+    name: 'Command Palette',
+    category: 'Navigation',
+    description:
+      'Spotlight-style fuzzy search command palette (⌘K) with real-time scoring, keyboard arrow navigation, shortcut badges, and overlay portal.',
+    importCode: `import { CommandPalette, useCommandPalette } from 'es-react-components';`,
+    usageCode: `<CommandPalette
+  open={isOpen}
+  onDismiss={() => setIsOpen(false)}
+  onSelect={(item) => executeCommand(item)}
+  items={[
+    { id: 'deploy', label: 'Deploy to Production', shortcut: ['⌘', 'D'], hint: 'Rollout' },
+    { id: 'settings', label: 'Open Workspace Settings', shortcut: ['⌘', ','] },
+    { id: 'keys', label: 'Rotate API Keys' },
+  ]}
+/>`,
+    props: [
+      { name: 'open', type: 'boolean', defaultVal: 'undefined', description: 'When provided, renders as an overlay portal.' },
+      { name: 'items', type: 'CommandItem[]', defaultVal: '[]', description: 'Selectable commands with label, hint, shortcut, and keywords.' },
+      { name: 'onSelect', type: '(item: CommandItem) => void', defaultVal: 'undefined', description: 'Invoked when Enter is pressed or item clicked.' },
+      { name: 'onDismiss', type: '() => void', defaultVal: 'undefined', description: 'Invoked on Escape or outside click.' },
+    ],
+    themeTokens: ['--surface-elevated', '--border', '--primary', '--foreground', '--radius'],
+  },
+];
+
+
