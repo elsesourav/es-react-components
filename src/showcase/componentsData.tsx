@@ -2484,6 +2484,142 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     ],
     themeTokens: ['--surface-elevated', '--border', '--primary', '--foreground', '--radius'],
   },
+  {
+    id: 'filter-grid',
+    name: 'Filter Grid',
+    category: 'Surfaces & Layout',
+    description:
+      'Animated categorical item filtering grid with popLayout transitions, dynamic item count badges, radiogroup chip navigation, and responsive multi-column layouts.',
+    importCode: `import { FilterGrid, useFilterGrid } from 'es-react-components';`,
+    usageCode: `<FilterGrid
+  label="Resource Types"
+  items={items}
+  filters={[
+    { id: 'all', label: 'All', match: () => true },
+    { id: 'api', label: 'APIs', match: (item) => item.type === 'api' },
+    { id: 'db', label: 'Databases', match: (item) => item.type === 'db' },
+  ]}
+  getKey={(item) => item.id}
+  renderItem={(item) => <div>{item.name}</div>}
+/>`,
+    props: [
+      { name: 'items', type: 'readonly T[]', defaultVal: '[]', description: 'Full dataset collection to filter.' },
+      { name: 'filters', type: 'FilterDefinition<T>[]', defaultVal: '[]', description: 'Filter predicates with id, label, and match callback.' },
+      { name: 'getKey', type: '(item: T) => string', defaultVal: 'undefined', description: 'Unique identifier generator per item.' },
+      { name: 'renderItem', type: '(item: T) => ReactNode', defaultVal: 'undefined', description: 'Item card renderer.' },
+      { name: 'columns', type: 'number', defaultVal: '3', description: 'Grid column count.' },
+      { name: 'rowHeight', type: 'number', defaultVal: '72', description: 'Height of each grid row in pixels.' },
+    ],
+    themeTokens: ['--primary', '--border', '--surface-elevated', '--radius'],
+  },
+  {
+    id: 'poll-results',
+    name: 'Poll Results',
+    category: 'Feedback',
+    description:
+      'Interactive voting poll component featuring spring-animated clip-path progress reveals, percentage counters, winner tick pop animation, and one-vote enforcement.',
+    importCode: `import { PollResults, usePollResults } from 'es-react-components';`,
+    usageCode: `<PollResults
+  label="Favorite Developer Tooling"
+  options={[
+    { id: 'react', label: 'React 19 & Vite', votes: 1420 },
+    { id: 'next', label: 'Next.js App Router', votes: 980 },
+    { id: 'astro', label: 'Astro Islands', votes: 640 },
+  ]}
+  onVote={(id) => console.log('Voted for:', id)}
+/>`,
+    props: [
+      { name: 'options', type: 'PollOption[]', defaultVal: '[]', description: 'Array of poll options with id, label, and vote count.' },
+      { name: 'label', type: 'string', defaultVal: "''", description: 'Question title for the poll.' },
+      { name: 'value', type: 'string | null', defaultVal: 'undefined', description: 'Controlled chosen vote option id.' },
+      { name: 'onVote', type: '(id: string) => void', defaultVal: 'undefined', description: 'Fired when user clicks an unvoted option.' },
+    ],
+    themeTokens: ['--primary', '--surface-elevated', '--border', '--foreground', '--radius'],
+  },
+  {
+    id: 'slider-detents',
+    name: 'Slider Detents',
+    category: 'Forms',
+    description:
+      'Accessible numeric slider with magnetic detent snap points, spring carriage thumb, haptic feedback, and keyboard detent traversal.',
+    importCode: `import { SliderDetents, useSliderDetents } from 'es-react-components';`,
+    usageCode: `<SliderDetents
+  label="Instance CPU Allocation"
+  min={1}
+  max={16}
+  step={1}
+  detents={[
+    { value: 2, label: 'Micro' },
+    { value: 4, label: 'Standard' },
+    { value: 8, label: 'High-Mem' },
+    { value: 16, label: 'Max' },
+  ]}
+  value={cores}
+  onValueChange={setCores}
+/>`,
+    props: [
+      { name: 'value', type: 'number', defaultVal: '0', description: 'Controlled slider value.' },
+      { name: 'onValueChange', type: '(val: number) => void', defaultVal: 'undefined', description: 'Callback fired on value update.' },
+      { name: 'detents', type: 'Array<number | SliderDetent>', defaultVal: '[]', description: 'Snap point landmarks with optional label.' },
+      { name: 'pull', type: 'number', defaultVal: '4.5% range', description: 'Magnetic snap attraction radius.' },
+      { name: 'haptic', type: 'boolean', defaultVal: 'true', description: 'Whether to trigger device vibration on detent hit.' },
+    ],
+    themeTokens: ['--primary', '--surface-subtle', '--border', '--foreground', '--radius'],
+  },
+  {
+    id: 'reorder-list',
+    name: 'Reorder List',
+    category: 'Surfaces & Layout',
+    description:
+      'Smooth physics-driven drag-and-drop sortable list with complete keyboard accessibility (Space to grab/drop, ArrowUp/Down to move, Escape to revert) and live screen reader feedback.',
+    importCode: `import { ReorderList, useReorderList } from 'es-react-components';`,
+    usageCode: `<ReorderList
+  label="Deployment Priorities"
+  items={items}
+  getId={(item) => item.id}
+  getLabel={(item) => item.title}
+  onReorder={setItems}
+>
+  {(item) => <div>{item.title}</div>}
+</ReorderList>`,
+    props: [
+      { name: 'items', type: 'readonly T[]', defaultVal: '[]', description: 'Collection of reorderable records.' },
+      { name: 'getId', type: '(item: T) => string', defaultVal: 'undefined', description: 'Item key resolver.' },
+      { name: 'getLabel', type: '(item: T) => string', defaultVal: 'undefined', description: 'Accessibility label resolver for ARIA announcements.' },
+      { name: 'onReorder', type: '(next: T[]) => void', defaultVal: 'undefined', description: 'Callback when list order changes during drag or key press.' },
+      { name: 'onCommit', type: '(next: T[]) => void', defaultVal: 'undefined', description: 'Fired when drag finishes or item is dropped.' },
+    ],
+    themeTokens: ['--primary', '--border', '--surface-elevated', '--foreground', '--radius'],
+  },
+  {
+    id: 'lightbox',
+    name: 'Lightbox',
+    category: 'Surfaces & Layout',
+    description:
+      'Zoomable modal image inspector with origin-element morph transitions, wheel zoom toward cursor, drag panning with velocity bounds, keyboard shortcuts (+, -, 0, Escape), and portal overlay.',
+    importCode: `import { Lightbox, useLightbox } from 'es-react-components';`,
+    usageCode: `<button ref={thumbnailRef} onClick={() => setOpen(true)}>
+  <img src="/sample.jpg" alt="Preview" className="rounded" />
+</button>
+
+<Lightbox
+  open={open}
+  onClose={() => setOpen(false)}
+  originRef={thumbnailRef}
+  src="/sample-hd.jpg"
+  alt="High Definition Architecture"
+  caption="Global Edge Distribution Architecture (4K Preview)"
+/>`,
+    props: [
+      { name: 'open', type: 'boolean', defaultVal: 'false', description: 'Visibility state.' },
+      { name: 'onClose', type: '() => void', defaultVal: 'undefined', description: 'Callback fired on close or outside click.' },
+      { name: 'src', type: 'string', defaultVal: "''", description: 'Full image URL.' },
+      { name: 'alt', type: 'string', defaultVal: "''", description: 'Accessible image description.' },
+      { name: 'originRef', type: 'RefObject<HTMLElement>', defaultVal: 'undefined', description: 'Thumbnail element ref for morph zoom transition.' },
+      { name: 'maxScale', type: 'number', defaultVal: '4', description: 'Maximum zoom level multiplier.' },
+    ],
+    themeTokens: ['--background', '--surface-elevated', '--border', '--foreground', '--radius'],
+  },
 ];
 
 

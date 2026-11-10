@@ -81,6 +81,16 @@ import {
   useScrollSpy,
   HideOnScroll,
   useHideOnScroll,
+  FilterGrid,
+  useFilterGrid,
+  PollResults,
+  usePollResults,
+  SliderDetents,
+  useSliderDetents,
+  ReorderList,
+  useReorderList,
+  Lightbox,
+  useLightbox,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -119,6 +129,11 @@ import {
   BookmarkCheck,
   EyeOff,
   Navigation2,
+  SlidersHorizontal,
+  Vote,
+  GripVertical,
+  Maximize2,
+  Grid3X3,
 } from 'lucide-react';
 
 export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
@@ -265,6 +280,28 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   // HideOnScroll State
   const [hidePinned, setHidePinned] = useState(false);
   const [hideIsHidden, setHideIsHidden] = useState(false);
+
+  // FilterGrid State
+  const [filterGridCat, setFilterGridCat] = useState('all');
+  const [filterGridCols, setFilterGridCols] = useState(3);
+
+  // PollResults State
+  const [pollVotedId, setPollVotedId] = useState<string | null>(null);
+
+  // SliderDetents State
+  const [sliderDetentsVal, setSliderDetentsVal] = useState(4);
+
+  // ReorderList State
+  const [reorderItems, setReorderItems] = useState([
+    { id: 'r1', title: 'Edge Routing Ingress Gateway', badge: 'Critical', latency: '8ms' },
+    { id: 'r2', title: 'Zero-Trust Identity Verifier', badge: 'High', latency: '14ms' },
+    { id: 'r3', title: 'Distributed Cache Invalidation', badge: 'Normal', latency: '28ms' },
+    { id: 'r4', title: 'Prometheus Telemetry Collector', badge: 'Low', latency: '42ms' },
+  ]);
+
+  // Lightbox State
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const lightboxThumbRef = useRef<HTMLButtonElement>(null);
 
   // Switch State
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -4133,6 +4170,356 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
               Scroll down inside the feed to hide the top bar; scroll up slightly to reveal it instantly.
             </p>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // FilterGrid Playground
+  if (componentId === 'filter-grid') {
+    const services = [
+      { id: 'srv-1', name: 'API Gateway', category: 'compute', status: 'Healthy', latency: '4ms', load: '32%' },
+      { id: 'srv-2', name: 'PostgreSQL Primary', category: 'database', status: 'Healthy', latency: '12ms', load: '64%' },
+      { id: 'srv-3', name: 'Redis Cache Cluster', category: 'database', status: 'Healthy', latency: '1ms', load: '18%' },
+      { id: 'srv-4', name: 'OAuth2 / mTLS Auth', category: 'security', status: 'Protected', latency: '8ms', load: '45%' },
+      { id: 'srv-5', name: 'Edge V8 Workers', category: 'compute', status: 'Healthy', latency: '2ms', load: '78%' },
+      { id: 'srv-6', name: 'Blob Storage S3', category: 'storage', status: 'Healthy', latency: '24ms', load: '52%' },
+      { id: 'srv-7', name: 'KMS Secret Vault', category: 'security', status: 'Protected', latency: '6ms', load: '11%' },
+      { id: 'srv-8', name: 'Kafka Event Bus', category: 'compute', status: 'Healthy', latency: '9ms', load: '89%' },
+    ];
+
+    const filters = [
+      { id: 'all', label: 'All Services', match: () => true },
+      { id: 'compute', label: 'Compute', match: (s: (typeof services)[0]) => s.category === 'compute' },
+      { id: 'database', label: 'Database', match: (s: (typeof services)[0]) => s.category === 'database' },
+      { id: 'security', label: 'Security & Auth', match: (s: (typeof services)[0]) => s.category === 'security' },
+    ];
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-foreground">Columns:</span>
+            {[2, 3, 4].map((cols) => (
+              <Button
+                key={cols}
+                size="xs"
+                variant={filterGridCols === cols ? 'primary' : 'outline'}
+                onClick={() => setFilterGridCols(cols)}
+              >
+                {cols} Cols
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            size="xs"
+            variant="ghost"
+            onClick={() => {
+              setFilterGridCat('all');
+              addToast({ title: 'Filters Reset', description: 'Showing all service cards', type: 'info' });
+            }}
+          >
+            Reset Filter
+          </Button>
+        </div>
+
+        <div className="p-6 sm:p-8 rounded-2xl bg-surface-subtle/50 border border-border">
+          <FilterGrid
+            items={services}
+            filters={filters}
+            value={filterGridCat}
+            onValueChange={(id) => {
+              setFilterGridCat(id);
+              addToast({ title: 'Filter Applied', description: `Filtered by: ${id}`, type: 'info' });
+            }}
+            label="Service Inventory"
+            columns={filterGridCols}
+            getKey={(s) => s.id}
+            renderItem={(s) => (
+              <div className="p-4 rounded-xl bg-surface border border-border shadow-xs hover:border-primary/40 hover:shadow-sm transition-all h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[11px] text-muted-foreground">{s.id}</span>
+                    <Badge variant={s.category === 'security' ? 'secondary' : 'default'} size="sm">
+                      {s.category}
+                    </Badge>
+                  </div>
+                  <div className="font-semibold text-sm text-foreground">{s.name}</div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Latency: <strong className="text-foreground">{s.latency}</strong></span>
+                  <span>Load: <strong className="text-foreground">{s.load}</strong></span>
+                </div>
+              </div>
+            )}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // PollResults Playground
+  if (componentId === 'poll-results') {
+    const pollOptions = [
+      { id: 'opt-react-state', label: 'React Context + Hooks', votes: 142 },
+      { id: 'opt-zustand', label: 'Zustand Store', votes: 318 },
+      { id: 'opt-tanstack', label: 'TanStack Query (React Query)', votes: 412 },
+      { id: 'opt-redux', label: 'Redux Toolkit / RTK Query', votes: 98 },
+    ];
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="text-xs text-muted-foreground">
+            Current Status: <strong className="text-foreground">{pollVotedId ? 'Vote Recorded' : 'Awaiting Vote'}</strong>
+          </div>
+
+          <Button
+            size="xs"
+            variant="outline"
+            onClick={() => {
+              setPollVotedId(null);
+              addToast({ title: 'Poll Reset', description: 'You can now cast your vote again.', type: 'info' });
+            }}
+          >
+            Reset Vote
+          </Button>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
+          <div className="w-full max-w-md p-6 rounded-2xl bg-surface border border-border shadow-sm space-y-4">
+            <div>
+              <div className="flex items-center gap-2 text-primary text-xs font-semibold uppercase tracking-wider mb-1">
+                <Vote className="size-3.5" />
+                <span>Developer Survey 2026</span>
+              </div>
+              <h3 className="text-base font-semibold text-foreground">
+                What is your primary state management library in production?
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Click an option below to reveal live spring percentage distributions.
+              </p>
+            </div>
+
+            <PollResults
+              label="Primary State Management Tool"
+              options={pollOptions}
+              value={pollVotedId}
+              onVote={(id) => {
+                setPollVotedId(id);
+                const match = pollOptions.find((o) => o.id === id);
+                addToast({
+                  title: 'Vote Counted!',
+                  description: `You voted for: ${match?.label}`,
+                  type: 'success',
+                });
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // SliderDetents Playground
+  if (componentId === 'slider-detents') {
+    const vcpuDetents = [
+      { value: 1, label: '1 Core (Dev)' },
+      { value: 2, label: '2 Cores (Small)' },
+      { value: 4, label: '4 Cores (Medium)' },
+      { value: 8, label: '8 Cores (Large)' },
+      { value: 16, label: '16 Cores (Cluster)' },
+    ];
+
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="size-4 text-primary" />
+            <span className="text-xs font-medium text-foreground">
+              Allocated vCPU: <span className="font-mono font-bold text-primary">{sliderDetentsVal} Cores</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {[1, 2, 4, 8, 16].map((v) => (
+              <Button
+                key={v}
+                size="xs"
+                variant={sliderDetentsVal === v ? 'primary' : 'outline'}
+                onClick={() => setSliderDetentsVal(v)}
+              >
+                {v}x
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
+          <div className="w-full max-w-lg p-6 rounded-2xl bg-surface border border-border shadow-sm space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Compute Instance Sizing</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Drag the thumb or use Left/Right arrows. Shift+Arrow jumps directly to detents with magnetic haptic snap.
+              </p>
+            </div>
+
+            <SliderDetents
+              label="Compute vCPU Sizing"
+              value={sliderDetentsVal}
+              onValueChange={setSliderDetentsVal}
+              min={1}
+              max={16}
+              step={1}
+              detents={vcpuDetents}
+              pull={18}
+              format={(v) => `${v} vCPU`}
+            />
+
+            <div className="p-3.5 rounded-xl bg-surface-subtle border border-border/80 flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Estimated Monthly Tier:</span>
+              <span className="font-mono font-semibold text-foreground">
+                ${sliderDetentsVal * 18}.00 / month
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ReorderList Playground
+  if (componentId === 'reorder-list') {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="text-xs text-muted-foreground">
+            Sort Priority: <span className="text-foreground font-semibold">Top item has highest execution precedence</span>
+          </div>
+
+          <Button
+            size="xs"
+            variant="outline"
+            onClick={() => {
+              setReorderItems([
+                { id: 'r1', title: 'Edge Routing Ingress Gateway', badge: 'Critical', latency: '8ms' },
+                { id: 'r2', title: 'Zero-Trust Identity Verifier', badge: 'High', latency: '14ms' },
+                { id: 'r3', title: 'Distributed Cache Invalidation', badge: 'Normal', latency: '28ms' },
+                { id: 'r4', title: 'Prometheus Telemetry Collector', badge: 'Low', latency: '42ms' },
+              ]);
+              addToast({ title: 'List Reset', description: 'Restored default routing order.', type: 'info' });
+            }}
+          >
+            Reset Order
+          </Button>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
+          <div className="w-full max-w-lg space-y-3">
+            <ReorderList
+              label="Ingress Pipeline Tasks"
+              items={reorderItems}
+              getId={(item) => item.id}
+              getLabel={(item) => item.title}
+              onReorder={setReorderItems}
+              onCommit={(items) => {
+                addToast({
+                  title: 'Order Updated',
+                  description: `New top task: ${items[0]?.title}`,
+                  type: 'success',
+                });
+              }}
+            >
+              {(item) => (
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <GripVertical className="size-4 text-muted-foreground/60 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="text-xs font-semibold text-foreground truncate">{item.title}</div>
+                      <div className="text-[11px] text-muted-foreground font-mono">Ping: {item.latency}</div>
+                    </div>
+                  </div>
+                  <Badge
+                    variant={item.badge === 'Critical' ? 'danger' : item.badge === 'High' ? 'warning' : 'outline'}
+                    size="sm"
+                  >
+                    {item.badge}
+                  </Badge>
+                </div>
+              )}
+            </ReorderList>
+
+            <p className="text-center text-xs text-muted-foreground">
+              Drag items with mouse/touch, or press Space/Enter on a row and use Up/Down arrows to move.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Lightbox Playground
+  if (componentId === 'lightbox') {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-2">
+            <Maximize2 className="size-4 text-primary" />
+            <span className="text-xs font-medium text-foreground">
+              Status: <span className="text-primary font-bold">{lightboxOpen ? 'Modal Active' : 'Thumbnail Preview'}</span>
+            </span>
+          </div>
+
+          <Button
+            size="xs"
+            variant="primary"
+            onClick={() => setLightboxOpen(true)}
+          >
+            Open Lightbox
+          </Button>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-md flex flex-col items-center gap-3">
+            <button
+              ref={lightboxThumbRef}
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="group relative block aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border bg-surface shadow-md hover:shadow-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-zoom-in"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+                alt="Tropical beach coast"
+                className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <div className="flex items-center justify-between w-full text-white">
+                  <div>
+                    <div className="text-xs font-semibold">Pacific Coastal Sunset</div>
+                    <div className="text-[11px] text-white/80">Click thumbnail to inspect full-res</div>
+                  </div>
+                  <div className="size-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
+                    <Maximize2 className="size-3.5" />
+                  </div>
+                </div>
+              </div>
+            </button>
+
+            <p className="text-xs text-muted-foreground text-center">
+              Click thumbnail above to expand with landing morph physics, wheel zoom, and drag panning.
+            </p>
+          </div>
+
+          <Lightbox
+            open={lightboxOpen}
+            onClose={() => setLightboxOpen(false)}
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=90"
+            alt="Pacific coastal sunset in 4K resolution"
+            caption="Pacific Coastal Sunset — 4K High Resolution Inspector"
+            originRef={lightboxThumbRef}
+            maxScale={5}
+          />
         </div>
       </div>
     );

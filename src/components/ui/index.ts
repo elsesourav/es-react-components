@@ -51,3 +51,8 @@ export * from './sticky-header';
 export * from './reading-progress';
 export * from './scroll-spy';
 export * from './hide-on-scroll';
+export * from './filter-grid';
+export * from './poll-results';
+export * from './slider-detents';
+export * from './reorder-list';
+export * from './lightbox';
