@@ -78,42 +78,125 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'toast',
-    name: 'Toast',
+    name: 'Toast (SwipeToast)',
     category: 'Feedback',
     description:
-      'Lightweight floating notification queue managed via the imperative useToast hook.',
-    importCode: `import { ToastProvider, useToast } from 'es-react-components';`,
-    usageCode: `const { addToast } = useToast();
+      'Kinetic swipe-to-dismiss toast notifications featuring spring physics, rubberband drag resistance, linear burning fuse progress indicator, pause-on-hover, and WAI-ARIA politeness. Supports both declarative inline/floating mounting (<SwipeToast />) and imperative queuing (useToast().addToast()).',
+    importCode: `import { Toast, SwipeToast, ToastProvider, useToast } from 'es-react-components';`,
+    usageCode: `// 1. Declarative inline / floating component:
+<SwipeToast
+  title="File archived"
+  description="Stored in cold vault"
+  actionLabel="Undo"
+  onAction={() => restoreFile()}
+  fuse="bottom"
+  duration={4000}
+  pauseOnHover
+/>
+
+// 2. Imperative hook queue:
+const { addToast } = useToast();
 
 addToast({
   title: 'Repository Forked',
   description: 'Created remote fork under org/demo.',
   type: 'success',
+  actionLabel: 'View PR',
+  onAction: () => navigate('/prs'),
+  fuse: 'bottom',
+  duration: 4500,
 });`,
     props: [
       {
         name: 'title',
-        type: 'string',
-        defaultVal: '""',
-        description: 'Notification headline.',
+        type: 'ReactNode',
+        defaultVal: '"File archived"',
+        description: 'Main notification headline or heading element.',
       },
       {
-        name: 'type',
-        type: `'info' | 'success' | 'danger'`,
-        defaultVal: `'info'`,
-        description: 'Accent border and status icon.',
+        name: 'description',
+        type: 'ReactNode',
+        defaultVal: '""',
+        description: 'Supporting descriptive body text.',
+      },
+      {
+        name: 'icon',
+        type: 'ReactNode',
+        defaultVal: 'undefined',
+        description: 'Leading status icon or glyph element.',
+      },
+      {
+        name: 'actionLabel',
+        type: 'ReactNode',
+        defaultVal: '""',
+        description: 'Text label for interactive action button (e.g. "Undo", "Retry").',
+      },
+      {
+        name: 'onAction',
+        type: '() => void',
+        defaultVal: 'undefined',
+        description: 'Callback fired when action button is clicked.',
       },
       {
         name: 'duration',
         type: 'number',
         defaultVal: '4000',
-        description: 'Auto-dismiss timeout in ms.',
+        description: 'Burning fuse countdown in milliseconds before auto-dismiss (0 for persistent).',
+      },
+      {
+        name: 'fuse',
+        type: `'bottom' | 'top' | 'none'`,
+        defaultVal: `'bottom'`,
+        description: 'Placement of linear countdown progress bar.',
+      },
+      {
+        name: 'pauseOnHover',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Whether countdown freezes when mouse pointer enters card.',
+      },
+      {
+        name: 'closeButton',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Whether to show the dismiss close icon button.',
+      },
+      {
+        name: 'inline',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'If true, renders inline in the flow layout with animated grid-rows height collapse.',
+      },
+      {
+        name: 'dismissible',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Enables gesture drag-to-dismiss and Escape key close.',
+      },
+      {
+        name: 'settleBounce',
+        type: 'number',
+        defaultVal: '0.2',
+        description: 'Spring settle bounce coefficient for released drag gesture.',
+      },
+      {
+        name: 'swipeDistance',
+        type: 'number',
+        defaultVal: '40',
+        description: 'Drag threshold in pixels required to trigger swipe dismissal.',
+      },
+      {
+        name: 'fuseColor',
+        type: 'string',
+        defaultVal: `'var(--primary, #f5a524)'`,
+        description: 'Custom CSS color or gradient token for burning fuse line.',
       },
     ],
     themeTokens: [
       '--surface-elevated',
       '--border',
       '--foreground',
+      '--muted-foreground',
       '--primary',
       '--radius',
     ],

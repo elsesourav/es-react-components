@@ -335,15 +335,12 @@ export const BadgePlayground: React.FC = () => {
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Interactive Controls
             </span>
-            <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-              <input
-                type="checkbox"
-                checked={badgeDot}
-                onChange={(e) => setBadgeDot(e.target.checked)}
-                className="rounded border-border text-primary"
-              />
-              Show Status Dot
-            </label>
+            <Checkbox
+              sizeVariant="sm"
+              checked={badgeDot}
+              onChange={(e) => setBadgeDot(e.target.checked)}
+              label="Show Status Dot"
+            />
           </div>
 
           <div>
@@ -776,15 +773,12 @@ export const PasswordInputPlayground: React.FC = () => {
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Display Settings
           </span>
-          <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input
-              type="checkbox"
-              checked={passReqs}
-              onChange={(e) => setPassReqs(e.target.checked)}
-              className="rounded border-border text-primary"
-            />
-            Show Requirements Checklist
-          </label>
+          <Checkbox
+            sizeVariant="sm"
+            checked={passReqs}
+            onChange={(e) => setPassReqs(e.target.checked)}
+            label="Show Requirements Checklist"
+          />
         </div>
 
         <div className="max-w-md mx-auto space-y-4">

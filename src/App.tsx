@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { COMPONENTS_DATA, ComponentDoc } from './showcase/componentsData';
 import { ComponentDocView } from './showcase/ComponentDocView';
 import { ThemeCustomizer } from './components/ThemeCustomizer';
@@ -60,14 +60,7 @@ export const App: React.FC = () => {
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const { toggleDark, setPreset } = useTheme();
 
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(() => [
-    'cat-General',
-    'cat-Surfaces & Layout',
-    'cat-Forms',
-    'cat-Feedback',
-    'cat-Navigation',
-    'cat-AI & Agentic UX',
-  ]);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(() => []);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -184,7 +177,12 @@ export const App: React.FC = () => {
     }
   };
 
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     if (activeComponent) {
       const catId = `cat-${activeComponent.category}`;
       setExpandedCategories((prev) => (prev.includes(catId) ? prev : [...prev, catId]));
@@ -271,29 +269,6 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200">
-      <ReadingProgress className="fixed top-0 inset-x-0 z-50 h-[3px] pointer-events-none" />
-
-      {/* Sleek Compact Announcement Bar (Desktop) */}
-      <div className="hidden md:flex h-8 border-b border-border/60 bg-surface-subtle/40 text-xs text-muted-foreground items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors">
-        <div className="flex items-center gap-2 text-[11px]">
-          <span className="inline-flex items-center px-1.5 py-0.2 rounded-full bg-primary/10 text-primary font-semibold text-[10px]">
-            v1.0.0
-          </span>
-          <span className="font-medium text-foreground">
-            es-react-components
-          </span>
-          <span className="text-muted-foreground/40">•</span>
-          <span>93 production-grade React 19 UI components with kinetic physics & HSL theming</span>
-        </div>
-        <button
-          type="button"
-          onClick={() => handleSelectComponent('filter-grid')}
-          className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
-        >
-          Explore Catalog →
-        </button>
-      </div>
-
       <AppNavbar
         onOpenMobileMenu={() => setMobileMenuOpen(true)}
         onOpenCommand={() => setCommandOpen(true)}
@@ -331,6 +306,23 @@ export const App: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-surface border border-border rounded-xl pl-9 pr-4 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
             />
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[11px] font-semibold text-muted-foreground">
+              {COMPONENTS_DATA.length} Components
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                const branchIds = Array.from(categories.keys()).map((c) => `cat-${c}`);
+                const isAllExpanded = branchIds.length > 0 && branchIds.every((id) => expandedCategories.includes(id));
+                setExpandedCategories(isAllExpanded ? [] : branchIds);
+              }}
+              className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+            >
+              {expandedCategories.length >= categories.size ? 'Collapse All' : 'Expand All'}
+            </button>
           </div>
 
           <div className="max-h-[60vh] overflow-y-auto pr-1">

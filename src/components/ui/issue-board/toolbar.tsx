@@ -18,6 +18,8 @@ import {
   DISPLAY_FIELDS,
 } from "./types";
 import { ToolbarPopover } from "./card";
+import { Checkbox } from "../checkbox";
+import { NativeSelect } from "../select";
 
 export interface BoardToolbarProps {
   issues: BoardIssue[];
@@ -165,13 +167,13 @@ export function BoardToolbar({
           icon={<SlidersHorizontal className="h-3 w-3" />}
         >
           {DISPLAY_FIELDS.map((field) => (
-            <label
+            <div
               key={field}
-              className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 hover:bg-[var(--mova-ai-hover,#f1f1f1)]"
+              className="flex items-center px-2 py-1.5 rounded hover:bg-[var(--mova-ai-hover,#f1f1f1)]"
             >
-              <input
-                className="accent-[var(--mova-ai-accent,#454545)]"
-                type="checkbox"
+              <Checkbox
+                sizeVariant="sm"
+                label={field}
                 checked={display.includes(field)}
                 onChange={() =>
                   setDisplay((fields) =>
@@ -181,8 +183,7 @@ export function BoardToolbar({
                   )
                 }
               />
-              {field}
-            </label>
+            </div>
           ))}
         </ToolbarPopover>
       </div>
@@ -229,18 +230,17 @@ export function BoardCreateForm({
         onChange={(event) => setDraft(event.target.value)}
         className="min-w-0 flex-1 rounded border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-field,#f6f6f6)] px-2 py-1.5 text-sm"
       />
-      <select
+      <NativeSelect
         aria-label="New issue status"
         value={creating}
         onChange={(event) => setCreating(event.target.value as BoardStatus)}
-        className="rounded bg-[var(--mova-ai-canvas,#f4f4f4)] p-1 text-xs"
-      >
-        {BOARD_STATUSES.map((status) => (
-          <option key={status} value={status}>
-            {STATUS_META[status].label}
-          </option>
-        ))}
-      </select>
+        sizeVariant="sm"
+        className="w-auto"
+        options={BOARD_STATUSES.map((status) => ({
+          value: status,
+          label: STATUS_META[status].label,
+        }))}
+      />
       <button
         type="submit"
         className="rounded bg-[var(--mova-ai-accent,#454545)] px-3 py-1.5 text-xs text-[color:var(--mova-ai-accent-foreground,#fff)]"

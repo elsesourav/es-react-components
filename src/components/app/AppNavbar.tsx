@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Tooltip, Logo } from '../ui';
+import { Badge, Tooltip, Logo, NativeSelect } from '../ui';
 import {
   Search,
   Sun,
@@ -94,21 +94,22 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
 
         {/* Theme Preset Selector */}
         <div className="relative flex items-center">
-          <Palette className="absolute left-2 size-3 text-primary pointer-events-none hidden sm:block" />
-          <select
+          <Palette className="absolute left-2.5 z-10 size-3 text-primary pointer-events-none hidden sm:block" />
+          <NativeSelect
             value={preset}
             onChange={(e) => setPreset(e.target.value as ThemePresetKey)}
-            className="h-8 sm:pl-7 pl-2.5 pr-6 text-xs font-medium rounded-lg bg-surface border border-border/80 text-foreground hover:bg-surface-subtle focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer appearance-none transition-colors shadow-2xs"
+            sizeVariant="sm"
+            className="sm:pl-7 pl-2.5 pr-7 font-medium shadow-2xs"
             aria-label="Theme Preset"
-          >
-            <option value="midnight">Midnight</option>
-            <option value="minimal-light">Minimal Light</option>
-            <option value="cyberpunk">Cyberpunk</option>
-            <option value="emerald">Emerald</option>
-            <option value="sunset">Sunset</option>
-            <option value="ocean">Ocean</option>
-          </select>
-          <ChevronDown className="absolute right-2 size-3 text-muted-foreground pointer-events-none" />
+            options={[
+              { value: 'midnight', label: 'Midnight' },
+              { value: 'minimal-light', label: 'Minimal Light' },
+              { value: 'cyberpunk', label: 'Cyberpunk' },
+              { value: 'emerald', label: 'Emerald' },
+              { value: 'sunset', label: 'Sunset' },
+              { value: 'ocean', label: 'Ocean' },
+            ]}
+          />
         </div>
 
         {/* Light / Dark Mode Toggle */}

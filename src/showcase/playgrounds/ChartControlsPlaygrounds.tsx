@@ -105,7 +105,9 @@ export const InteractiveControlsPlayground: React.FC = () => {
           <span className="text-xs font-medium text-muted-foreground">12. Animated Download</span>
           <DownloadAnimatedIcons
             theme={microTheme}
-            onDownload={() => addToast({ title: 'Download Started', description: 'Asset package downloading...', type: 'success' })}
+            onDownload={() => {
+              addToast({ title: 'Download Started', description: 'Asset package downloading...', type: 'success' });
+            }}
           />
         </div>
 

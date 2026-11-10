@@ -604,19 +604,21 @@ export const WizardStepsPlayground: React.FC = () => {
                   content: (
                     <div className="space-y-2 text-xs">
                       <p className="font-medium text-foreground">Security Compliance Gates:</p>
-                      <div className="space-y-1.5 text-muted-foreground">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" defaultChecked className="rounded text-primary" />
-                          <span>Enable zero-trust identity token verification</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" defaultChecked className="rounded text-primary" />
-                          <span>Enforce TLS 1.3 encryption for edge connections</span>
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" className="rounded text-primary" />
-                          <span>Automate SOC2 compliance audit log exports</span>
-                        </label>
+                      <div className="space-y-2 pt-1">
+                        <Checkbox
+                          sizeVariant="sm"
+                          defaultChecked
+                          label="Enable zero-trust identity token verification"
+                        />
+                        <Checkbox
+                          sizeVariant="sm"
+                          defaultChecked
+                          label="Enforce TLS 1.3 encryption for edge connections"
+                        />
+                        <Checkbox
+                          sizeVariant="sm"
+                          label="Automate SOC2 compliance audit log exports"
+                        />
                       </div>
                     </div>
                   ),

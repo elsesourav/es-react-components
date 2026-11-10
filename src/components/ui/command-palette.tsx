@@ -3,7 +3,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
 const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
@@ -29,12 +29,26 @@ export type UseCommandPaletteOptions = {
 
 function scoreOne(text: string, query: string): number {
   const t = text.toLowerCase();
+  const q = query.toLowerCase();
+
+  // Exact match gets highest priority
+  if (t === q) return 100;
+  // Prefix match gets very high priority
+  if (t.startsWith(q)) return 85 + (q.length / t.length) * 10;
+  // Substring match gets strong priority
+  const subIdx = t.indexOf(q);
+  if (subIdx >= 0) {
+    const isBoundary = subIdx === 0 || BOUNDARY.test(t[subIdx - 1]);
+    return 60 + (isBoundary ? 20 : 0) - subIdx * 0.5;
+  }
+
+  // Fuzzy subsequence match
   let cursor = 0;
   let total = 0;
   let streak = 0;
 
-  for (let i = 0; i < query.length; i++) {
-    const at = t.indexOf(query[i], cursor);
+  for (let i = 0; i < q.length; i++) {
+    const at = t.indexOf(q[i], cursor);
     if (at < 0) return -1;
     streak = at === cursor && i > 0 ? streak + 1 : 0;
     total += 2 + streak * 4;
@@ -55,8 +69,9 @@ function rank(items: CommandItem[], query: string): CommandItem[] {
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     const direct = scoreOne(item.label, q);
+    const hintScore = item.hint ? scoreOne(item.hint, q) - 5 : -1;
     const aliased = item.keywords ? scoreOne(item.keywords, q) - 3 : -1;
-    const best = Math.max(direct, item.keywords ? aliased : -1);
+    const best = Math.max(direct, hintScore, aliased);
     if (best < 0) continue;
     scored.push({ item, score: best - item.label.length * 0.05, order: i });
   }
@@ -187,7 +202,7 @@ export function CommandPalette({
   placeholder = "Search actions or navigation...",
   emptyLabel = "No matching commands found",
   label = "Command palette",
-  maxRows = 6,
+  maxRows = 8,
   autoFocus = false,
   className = "",
 }: CommandPaletteProps) {
@@ -208,17 +223,31 @@ export function CommandPalette({
     run,
   } = useCommandPalette({ items, onSelect, onDismiss });
 
-  const rows = Math.max(1, Math.min(maxRows, items.length));
+  const rows = Math.max(1, Math.min(maxRows, Math.max(items.length, 1)));
   const height = PAD * 2 + rows * ROW + (rows - 1) * GAP;
   const count = results.length;
 
   useEffect(() => {
-    if (autoFocus) inputRef.current?.focus({ preventScroll: true });
-  }, [autoFocus]);
+    if (open) {
+      setQuery("");
+      const raf = requestAnimationFrame(() => {
+        inputRef.current?.focus({ preventScroll: true });
+      });
+      const timer = setTimeout(() => {
+        inputRef.current?.focus({ preventScroll: true });
+      }, 40);
+      return () => {
+        cancelAnimationFrame(raf);
+        clearTimeout(timer);
+      };
+    }
+  }, [open, setQuery]);
 
   useEffect(() => {
-    if (open) setQuery("");
-  }, [open, setQuery]);
+    if (autoFocus && !open) {
+      inputRef.current?.focus({ preventScroll: true });
+    }
+  }, [autoFocus, open]);
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -237,13 +266,13 @@ export function CommandPalette({
   const surface = (
     <div
       ref={panelRef}
-      className={`overflow-hidden rounded-[var(--radius)] border border-border bg-surface-elevated text-foreground ${
+      className={`overflow-hidden rounded-2xl border border-border/80 bg-surface-elevated text-foreground ${
         overlaid
-          ? "w-full max-w-[540px] shadow-2xl backdrop-blur-md"
+          ? "w-full max-w-[560px] shadow-2xl backdrop-blur-xl"
           : "w-full"
       } ${className}`}
     >
-      <div className="flex h-12 items-center gap-3 border-b border-border/50 px-3.5">
+      <div className="flex h-12 items-center gap-2.5 border-b border-border/60 px-3.5 bg-surface/30">
         <Search className="size-4 shrink-0 text-muted-foreground" />
         <input
           ref={inputRef}
@@ -262,18 +291,30 @@ export function CommandPalette({
           onKeyDown={onKeyDown}
           className="h-full min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
         />
-        <span className="min-w-[3ch] shrink-0 text-right font-mono text-[10px] tabular-nums text-muted-foreground">
+        {query ? (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              inputRef.current?.focus();
+            }}
+            className="size-5 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-surface-subtle transition-colors cursor-pointer"
+            aria-label="Clear search"
+          >
+            <X className="size-3" />
+          </button>
+        ) : null}
+        <span className="min-w-[2.5ch] shrink-0 text-right font-mono text-[10px] tabular-nums text-muted-foreground px-1.5 py-0.5 rounded bg-surface/60 border border-border/50">
           {count}
         </span>
       </div>
-      <div className="relative" style={{ height }}>
+      <div className="relative" style={{ height: Math.min(height, PAD * 2 + Math.min(count || 1, maxRows) * ROW + Math.max(0, Math.min(count || 1, maxRows) - 1) * GAP) }}>
         <ul
           ref={listRef}
           id={`${uid}-list`}
           role="listbox"
           aria-label={label}
-          onMouseDown={(e) => e.preventDefault()}
-          className="absolute inset-0 flex flex-col gap-[2px] overflow-y-auto overscroll-contain p-1.5 [scrollbar-gutter:stable]"
+          className="absolute inset-0 flex flex-col gap-[2px] overflow-y-auto overscroll-contain p-1.5 [scrollbar-gutter:stable] scrollbar-thin"
         >
           {results.map((item) => {
             const active = item.id === activeId;
@@ -287,25 +328,27 @@ export function CommandPalette({
                 transition={spring}
                 onPointerMove={(e) => pointerActivate(item.id, e)}
                 onClick={() => run(item)}
-                className="relative flex h-[38px] shrink-0 cursor-pointer items-center rounded-[calc(var(--radius)-4px)] px-3 select-none"
+                className="relative flex h-[38px] shrink-0 cursor-pointer items-center rounded-xl px-3 select-none"
               >
                 <motion.span
                   aria-hidden
                   initial={false}
                   animate={{ opacity: active ? 1 : 0 }}
                   transition={reduced ? { duration: 0 } : CROSSFADE}
-                  className="absolute inset-0 rounded-[calc(var(--radius)-4px)] bg-primary/10 dark:bg-primary/20"
+                  className="absolute inset-0 rounded-xl bg-primary/10 border border-primary/20 dark:bg-primary/20"
                 />
                 <span className="relative flex min-w-0 flex-1 items-center gap-2.5">
                   {item.icon && (
-                    <span className="size-4 shrink-0 text-muted-foreground">{item.icon}</span>
+                    <span className={`size-4 shrink-0 transition-colors ${active ? "text-primary" : "text-muted-foreground"}`}>
+                      {item.icon}
+                    </span>
                   )}
-                  <span className={`truncate text-sm font-medium ${active ? "text-primary" : "text-foreground"}`}>
+                  <span className={`truncate text-sm font-medium ${active ? "text-primary font-semibold" : "text-foreground"}`}>
                     {item.label}
                   </span>
 
                   {item.hint && (
-                    <span className="hidden shrink-0 text-xs text-muted-foreground sm:inline">
+                    <span className="hidden shrink-0 text-[11px] text-muted-foreground/80 sm:inline px-1.5 py-0.5 rounded bg-surface/80 border border-border/50">
                       {item.hint}
                     </span>
                   )}
@@ -329,14 +372,37 @@ export function CommandPalette({
         </ul>
 
         {count === 0 && (
-          <motion.p
+          <motion.div
             initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={reduced ? { duration: 0 } : CROSSFADE}
-            className="pointer-events-none absolute inset-0 flex items-center justify-center px-3 text-center text-xs text-muted-foreground"
+            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-4 text-center"
           >
-            {emptyLabel}
-          </motion.p>
+            <p className="text-sm font-medium text-foreground mb-1">{emptyLabel}</p>
+            <p className="text-xs text-muted-foreground">Try searching with a different keyword or category name.</p>
+          </motion.div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between border-t border-border/60 bg-surface/30 px-3.5 py-2 text-[11px] text-muted-foreground select-none">
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <kbd className="flex h-4 min-w-4 items-center justify-center rounded border border-border/80 bg-surface px-1 font-mono text-[9px] text-foreground/80">↑↓</kbd>
+            <span className="hidden sm:inline">Navigate</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="flex h-4 min-w-4 items-center justify-center rounded border border-border/80 bg-surface px-1 font-mono text-[9px] text-foreground/80">↵</kbd>
+            <span className="hidden sm:inline">Select</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <kbd className="flex h-4 min-w-4 items-center justify-center rounded border border-border/80 bg-surface px-1 font-mono text-[9px] text-foreground/80">esc</kbd>
+            <span className="hidden sm:inline">Close</span>
+          </span>
+        </div>
+        {results.length > 0 && activeId && (
+          <span className="truncate max-w-[200px] font-mono text-[10px] text-muted-foreground/90">
+            {results.find((r) => r.id === activeId)?.hint || ''}
+          </span>
         )}
       </div>
       <span ref={liveRef} role="status" aria-live="polite" className="sr-only" />
@@ -383,13 +449,14 @@ function PaletteLayer({
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") return;
-      event.preventDefault();
-      event.stopPropagation();
-      leave.current?.();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        leave.current?.();
+      }
     };
-    document.addEventListener("keydown", onKeyDown, true);
-    return () => document.removeEventListener("keydown", onKeyDown, true);
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   useEffect(() => {

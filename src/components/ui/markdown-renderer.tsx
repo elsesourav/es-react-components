@@ -15,6 +15,7 @@ import {
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "./checkbox";
 
 export interface MarkdownRendererProps {
   content?: string | null;
@@ -380,12 +381,12 @@ export function MarkdownRenderer({
           <ul key={`tasks-${blockIndex++}`} className="my-3 space-y-1.5 text-xs sm:text-sm">
             {taskItems.map((task) => (
               <li key={task.itemIdx} className="flex items-start gap-2.5">
-                <input
-                  type="checkbox"
+                <Checkbox
+                  sizeVariant="sm"
                   checked={task.checked}
                   disabled={!interactiveChecklists}
                   onChange={(e) => onChecklistToggle?.(task.itemIdx, e.target.checked)}
-                  className="mt-1 rounded accent-primary cursor-pointer size-4"
+                  className="mt-0.5"
                 />
                 <span
                   className={cn(
