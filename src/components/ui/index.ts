@@ -65,3 +65,4 @@ export * from './show-more';
 export * from './parameter-slider';
 export * from './slider';
 export * from './mono-charts';
+export * from './logo';

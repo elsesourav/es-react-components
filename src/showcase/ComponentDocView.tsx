@@ -8,8 +8,9 @@ import {
   Card,
   AICodeBlock,
   Tooltip,
+  Logo,
 } from '@/components/ui';
-import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette } from 'lucide-react';
+import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette, ChevronRight } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { useTheme } from '@/theme/ThemeContext';
 
@@ -33,22 +34,33 @@ export const ComponentDocView: React.FC<{ component: ComponentDoc }> = ({
   };
 
   return (
-    <div className="space-y-8 animate-fade-in pb-16">
-      {/* Component Header */}
-      <div className="space-y-4 border-b border-border/80 pb-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16">
+      {/* Component Header with Brand Breadcrumbs */}
+      <div className="space-y-3 sm:space-y-4 border-b border-border/80 pb-4 sm:pb-6">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+          <span className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
+            <Logo size={14} variant="badge" className="shrink-0" />
+            <span>Components</span>
+          </span>
+          <ChevronRight className="size-3 text-muted-foreground/60" />
+          <span>{component.category}</span>
+          <ChevronRight className="size-3 text-muted-foreground/60" />
+          <span className="text-foreground font-semibold">{component.name}</span>
+        </nav>
+
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
             {component.name}
           </h1>
           <Badge variant="primary">{component.category}</Badge>
           <Badge variant="outline">{component.themeTokens.length} Tokens</Badge>
         </div>
-        <p className="text-base text-muted-foreground max-w-3xl leading-relaxed">
+        <p className="text-sm sm:text-base text-muted-foreground max-w-3xl leading-relaxed">
           {component.description}
         </p>
 
         {/* Quick Import Snippet */}
-        <div className="flex items-center justify-between p-2.5 px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-xs">
+        <div className="flex items-center justify-between p-2 px-3 sm:px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-xs">
           <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto py-1">
             <Terminal className="h-4 w-4 text-primary shrink-0" />
             <span className="text-foreground">{component.importCode}</span>

@@ -1,0 +1,26 @@
+{
+  "name": "es-react-components",
+  "short_name": "ES Components",
+  "description": "Production-grade React 19 UI component library & interactive design system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#031c12",
+  "theme_color": "#031c12",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

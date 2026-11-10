@@ -27,7 +27,9 @@ import {
   Modal,
   TreeView,
   TreeNode,
+  Logo,
 } from './components/ui';
+import { useSeoMetadata } from './hooks/useSeoMetadata';
 import {
   Search,
   Sparkles,
@@ -157,6 +159,24 @@ export const App: React.FC = () => {
     return COMPONENTS_DATA.find((c) => c.id === selectedId) || null;
   }, [selectedId]);
 
+  // Dynamic SEO metadata based on current component / overview
+  useSeoMetadata(activeComponent);
+
+  // Handle browser Back / Forward history navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const c = params.get('component');
+      if (c && COMPONENTS_DATA.some((comp) => comp.id === c)) {
+        setSelectedId(c);
+      } else {
+        setSelectedId(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const handleSelectComponent = (id: string | null) => {
     setSelectedId(id);
     setMobileMenuOpen(false);
@@ -283,8 +303,7 @@ export const App: React.FC = () => {
     } else if (item.id === 'act-toggle-dark') {
       toggleDark();
     } else if (item.id === 'act-theme-editor') {
-      const trigger = document.querySelector('button[title*="Theme"]') || document.querySelector('button[aria-label*="Theme"]');
-      if (trigger) (trigger as HTMLElement).click();
+      setThemeCustomizerOpen(true);
     } else if (item.id.startsWith('act-preset-')) {
       const p = item.id.replace('act-preset-', '');
       if (p === 'light') setPreset('minimal-light');
@@ -313,22 +332,24 @@ export const App: React.FC = () => {
       {/* Live Reading Progress Top Bar */}
       <ReadingProgress className="fixed top-0 inset-x-0 z-50 h-[3px] pointer-events-none" />
 
-      {/* Release Announcement Banner */}
-      <CollapsibleBanner
-        variant="info"
-        title="es-react-components v1.0 • Modern Theme-Driven Design System"
-        description="93 production-grade React 19 components with fluid kinetic physics, full WAI-ARIA accessibility, and real-time HSL theming."
-        action={
-          <Button size="xs" variant="primary" onClick={() => handleSelectComponent('filter-grid')}>
-            Explore Catalog
-          </Button>
-        }
-        defaultCollapsed={false}
-      />
+      {/* Release Announcement Banner (Desktop/Tablet) */}
+      <div className="hidden sm:block">
+        <CollapsibleBanner
+          variant="info"
+          title="es-react-components v1.0 • Modern Theme-Driven Design System"
+          description="93 production-grade React 19 components with fluid kinetic physics, full WAI-ARIA accessibility, and real-time HSL theming."
+          action={
+            <Button size="xs" variant="primary" onClick={() => handleSelectComponent('filter-grid')}>
+              Explore Catalog
+            </Button>
+          }
+          defaultCollapsed={true}
+        />
+      </div>
 
       {/* Top Navbar */}
-      <header className="sticky top-0 z-30 h-16 border-b border-border bg-surface/85 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-30 h-14 sm:h-16 border-b border-border bg-surface/85 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Mobile Menu Hamburger */}
           <Button
             size="xs"
@@ -343,16 +364,19 @@ export const App: React.FC = () => {
             variant="ghost"
             onClick={() => handleSelectComponent(null)}
             className="flex items-center gap-2.5 px-1 hover:bg-transparent"
+            aria-label="es-react-components home"
           >
-            <div className="p-2 rounded-xl bg-primary text-primary-foreground font-black text-sm shadow-md shadow-primary/20 hover:scale-105 transition-transform">
-              ES
-            </div>
-            <div className="text-left">
+            <Logo
+              size={36}
+              variant="badge"
+              className="shrink-0 shadow-md shadow-emerald-950/40 hover:scale-105 transition-transform"
+            />
+            <div className="text-left hidden sm:block">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-sm sm:text-base text-foreground leading-none">
                   es-react-components
                 </span>
-                <Badge variant="outline" size="sm" className="hidden sm:inline font-mono text-[10px]">
+                <Badge variant="outline" size="sm" className="font-mono text-[10px]">
                   v1.0.0
                 </Badge>
               </div>
@@ -387,51 +411,46 @@ export const App: React.FC = () => {
             <PresenceAvatars people={ACTIVE_DESIGNERS} max={3} size={26} label="Active System Collaborators" />
           </div>
 
-          {/* Preset Switcher Pills */}
-          <div className="hidden lg:flex items-center gap-1 p-1 rounded-xl bg-surface border border-border">
-            {(
-              [
-                ['midnight', 'Midnight'],
-                ['minimal-light', 'Light'],
-                ['cyberpunk', 'Cyberpunk'],
-                ['emerald', 'Emerald'],
-                ['sunset', 'Sunset'],
-              ] as [ThemePresetKey, string][]
-            ).map(([key, label]) => (
-              <Tooltip key={key} label={`Switch to ${label} theme`}>
-                <Button
-                  size="xs"
-                  variant={preset === key ? 'primary' : 'ghost'}
-                  onClick={() => setPreset(key)}
-                  className="px-2.5 py-1 text-xs"
-                >
-                  {label}
-                </Button>
-              </Tooltip>
-            ))}
+          {/* Theme Preset Selector */}
+          <div className="relative flex items-center">
+            <Palette className="absolute left-2.5 size-3.5 text-primary pointer-events-none" />
+            <select
+              value={preset}
+              onChange={(e) => setPreset(e.target.value as ThemePresetKey)}
+              className="h-8 pl-8 pr-7 text-xs font-semibold rounded-lg bg-surface border border-border text-foreground hover:bg-surface-subtle focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer appearance-none transition-colors shadow-xs"
+              aria-label="Theme Preset"
+            >
+              <option value="midnight">Midnight</option>
+              <option value="minimal-light">Minimal Light</option>
+              <option value="cyberpunk">Cyberpunk</option>
+              <option value="emerald">Emerald</option>
+              <option value="sunset">Sunset</option>
+              <option value="ocean">Ocean</option>
+            </select>
+            <ChevronDown className="absolute right-2 size-3 text-muted-foreground pointer-events-none" />
           </div>
 
-          <Tooltip label="Toggle Light / Dark Mode">
+          {/* Light / Dark Mode Toggle */}
+          <Tooltip label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}>
             <Button
               size="xs"
               variant="outline"
               onClick={toggleDark}
+              className="h-8 w-8 p-0 flex items-center justify-center rounded-lg"
             >
-              {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              {isDark ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-primary" />}
             </Button>
           </Tooltip>
 
-          <Tooltip label="Open Theme & Token Customizer">
+          {/* Token Customizer Modal Trigger */}
+          <Tooltip label="Theme & Design Token Editor">
             <Button
               size="xs"
-              variant="primary"
-              onClick={() => {
-                const trigger = document.querySelector('button[title*="Theme"]') || document.querySelector('button[aria-label*="Theme"]');
-                if (trigger) (trigger as HTMLElement).click();
-              }}
-              leftIcon={<Palette className="size-3.5" />}
+              variant="ghost"
+              onClick={() => setThemeCustomizerOpen(true)}
+              className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground hidden sm:flex items-center gap-1.5"
             >
-              Theme
+              <span>Tokens</span>
             </Button>
           </Tooltip>
         </div>
@@ -450,7 +469,12 @@ export const App: React.FC = () => {
       <Modal
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        title="Component Directory"
+        title={
+          <div className="flex items-center gap-2.5">
+            <Logo size={24} variant="badge" />
+            <span>Component Directory</span>
+          </div>
+        }
         description="Select a component to inspect its interactive playground and documentation."
       >
         <div className="space-y-4">
@@ -465,127 +489,40 @@ export const App: React.FC = () => {
             />
           </div>
 
-          <div className="space-y-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Theme Presets
-            </span>
-            <div className="grid grid-cols-2 gap-1.5">
-              {(
-                [
-                  ['midnight', 'Midnight'],
-                  ['minimal-light', 'Light'],
-                  ['cyberpunk', 'Cyberpunk'],
-                  ['emerald', 'Emerald'],
-                  ['sunset', 'Sunset'],
-                ] as [ThemePresetKey, string][]
-              ).map(([key, label]) => (
-                <Button
-                  key={key}
-                  size="xs"
-                  variant={preset === key ? 'primary' : 'outline'}
-                  onClick={() => setPreset(key)}
-                  className="w-full"
-                >
-                  {label}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className="max-h-72 overflow-y-auto space-y-3 pr-1">
-            <Button
-              variant={selectedId === null ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => handleSelectComponent(null)}
-              className="w-full justify-start gap-2"
-              leftIcon={<Layers className="size-4" />}
-            >
-              Showcase Overview
-            </Button>
-
-            {Array.from(categories.entries()).map(([category, items]) => (
-              <div key={category} className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-2">
-                  {category}
-                </span>
-                {items.map((item) => (
-                  <Button
-                    key={item.id}
-                    size="xs"
-                    variant={selectedId === item.id ? 'secondary' : 'ghost'}
-                    onClick={() => handleSelectComponent(item.id)}
-                    className="w-full justify-between"
-                  >
-                    <span>{item.name}</span>
-                    {selectedId === item.id && (
-                      <ChevronRight className="size-3.5 text-primary" />
-                    )}
-                  </Button>
-                ))}
-              </div>
-            ))}
+          <div className="max-h-[60vh] overflow-y-auto pr-1">
+            <TreeView
+              label="Mobile Component Directory Tree"
+              nodes={treeNodes}
+              selected={selectedId || '__overview__'}
+              onSelectedChange={handleTreeSelect}
+              expanded={expandedCategories}
+              onExpandedChange={setExpandedCategories}
+            />
           </div>
         </div>
       </Modal>
 
       {/* Main Container */}
       <div className="flex-1 flex w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-8">
-        {/* Left Sidebar (Desktop) */}
+        {/* Left Sidebar (Desktop Tree View) */}
         <aside className="w-64 shrink-0 hidden md:block">
-          <div className="sticky top-24 space-y-6">
-            <Button
-              variant={selectedId === null ? 'primary' : 'ghost'}
-              size="sm"
-              onClick={() => handleSelectComponent(null)}
-              className="w-full justify-between shadow-xs"
-              leftIcon={<Layers className="size-4" />}
-              rightIcon={<ChevronRight className="size-3.5 opacity-60" />}
-            >
-              Showcase Overview
-            </Button>
+          <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto space-y-3 pr-2">
+            <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 flex items-center justify-between">
+              <span>Component Tree</span>
+              <Badge size="sm" variant="outline" className="font-mono text-[10px]">
+                {COMPONENTS_DATA.length}
+              </Badge>
+            </div>
 
-            {/* Categorized Component Links */}
-            <div className="space-y-5">
-              {Array.from(categories.entries()).map(([category, items]) => (
-                <div key={category} className="space-y-1.5">
-                  <div className="flex items-center justify-between px-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
-                    <span>{category}</span>
-                    <Badge size="sm" variant="outline" className="font-mono text-[10px]">
-                      {items.length}
-                    </Badge>
-                  </div>
-                  <div className="space-y-0.5">
-                    {items.map((item) => {
-                      const isSelected = selectedId === item.id;
-                      return (
-                        <Button
-                          key={item.id}
-                          size="xs"
-                          variant={isSelected ? 'secondary' : 'ghost'}
-                          onClick={() => handleSelectComponent(item.id)}
-                          className={`w-full justify-between h-8 px-2.5 text-xs ${
-                            isSelected
-                              ? 'font-bold text-primary border border-primary/20 shadow-xs'
-                              : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 truncate">
-                            <span
-                              className={`size-1.5 rounded-full shrink-0 ${
-                                isSelected ? 'bg-primary' : 'bg-transparent'
-                              }`}
-                            />
-                            <span className="truncate">{item.name}</span>
-                          </div>
-                          {isSelected && (
-                            <ChevronRight className="size-3 text-primary shrink-0" />
-                          )}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+            <div className="p-2 rounded-2xl bg-surface/60 border border-border shadow-xs">
+              <TreeView
+                label="Component Directory Tree"
+                nodes={treeNodes}
+                selected={selectedId || '__overview__'}
+                onSelectedChange={handleTreeSelect}
+                expanded={expandedCategories}
+                onExpandedChange={setExpandedCategories}
+              />
             </div>
           </div>
         </aside>
@@ -746,8 +683,61 @@ export const App: React.FC = () => {
         </main>
       </div>
 
-      {/* Floating Theme Customizer */}
-      <ThemeCustomizer />
+      {/* Modern Documentation & Brand Footer */}
+      <footer className="mt-auto border-t border-border/80 bg-surface/50 backdrop-blur-xs py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <Logo size={32} variant="badge" className="shadow-xs" />
+            <div>
+              <div className="font-semibold text-foreground text-sm flex items-center gap-2">
+                <span>es-react-components</span>
+                <Badge size="sm" variant="primary">v1.0.0</Badge>
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Modern React 19 UI component library & interactive design system.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => handleSelectComponent(null)}
+              className="hover:text-foreground transition-colors cursor-pointer"
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => handleSelectComponent('filter-grid')}
+              className="hover:text-foreground transition-colors cursor-pointer"
+            >
+              Catalog
+            </button>
+            <button
+              onClick={() => setThemeCustomizerOpen(true)}
+              className="hover:text-foreground transition-colors cursor-pointer"
+            >
+              Theme Engine
+            </button>
+            <a
+              href="https://github.com/elsesourav/es-react-components"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors"
+            >
+              GitHub
+            </a>
+          </div>
+          <div className="text-right text-[11px]">
+            <span>MIT Licensed • Built for React 19 & Tailwind CSS</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* Theme Customizer Drawer */}
+      <ThemeCustomizer
+        open={themeCustomizerOpen}
+        onOpenChange={setThemeCustomizerOpen}
+        showFloatingTrigger={false}
+      />
     </div>
   );
 };

@@ -26,7 +26,7 @@ export function ParameterSlider({
   step = 1,
   unit = "",
   format,
-  ticks = 7,
+  ticks = 9,
   disabled = false,
   className = "",
 }: ParameterSliderProps) {
@@ -45,11 +45,12 @@ export function ParameterSlider({
     [min, max, step]
   );
 
+  const thumbWidth = 4;
+
   const updateFromPosition = useCallback(
     (clientX: number) => {
       if (!trackRef.current || disabled) return;
       const rect = trackRef.current.getBoundingClientRect();
-      const thumbWidth = 36;
       const availableWidth = Math.max(1, rect.width - thumbWidth);
       const relativeX = clientX - rect.left - thumbWidth / 2;
       const ratio = Math.min(1, Math.max(0, relativeX / availableWidth));
@@ -106,7 +107,7 @@ export function ParameterSlider({
   return (
     <div
       className={cn(
-        "group relative flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl bg-surface border border-border shadow-xs transition-all duration-150 select-none",
+        "group relative flex items-center justify-between gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border border-border shadow-xs transition-all duration-150 select-none",
         isDragging && "border-primary/50 shadow-sm",
         disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
         className
@@ -115,12 +116,12 @@ export function ParameterSlider({
       {/* Parameter Label */}
       <label
         htmlFor={id}
-        className="text-xs font-medium text-foreground/85 shrink-0 min-w-[70px] truncate cursor-pointer"
+        className="text-xs font-medium text-foreground/80 shrink-0 min-w-[68px] max-w-[120px] truncate cursor-pointer"
       >
         {label}
       </label>
 
-      {/* Scrubber Track & Carriage */}
+      {/* Ruler Detents Track */}
       <div
         ref={trackRef}
         id={id}
@@ -137,42 +138,33 @@ export function ParameterSlider({
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onKeyDown={handleKeyDown}
-        className="relative flex-1 h-7 flex items-center cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/40 rounded-lg px-0.5"
+        className="relative flex-1 h-7 mx-1.5 flex items-center cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/40 rounded-md"
       >
-        {/* Subtle Track Background with Vertical Ticks */}
-        <div className="absolute inset-x-0 h-1.5 rounded-full bg-surface-subtle/80 border border-border/40 overflow-hidden flex items-center justify-between px-2">
+        {/* Ruler Tick Marks */}
+        <div className="absolute inset-x-0.5 h-full flex items-center justify-between pointer-events-none">
           {Array.from({ length: ticks }).map((_, i) => (
             <span
               key={i}
-              className="w-[1px] h-1.5 bg-border-strong/40 rounded-full"
+              className="w-[1px] h-2.5 rounded-full bg-foreground/15 dark:bg-white/12 transition-colors"
             />
           ))}
         </div>
 
-        {/* Floating Thumb Carriage with Inner Vertical Notch */}
+        {/* Needle Thumb Indicator Bar */}
         <div
           style={{
-            left: `calc(${percent * 100}% - ${percent * 36}px)`,
+            left: `calc(${percent * 100}% - ${percent * thumbWidth}px)`,
           }}
           className={cn(
-            "absolute top-0.5 h-6 w-9 rounded-md bg-surface-elevated border border-border shadow-md flex items-center justify-center transition-transform duration-75",
-            isDragging
-              ? "scale-105 border-primary shadow-primary/20 cursor-grabbing ring-1 ring-primary/40"
-              : "hover:border-border-strong cursor-grab"
+            "absolute top-1/2 -translate-y-1/2 h-5 w-1 rounded-full pointer-events-none transition-transform duration-75",
+            "bg-foreground dark:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.3)] dark:shadow-[0_0_8px_rgba(255,255,255,0.45)]",
+            isDragging && "scale-y-110 shadow-[0_0_12px_rgba(255,255,255,0.7)]"
           )}
-        >
-          {/* Inner Notch Indicator Bar */}
-          <span
-            className={cn(
-              "w-0.5 h-3 rounded-full transition-colors",
-              isDragging ? "bg-primary" : "bg-muted-foreground/60"
-            )}
-          />
-        </div>
+        />
       </div>
 
       {/* Value Readout */}
-      <span className="text-xs font-mono font-bold text-foreground text-right shrink-0 min-w-[50px] tabular-nums">
+      <span className="text-xs font-mono font-bold text-foreground text-right shrink-0 min-w-[42px] tabular-nums">
         {displayVal}
       </span>
     </div>

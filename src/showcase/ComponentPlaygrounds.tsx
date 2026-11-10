@@ -2751,89 +2751,70 @@ export function PhysicsNote() {
   // ───────── LiquidGlassSheet Playground ─────────
   if (componentId === 'liquid-glass-sheet') {
     const wallpapers = [
-      { id: 'forest', name: 'Autumn Forest', url: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?auto=format&fit=crop&q=80&w=800' },
-      { id: 'nordic', name: 'Nordic Villa', url: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800' },
-      { id: 'tokyo', name: 'Tokyo Neon', url: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800' },
-      { id: 'coast', name: 'Azure Coast', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800' },
+      { id: 'forest', name: 'Forest', url: 'https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?auto=format&fit=crop&q=80&w=800' },
+      { id: 'nordic', name: 'Villa', url: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800' },
+      { id: 'tokyo', name: 'Tokyo', url: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800' },
+      { id: 'coast', name: 'Coast', url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800' },
     ];
 
     return (
-      <div className="space-y-8">
-        {/* Controls */}
-        <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-          <div className="text-sm font-semibold text-foreground flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Sparkles className="size-4 text-primary" />
-              Liquid Glass Sheet Configuration
-            </span>
+      <div className="space-y-6">
+        {/* Sleek Compact Toolbar */}
+        <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2">
+            <Sparkles className="size-4 text-primary" />
+            <span className="font-semibold text-foreground">Liquid Glass Sheet</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5 font-medium">
-                Sheet Title
-              </label>
-              <Input
-                value={glassTitle}
-                onChange={(e) => setGlassTitle(e.target.value)}
-                placeholder="Enter sheet title"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5 font-medium">
-                Subtitle
-              </label>
-              <Input
-                value={glassSubtitle}
-                onChange={(e) => setGlassSubtitle(e.target.value)}
-                placeholder="Enter subtitle"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5 font-medium">
-                Theme Variant
-              </label>
-              <div className="flex gap-1.5">
+
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Theme Toggle */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground text-[11px]">Theme:</span>
+              <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
                 {(['auto', 'light', 'dark'] as const).map((t) => (
-                  <Button
+                  <button
                     key={t}
-                    size="sm"
-                    variant={glassTheme === t ? 'primary' : 'outline'}
+                    type="button"
                     onClick={() => setGlassTheme(t)}
-                    className="flex-1 capitalize text-xs"
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-xs font-medium capitalize transition-all",
+                      glassTheme === t
+                        ? "bg-primary text-primary-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
                   >
                     {t}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className="pt-2 border-t border-border/50">
-            <label className="text-xs text-muted-foreground block mb-2 font-medium">
-              Backdrop Wallpaper
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {wallpapers.map((w) => (
-                <button
-                  key={w.id}
-                  type="button"
-                  onClick={() => setGlassImage(w.url)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-xl border text-xs font-medium cursor-pointer transition-all",
-                    glassImage === w.url
-                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                      : "bg-surface-subtle border-border text-foreground hover:bg-surface"
-                  )}
-                >
-                  {w.name}
-                </button>
-              ))}
+            {/* Backdrop Wallpaper */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground text-[11px]">Backdrop:</span>
+              <div className="flex items-center gap-1">
+                {wallpapers.map((w) => (
+                  <button
+                    key={w.id}
+                    type="button"
+                    onClick={() => setGlassImage(w.url)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-lg border text-xs font-medium transition-all",
+                      glassImage === w.url
+                        ? "bg-primary/15 text-primary border-primary/40 font-semibold"
+                        : "bg-surface-subtle/40 border-border text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {w.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Live Preview Container */}
-        <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[460px] relative overflow-hidden">
+        <div className="p-4 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center min-h-[440px] relative overflow-hidden">
           <LiquidGlassSheet
             title={glassTitle}
             subtitle={glassSubtitle}
@@ -2943,39 +2924,36 @@ export function PhysicsNote() {
   // ───────── Interactive Micro-Controls Playground ─────────
   if (componentId === 'interactive-controls') {
     return (
-      <div className="space-y-8">
-        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
-          <div className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <Sparkles className="size-4 text-primary" />
-            Interactive Micro-Controls (11 Components)
-          </div>
+      <div className="space-y-6">
+        <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground mr-1">Theme:</span>
-            <Button
-              size="sm"
-              variant={microTheme === 'auto' ? 'primary' : 'outline'}
-              onClick={() => setMicroTheme('auto')}
-            >
-              Auto (System)
-            </Button>
-            <Button
-              size="sm"
-              variant={microTheme === 'dark' ? 'primary' : 'outline'}
-              onClick={() => setMicroTheme('dark')}
-            >
-              Dark
-            </Button>
-            <Button
-              size="sm"
-              variant={microTheme === 'light' ? 'primary' : 'outline'}
-              onClick={() => setMicroTheme('light')}
-            >
-              Light
-            </Button>
+            <Sparkles className="size-4 text-primary" />
+            <span className="font-semibold text-foreground">Interactive Micro-Controls</span>
+            <Badge size="sm" variant="outline" className="font-mono text-[10px]">11 Components</Badge>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-[11px]">Theme:</span>
+            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
+              {(['auto', 'dark', 'light'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setMicroTheme(t)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-md text-xs font-medium capitalize transition-all",
+                    microTheme === t
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {t === 'auto' ? 'Auto' : t}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
           {/* 10. Context Menu */}
           <div className="p-6 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center gap-3 min-h-[160px]">
             <span className="text-xs font-medium text-muted-foreground">10. Context Menu</span>
@@ -3086,54 +3064,73 @@ export function PhysicsNote() {
   // ───────── Motion Loaders Playground ─────────
   if (componentId === 'motion-loaders') {
     const colorOptions = [
-      { label: 'Theme Primary', value: 'bg-primary' },
-      { label: 'Emerald', value: 'bg-emerald-500' },
-      { label: 'Cyan', value: 'bg-cyan-500' },
-      { label: 'Amber', value: 'bg-amber-500' },
-      { label: 'Rose', value: 'bg-rose-500' },
+      { label: 'Theme', value: 'bg-primary', dot: 'bg-primary' },
+      { label: 'Emerald', value: 'bg-emerald-500', dot: 'bg-emerald-500' },
+      { label: 'Cyan', value: 'bg-cyan-500', dot: 'bg-cyan-500' },
+      { label: 'Amber', value: 'bg-amber-500', dot: 'bg-amber-500' },
+      { label: 'Rose', value: 'bg-rose-500', dot: 'bg-rose-500' },
     ];
 
     return (
-      <div className="space-y-8">
-        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
-          <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+      <div className="space-y-6">
+        <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
-            Motion Loaders Configuration
+            <span className="font-semibold text-foreground">Motion Loaders</span>
           </div>
+
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground mr-1">Size:</span>
-              {(['sm', 'md', 'lg'] as const).map((s) => (
-                <Button
-                  key={s}
-                  size="sm"
-                  variant={loaderSize === s ? 'primary' : 'outline'}
-                  onClick={() => setLoaderSize(s)}
-                >
-                  {s.toUpperCase()}
-                </Button>
-              ))}
+            {/* Size Scale */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground text-[11px]">Scale:</span>
+              <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
+                {(['sm', 'md', 'lg'] as const).map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setLoaderSize(s)}
+                    className={cn(
+                      "px-2.5 py-1 rounded-md text-xs font-semibold uppercase transition-all",
+                      loaderSize === s
+                        ? "bg-primary text-primary-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground mr-1">Color:</span>
-              {colorOptions.map((c) => (
-                <Button
-                  key={c.value}
-                  size="sm"
-                  variant={loaderColor === c.value ? 'primary' : 'outline'}
-                  onClick={() => setLoaderColor(c.value)}
-                >
-                  {c.label}
-                </Button>
-              ))}
+            {/* Color Swatches */}
+            <div className="flex items-center gap-1.5">
+              <span className="text-muted-foreground text-[11px]">Color:</span>
+              <div className="flex items-center gap-1">
+                {colorOptions.map((c) => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => setLoaderColor(c.value)}
+                    title={c.label}
+                    className={cn(
+                      "flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs transition-all",
+                      loaderColor === c.value
+                        ? "bg-primary/10 border-primary text-foreground font-semibold shadow-xs"
+                        : "border-border text-muted-foreground hover:text-foreground bg-surface-subtle/40"
+                    )}
+                  >
+                    <span className={cn("size-2 rounded-full shrink-0", c.dot)} />
+                    <span className="hidden sm:inline">{c.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* SquareSnake */}
-          <div className="p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
+          <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               SquareSnake (3x3 Staggered Matrix)
             </div>
@@ -3146,7 +3143,7 @@ export function PhysicsNote() {
           </div>
 
           {/* BobbingDots */}
-          <div className="p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
+          <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               BobbingDots (Harmonic Wave)
             </div>
@@ -5655,20 +5652,16 @@ export function PhysicsNote() {
     return (
       <div className="space-y-6">
         {/* Controls Card */}
-        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <Sparkles className="size-4 text-primary" />
-              Markdown Editor & KaTeX Math Playground
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Built completely from scratch with real-time KaTeX LaTeX math rendering, GitHub callouts, and split-screen editing.
-            </p>
+        <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+          <div className="flex items-center gap-2">
+            <Sparkles className="size-4 text-primary" />
+            <span className="font-semibold text-foreground">Markdown & KaTeX Math Editor</span>
+            <Badge size="sm" variant="outline" className="font-mono text-[10px]">Split View</Badge>
           </div>
 
           <div className="flex items-center gap-2">
             <Button
-              size="sm"
+              size="xs"
               variant="outline"
               onClick={() => {
                 setMarkdownVal(defaultMarkdownContent);
@@ -5682,7 +5675,7 @@ export function PhysicsNote() {
               Reset Demo
             </Button>
             <Button
-              size="sm"
+              size="xs"
               variant="outline"
               onClick={() => {
                 setMarkdownVal(
@@ -5690,7 +5683,7 @@ export function PhysicsNote() {
                 );
               }}
             >
-              Load Math Cheat
+              Math Cheat
             </Button>
           </div>
         </div>
