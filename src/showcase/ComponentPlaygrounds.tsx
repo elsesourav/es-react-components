@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { cn } from '@/lib/utils';
 import {
   Button,
   Badge,
@@ -99,6 +100,15 @@ import {
   useBlurUpImage,
   ShowMore,
   useShowMore,
+  MarkdownEditor,
+  MarkdownRenderer,
+  ParameterSlider,
+  ParameterSwitch,
+  ParameterColor,
+  ParameterGrid,
+  ElasticSlider,
+  WakeSlider,
+  Slider,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -138,6 +148,9 @@ import {
   EyeOff,
   Navigation2,
   SlidersHorizontal,
+  SlidersVertical,
+  Volume2,
+  VolumeX,
   Vote,
   GripVertical,
   Maximize2,
@@ -158,6 +171,8 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [btnSize, setBtnSize] = useState<any>('md');
   const [btnLoading, setBtnLoading] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(false);
+  const [btnRadius, setBtnRadius] = useState(10);
+  const [btnScale, setBtnScale] = useState(100);
 
   // Badge Playground State
   const [badgeVariant, setBadgeVariant] = useState<any>('primary');
@@ -200,6 +215,8 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [selectTab, setSelectTab] = useState<'animated' | 'native'>('animated');
   const [dropdownVal, setDropdownVal] = useState('us-east');
   const [nativeSelectVal, setNativeSelectVal] = useState('us-east-1');
+  const [selectDelay, setSelectDelay] = useState(600);
+  const [selectDisabled, setSelectDisabled] = useState(false);
 
   // Dialog State
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -333,6 +350,23 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   const [showMoreExpanded, setShowMoreExpanded] = useState(false);
   const [showMoreLines, setShowMoreLines] = useState(3);
 
+  // Parameter Slider / Audio EQ Visualizer Showcase State (Matching user screenshot!)
+  const [paramFill, setParamFill] = useState('#f5f5f5');
+  const [paramTrack, setParamTrack] = useState('#27272a');
+  const [paramValue, setParamValue] = useState(50);
+  const [paramStep, setParamStep] = useState(1);
+  const [paramShowValue, setParamShowValue] = useState(true);
+  const [paramBars, setParamBars] = useState(32);
+  const [paramHeight, setParamHeight] = useState(56);
+  const [paramRestHeight, setParamRestHeight] = useState(18);
+  const [paramGap, setParamGap] = useState(4);
+  const [paramSensitivity, setParamSensitivity] = useState(1);
+  const [paramReach, setParamReach] = useState(6);
+  const [paramSkew, setParamSkew] = useState(0.6);
+  const [paramGlide, setParamGlide] = useState(0.3);
+  const [paramSmoothing, setParamSmoothing] = useState(100);
+  const [paramDisabled, setParamDisabled] = useState(false);
+
   // Switch State
   const [switchChecked, setSwitchChecked] = useState(true);
 
@@ -417,6 +451,89 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
   // Motion Loaders State
   const [loaderSize, setLoaderSize] = useState<'sm' | 'md' | 'lg'>('md');
 
+  // MarkdownEditor State
+  const defaultMarkdownContent = `# Quantum Mechanics & Relativistic Physics
+
+This document showcases **live Markdown rendering** with full **KaTeX LaTeX math support** built completely from scratch.
+
+> [!NOTE]
+> Math formulas render synchronously using KaTeX with zero latency and high fidelity.
+
+### Core Mathematical Formulations
+
+Here is Einstein's famous mass-energy-momentum invariant relation:
+
+$$E^2 = (m_0 c^2)^2 + (pc)^2$$
+
+And the time-dependent **Schrödinger Equation** describing quantum state evolution:
+
+$$i\\hbar\\frac{\\partial}{\\partial t}\\Psi(\\mathbf{r}, t) = \\left[ -\\frac{\\hbar^2}{2m}\\nabla^2 + V(\\mathbf{r}, t) \\right] \\Psi(\\mathbf{r}, t)$$
+
+You can also write inline math formulas such as $e^{i\\pi} + 1 = 0$, or standard deviations $\\sigma = \\sqrt{\\frac{1}{N}\\sum_{i=1}^N (x_i - \\mu)^2}$.
+
+### Gaussian Integral
+
+$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
+
+> [!TIP]
+> Hover any block equation above to copy its raw TeX source!
+
+### Engineering Task Checklist
+- [x] Implement from-scratch optical Markdown block parser
+- [x] Embed KaTeX LaTeX mathematical typography
+- [x] Support GitHub-flavored alerts (Note, Tip, Important, Warning)
+- [ ] Connect remote collaborative WebSocket operational transforms
+
+### System Performance Comparison
+
+| Metric | Legacy Engine | Antigravity Engine | Speedup |
+| :--- | :---: | :---: | ---: |
+| First Paint | 142ms | 18ms | 7.8x |
+| Formula Parse | 88ms | 1.2ms | 73x |
+| Bundle Overhead | 480KB | 42KB | 11.4x |
+
+\`\`\`typescript
+// Clean TypeScript integration
+import { MarkdownEditor, MarkdownRenderer } from 'es-react-components';
+
+export function PhysicsNote() {
+  return <MarkdownEditor mode="split" defaultValue="# Hello KaTeX" />;
+}
+\`\`\`
+`;
+
+  const [markdownVal, setMarkdownVal] = useState(defaultMarkdownContent);
+  const [markdownMode, setMarkdownMode] = useState<any>('split');
+
+  // ElasticSlider State
+  const [elasticVal, setElasticVal] = useState(65);
+  const [elasticThumb, setElasticThumb] = useState(true);
+  const [elasticTicks, setElasticTicks] = useState(true);
+  const [elasticPlacement, setElasticPlacement] = useState<'outside' | 'inside'>('outside');
+  const [elasticPosition, setElasticPosition] = useState<'top' | 'bubble' | 'inside' | 'none'>('bubble');
+  const [elasticBounce, setElasticBounce] = useState(0.5);
+  const [elasticMaxStretch, setElasticMaxStretch] = useState(50);
+  const [elasticOrientation, setElasticOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
+
+  // WakeSlider State
+  const [wakeVal, setWakeVal] = useState(48);
+  const [wakeBars, setWakeBars] = useState(32);
+  const [wakeHeight, setWakeHeight] = useState(56);
+  const [wakeReach, setWakeReach] = useState(6);
+  const [wakeSkew, setWakeSkew] = useState(0.6);
+  const [wakeGlide, setWakeGlide] = useState(0.3);
+  const [wakeShowValue, setWakeShowValue] = useState(true);
+
+  // Slider (Aria) State
+  const [singleSliderVal, setSingleSliderVal] = useState(45);
+  const [rangeSliderVal, setRangeSliderVal] = useState<number[]>([25, 75]);
+  const [sliderLabelPos, setSliderLabelPos] = useState<'default' | 'bottom' | 'top-floating'>('top-floating');
+
+  // ParameterSlider State
+  const [paramCutoff, setParamCutoff] = useState(1200);
+  const [paramResonance, setParamResonance] = useState(3.4);
+  const [paramGain, setParamGain] = useState(0);
+
   // AI & Workspace Components State
   const [boardTheme, setBoardTheme] = useState<'dark' | 'light'>('dark');
   const [boardKey, setBoardKey] = useState(0);
@@ -455,33 +572,44 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
     return (
       <div className="space-y-6">
         <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
+          <div className="border-b border-border/50 pb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Interactive Controls
+              Interactive Parameter Controls
             </span>
-            <div className="flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={btnLoading}
-                  onChange={(e) => setBtnLoading(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Loading State
-              </label>
-              <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={btnDisabled}
-                  onChange={(e) => setBtnDisabled(e.target.checked)}
-                  className="rounded border-border text-primary"
-                />
-                Disabled
-              </label>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ParameterGrid columns={3}>
+            <ParameterSlider
+              label="Corner Radius"
+              value={btnRadius}
+              onChange={setBtnRadius}
+              min={0}
+              max={28}
+              step={2}
+              unit="px"
+            />
+            <ParameterSlider
+              label="Scale / Zoom"
+              value={btnScale}
+              onChange={setBtnScale}
+              min={80}
+              max={130}
+              step={5}
+              unit="%"
+            />
+            <ParameterSwitch
+              label="Loading State"
+              checked={btnLoading}
+              onChange={setBtnLoading}
+            />
+            <ParameterSwitch
+              label="Disabled"
+              checked={btnDisabled}
+              onChange={setBtnDisabled}
+            />
+          </ParameterGrid>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
               <label className="block text-xs font-medium text-muted-foreground mb-2">
                 Variant
@@ -534,25 +662,28 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
           </div>
 
           <div className="p-10 rounded-xl bg-surface-subtle/50 border border-border/60 flex flex-col items-center justify-center min-h-[160px] gap-4">
-            <Button
-              variant={btnVariant}
-              size={btnSize}
-              isLoading={btnLoading}
-              disabled={btnDisabled}
-              leftIcon={btnSize !== 'icon' ? <Sparkles className="h-4 w-4" /> : undefined}
-              rightIcon={btnSize !== 'icon' ? <ArrowRight className="h-4 w-4" /> : undefined}
-              onClick={() =>
-                addToast({
-                  title: 'Button Clicked!',
-                  description: `Triggered variant="${btnVariant}" size="${btnSize}"`,
-                  type: 'info',
-                })
-              }
-            >
-              {btnSize === 'icon' ? <Sparkles className="h-4 w-4" /> : 'Button Action'}
-            </Button>
+            <div style={{ transform: `scale(${btnScale / 100})`, transition: 'transform 0.15s ease' }}>
+              <Button
+                variant={btnVariant}
+                size={btnSize}
+                isLoading={btnLoading}
+                disabled={btnDisabled}
+                style={{ borderRadius: `${btnRadius}px` }}
+                leftIcon={btnSize !== 'icon' ? <Sparkles className="h-4 w-4" /> : undefined}
+                rightIcon={btnSize !== 'icon' ? <ArrowRight className="h-4 w-4" /> : undefined}
+                onClick={() =>
+                  addToast({
+                    title: 'Button Clicked!',
+                    description: `Triggered variant="${btnVariant}" size="${btnSize}" radius="${btnRadius}px"`,
+                    type: 'info',
+                  })
+                }
+              >
+                {btnSize === 'icon' ? <Sparkles className="h-4 w-4" /> : 'Button Action'}
+              </Button>
+            </div>
             <p className="text-xs text-muted-foreground">
-              Click the button above to test interaction feedback
+              Adjust corner radius, scale, loading, or disabled state in real time with the parameter controls above.
             </p>
           </div>
         </div>
@@ -1209,6 +1340,23 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
             </div>
           </div>
 
+          <ParameterGrid columns={2}>
+            <ParameterSlider
+              label="Typeahead Delay"
+              value={selectDelay}
+              onChange={setSelectDelay}
+              min={200}
+              max={1500}
+              step={50}
+              unit="ms"
+            />
+            <ParameterSwitch
+              label="Disabled State"
+              checked={selectDisabled}
+              onChange={setSelectDisabled}
+            />
+          </ParameterGrid>
+
           <div className="max-w-md mx-auto p-6 rounded-xl bg-surface-subtle/40 border border-border/60 min-h-[220px] flex items-center justify-center">
             <div className="w-full space-y-4">
               {selectTab === 'animated' ? (
@@ -1218,6 +1366,7 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
                     items={regionItems}
                     value={dropdownVal}
                     onChange={setDropdownVal}
+                    disabled={selectDisabled}
                     fullWidth
                   />
                   <div className="text-xs text-muted-foreground flex items-center justify-between pt-2">
@@ -1231,6 +1380,7 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
                     label="Production Hosting Region"
                     helperText="Standard browser select dropdown for simple lightweight forms."
                     value={nativeSelectVal}
+                    disabled={selectDisabled}
                     onChange={(e: any) => setNativeSelectVal(e.target.value)}
                     options={[
                       { label: 'US East (N. Virginia)', value: 'us-east-1' },
@@ -1747,59 +1897,44 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2 border-t border-border/40">
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Speed ({loopSpeed}px/s)</span>
-              </div>
-              <input
-                type="range"
-                min="20"
-                max="300"
+          <div className="pt-2 border-t border-border/40">
+            <ParameterGrid columns={4}>
+              <ParameterSlider
+                label="Speed"
                 value={loopSpeed}
-                onChange={(e) => setLoopSpeed(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setLoopSpeed}
+                min={20}
+                max={300}
+                step={5}
+                unit="px/s"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Curviness ({loopCurviness})</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="180"
+              <ParameterSlider
+                label="Curviness"
                 value={loopCurviness}
-                onChange={(e) => setLoopCurviness(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setLoopCurviness}
+                min={0}
+                max={180}
+                step={5}
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Tilt Angle ({loopTilt}°)</span>
-              </div>
-              <input
-                type="range"
-                min="-45"
-                max="45"
+              <ParameterSlider
+                label="Tilt Angle"
                 value={loopTilt}
-                onChange={(e) => setLoopTilt(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setLoopTilt}
+                min={-45}
+                max={45}
+                step={1}
+                unit="°"
               />
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Font Size ({loopFontSize}px)</span>
-              </div>
-              <input
-                type="range"
-                min="24"
-                max="72"
+              <ParameterSlider
+                label="Font Size"
                 value={loopFontSize}
-                onChange={(e) => setLoopFontSize(Number(e.target.value))}
-                className="w-full accent-primary"
+                onChange={setLoopFontSize}
+                min={24}
+                max={72}
+                step={2}
+                unit="px"
               />
-            </div>
+            </ParameterGrid>
           </div>
         </div>
 
@@ -4825,6 +4960,737 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
                 </p>
               </div>
             </ShowMore>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── MarkdownEditor & Math Preview Playground ─────────
+  if (componentId === 'markdown-editor') {
+    return (
+      <div className="space-y-6">
+        {/* Controls Card */}
+        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Sparkles className="size-4 text-primary" />
+              Markdown Editor & KaTeX Math Playground
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Built completely from scratch with real-time KaTeX LaTeX math rendering, GitHub callouts, and split-screen editing.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setMarkdownVal(defaultMarkdownContent);
+                addToast({
+                  title: 'Template Reset',
+                  description: 'Loaded Quantum Mechanics & Math demo document.',
+                  type: 'info',
+                });
+              }}
+            >
+              Reset Demo
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setMarkdownVal(
+                  `# Quick KaTeX Math Cheatsheet\n\n- Inline: $f(x) = ax^2 + bx + c$\n- Binomial: $(x+y)^n = \\sum_{k=0}^n \\binom{n}{k} x^{n-k} y^k$\n- Limits: $\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1$\n\n$$\\nabla \\times \\mathbf{B} = \\mu_0 \\mathbf{J} + \\mu_0 \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}$$`
+                );
+              }}
+            >
+              Load Math Cheat
+            </Button>
+          </div>
+        </div>
+
+        {/* Live Editor */}
+        <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border min-h-[520px]">
+          <MarkdownEditor
+            label="Technical Document Editor"
+            value={markdownVal}
+            onChange={(val) => setMarkdownVal(val)}
+            mode={markdownMode}
+            onModeChange={(m) => setMarkdownMode(m)}
+            minHeight="480px"
+            helperText="Full GitHub-flavored Markdown with KaTeX math rendering ($inline$ & $$block$$)."
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // ParameterSlider Playground (Exact 15-control inspector matching user screenshot)
+  if (componentId === 'parameter-slider') {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="size-4 text-primary" />
+            <span className="text-xs font-semibold text-foreground">
+              Parameter Scrubber Toolbar • Real-Time Waveform Inspector
+            </span>
+          </div>
+
+          <Button
+            size="xs"
+            variant="outline"
+            onClick={() => {
+              setParamFill('#f5f5f5');
+              setParamTrack('#27272a');
+              setParamValue(50);
+              setParamStep(1);
+              setParamShowValue(true);
+              setParamBars(32);
+              setParamHeight(56);
+              setParamRestHeight(18);
+              setParamGap(4);
+              setParamSensitivity(1);
+              setParamReach(6);
+              setParamSkew(0.6);
+              setParamGlide(0.3);
+              setParamSmoothing(100);
+              setParamDisabled(false);
+              addToast({ title: 'Defaults Restored', description: 'Reset all 15 inspector parameters.', type: 'info' });
+            }}
+          >
+            Reset All 15 Parameters
+          </Button>
+        </div>
+
+        {/* Live Dynamic Waveform Preview Canvas */}
+        <div
+          style={{ backgroundColor: paramTrack }}
+          className={cn(
+            "relative p-6 sm:p-10 rounded-2xl border border-border flex flex-col items-center justify-center min-h-[180px] overflow-hidden transition-all duration-200",
+            paramDisabled && "opacity-40 pointer-events-none"
+          )}
+        >
+          {paramShowValue && (
+            <div className="absolute top-3 right-4 px-2.5 py-1 rounded-full bg-surface-elevated/80 backdrop-blur-md border border-border text-xs font-mono font-bold text-foreground shadow-sm">
+              Level: {paramValue}%
+            </div>
+          )}
+
+          <div
+            className="flex items-end justify-center w-full max-w-xl"
+            style={{ gap: `${paramGap}px` }}
+          >
+            {Array.from({ length: paramBars }).map((_, i) => {
+              // Calculate wave height modulated by parameters
+              const progress = i / Math.max(1, paramBars - 1);
+              const centerDist = Math.abs(progress - 0.5) * 2;
+              const bellCurve = Math.exp(-Math.pow(centerDist * (paramReach / 3), 2));
+              const skewOffset = (progress - 0.5) * paramSkew;
+              const amplitude = (paramValue / 100) * paramSensitivity;
+              const calculatedHeight = Math.max(
+                paramRestHeight,
+                Math.min(
+                  paramHeight,
+                  paramRestHeight + (paramHeight - paramRestHeight) * bellCurve * amplitude * (1 + skewOffset)
+                )
+              );
+
+              return (
+                <div
+                  key={i}
+                  style={{
+                    height: `${calculatedHeight}px`,
+                    backgroundColor: paramFill,
+                    transition: `height ${paramGlide}s ease, background-color 0.2s`,
+                  }}
+                  className="flex-1 min-w-[2px] max-w-[12px] rounded-full shadow-xs"
+                />
+              );
+            })}
+          </div>
+
+          <p className="text-[11px] text-muted-foreground/80 mt-4 text-center font-mono">
+            Modulated by Height ({paramHeight}px), Bars ({paramBars}), Gap ({paramGap}px), Skew ({paramSkew}), Reach ({paramReach}), Glide ({paramGlide}s)
+          </p>
+        </div>
+
+        {/* The Exact 15-Control Parameter Panel (Matching User Image) */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Inspector Control Grid
+            </span>
+            <span className="text-[11px] text-muted-foreground font-mono">
+              3 Columns • 15 Interactive Scrubber Controls
+            </span>
+          </div>
+
+          <ParameterGrid columns={3}>
+            {/* Row 1 */}
+            <ParameterColor
+              label="Fill"
+              value={paramFill}
+              onChange={setParamFill}
+              disabled={paramDisabled}
+            />
+            <ParameterColor
+              label="Track"
+              value={paramTrack}
+              onChange={setParamTrack}
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Value"
+              value={paramValue}
+              onChange={setParamValue}
+              min={0}
+              max={100}
+              step={paramStep}
+              disabled={paramDisabled}
+            />
+
+            {/* Row 2 */}
+            <ParameterSlider
+              label="Step"
+              value={paramStep}
+              onChange={setParamStep}
+              min={1}
+              max={10}
+              step={1}
+              disabled={paramDisabled}
+            />
+            <ParameterSwitch
+              label="Show Value"
+              checked={paramShowValue}
+              onChange={setParamShowValue}
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Bars"
+              value={paramBars}
+              onChange={setParamBars}
+              min={8}
+              max={64}
+              step={1}
+              disabled={paramDisabled}
+            />
+
+            {/* Row 3 */}
+            <ParameterSlider
+              label="Height"
+              value={paramHeight}
+              onChange={setParamHeight}
+              min={24}
+              max={96}
+              step={2}
+              unit="px"
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Rest Height"
+              value={paramRestHeight}
+              onChange={setParamRestHeight}
+              min={8}
+              max={40}
+              step={1}
+              unit="px"
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Gap"
+              value={paramGap}
+              onChange={setParamGap}
+              min={1}
+              max={16}
+              step={1}
+              unit="px"
+              disabled={paramDisabled}
+            />
+
+            {/* Row 4 */}
+            <ParameterSlider
+              label="Sensitivity"
+              value={paramSensitivity}
+              onChange={setParamSensitivity}
+              min={0.2}
+              max={3}
+              step={0.1}
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Reach"
+              value={paramReach}
+              onChange={setParamReach}
+              min={1}
+              max={12}
+              step={1}
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Skew"
+              value={paramSkew}
+              onChange={setParamSkew}
+              min={0}
+              max={1}
+              step={0.05}
+              disabled={paramDisabled}
+            />
+
+            {/* Row 5 */}
+            <ParameterSlider
+              label="Glide"
+              value={paramGlide}
+              onChange={setParamGlide}
+              min={0.1}
+              max={1.5}
+              step={0.1}
+              unit="s"
+              disabled={paramDisabled}
+            />
+            <ParameterSlider
+              label="Smoothing"
+              value={paramSmoothing}
+              onChange={setParamSmoothing}
+              min={20}
+              max={300}
+              step={10}
+              unit="ms"
+              disabled={paramDisabled}
+            />
+            <ParameterSwitch
+              label="Disabled"
+              checked={paramDisabled}
+              onChange={setParamDisabled}
+            />
+          </ParameterGrid>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── ElasticSlider Playground ─────────
+  if (componentId === 'elastic-slider') {
+    return (
+      <div className="space-y-6">
+        {/* Header Controls Card */}
+        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Sparkles className="size-4 text-primary" />
+              Elastic Rubber-Band Slider
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Spring-physics slider with overstretch edge resistance, auto-contrasting text, inside/outside icon slots, and multi-orientation support.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="xs"
+              variant={elasticVal === 0 ? 'primary' : 'outline'}
+              onClick={() => setElasticVal(0)}
+            >
+              Mute 0%
+            </Button>
+            <Button
+              size="xs"
+              variant={elasticVal === 30 ? 'primary' : 'outline'}
+              onClick={() => setElasticVal(30)}
+            >
+              30%
+            </Button>
+            <Button
+              size="xs"
+              variant={elasticVal === 65 ? 'primary' : 'outline'}
+              onClick={() => setElasticVal(65)}
+            >
+              65%
+            </Button>
+            <Button
+              size="xs"
+              variant={elasticVal === 100 ? 'primary' : 'outline'}
+              onClick={() => setElasticVal(100)}
+            >
+              100% Max
+            </Button>
+          </div>
+        </div>
+
+        {/* Live Interactive Preview */}
+        <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[320px] gap-8">
+          <div className="flex flex-col items-center justify-center w-full max-w-sm">
+            <ElasticSlider
+              value={elasticVal}
+              onChange={setElasticVal}
+              orientation={elasticOrientation}
+              valuePosition={elasticPosition}
+              iconPlacement={elasticPlacement}
+              thumb={elasticThumb}
+              ticks={elasticTicks}
+              bounce={elasticBounce}
+              maxStretch={elasticMaxStretch}
+              thickness={6}
+              activeThickness={14}
+              wheel
+              className="text-primary"
+            />
+          </div>
+
+          <div className="text-xs font-mono text-muted-foreground bg-surface-subtle px-3 py-1.5 rounded-lg border border-border/80">
+            Current Position: <span className="text-foreground font-semibold">{Math.round(elasticVal)}%</span>
+            {elasticVal === 0 ? ' (Muted)' : elasticVal > 80 ? ' (High Output)' : ''}
+          </div>
+        </div>
+
+        {/* Interactive Configuration Grid */}
+        <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Configuration & Physics Tuning
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            {/* Orientation */}
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Orientation</label>
+              <div className="flex gap-1.5">
+                {(['horizontal', 'vertical'] as const).map((o) => (
+                  <Button
+                    key={o}
+                    size="xs"
+                    variant={elasticOrientation === o ? 'primary' : 'outline'}
+                    className="flex-1 capitalize"
+                    onClick={() => setElasticOrientation(o)}
+                  >
+                    {o}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Value Position */}
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Label Position</label>
+              <div className="flex gap-1">
+                {(['bubble', 'top', 'inside', 'none'] as const).map((pos) => (
+                  <Button
+                    key={pos}
+                    size="xs"
+                    variant={elasticPosition === pos ? 'primary' : 'outline'}
+                    className="flex-1 capitalize px-1.5"
+                    onClick={() => setElasticPosition(pos)}
+                  >
+                    {pos}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Icon Placement */}
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Icon Placement</label>
+              <div className="flex gap-1.5">
+                {(['outside', 'inside'] as const).map((plc) => (
+                  <Button
+                    key={plc}
+                    size="xs"
+                    variant={elasticPlacement === plc ? 'primary' : 'outline'}
+                    className="flex-1 capitalize"
+                    onClick={() => setElasticPlacement(plc)}
+                  >
+                    {plc}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Toggles */}
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Handle & Marks</label>
+              <div className="flex gap-2">
+                <Button
+                  size="xs"
+                  variant={elasticThumb ? 'primary' : 'outline'}
+                  className="flex-1"
+                  onClick={() => setElasticThumb(!elasticThumb)}
+                >
+                  Thumb {elasticThumb ? 'On' : 'Off'}
+                </Button>
+                <Button
+                  size="xs"
+                  variant={elasticTicks ? 'primary' : 'outline'}
+                  className="flex-1"
+                  onClick={() => setElasticTicks(!elasticTicks)}
+                >
+                  Ticks {elasticTicks ? 'On' : 'Off'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── WakeSlider Playground ─────────
+  if (componentId === 'wake-slider') {
+    return (
+      <div className="space-y-6">
+        {/* Header Controls Card */}
+        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <SlidersHorizontal className="size-4 text-primary" />
+              Wake Acoustic Fluid Slider
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Drag or scrub across the bar array to observe velocity-induced hydrodynamic wake waves with directional asymmetry.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {[20, 48, 72, 95].map((lvl) => (
+              <Button
+                key={lvl}
+                size="xs"
+                variant={wakeVal === lvl ? 'primary' : 'outline'}
+                onClick={() => setWakeVal(lvl)}
+              >
+                {lvl}%
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Live Interactive Wave Canvas */}
+        <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[280px] gap-6">
+          <div className="w-full max-w-lg">
+            <WakeSlider
+              value={wakeVal}
+              onChange={setWakeVal}
+              bars={wakeBars}
+              height={wakeHeight}
+              reach={wakeReach}
+              skew={wakeSkew}
+              glide={wakeGlide}
+              showValue={wakeShowValue}
+              fillColor="hsl(var(--primary))"
+              trackColor="hsl(var(--muted) / 0.35)"
+              crestColor="hsl(var(--primary))"
+            />
+          </div>
+
+          <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground bg-surface-subtle px-4 py-2 rounded-xl border border-border/80">
+            <span>Level: <span className="text-foreground font-semibold">{wakeVal}%</span></span>
+            <span>•</span>
+            <span>Bars: <span className="text-foreground font-semibold">{wakeBars}</span></span>
+            <span>•</span>
+            <span>Glide: <span className="text-foreground font-semibold">{wakeGlide}s</span></span>
+            <span>•</span>
+            <span>Reach: <span className="text-foreground font-semibold">{wakeReach}</span></span>
+          </div>
+        </div>
+
+        {/* Live Tuning Parameters */}
+        <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Hydrodynamic Wave Parameters
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Bar Resolution</label>
+              <div className="flex gap-1">
+                {[16, 24, 32, 48].map((b) => (
+                  <Button
+                    key={b}
+                    size="xs"
+                    variant={wakeBars === b ? 'primary' : 'outline'}
+                    className="flex-1"
+                    onClick={() => setWakeBars(b)}
+                  >
+                    {b}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Wave Reach ({wakeReach})</label>
+              <div className="flex gap-1">
+                {[3, 6, 9, 12].map((r) => (
+                  <Button
+                    key={r}
+                    size="xs"
+                    variant={wakeReach === r ? 'primary' : 'outline'}
+                    className="flex-1"
+                    onClick={() => setWakeReach(r)}
+                  >
+                    {r}x
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Glide Speed ({wakeGlide}s)</label>
+              <div className="flex gap-1">
+                {[0.15, 0.3, 0.6].map((g) => (
+                  <Button
+                    key={g}
+                    size="xs"
+                    variant={wakeGlide === g ? 'primary' : 'outline'}
+                    className="flex-1"
+                    onClick={() => setWakeGlide(g)}
+                  >
+                    {g}s
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-muted-foreground font-medium">Value Readout</label>
+              <Button
+                size="xs"
+                variant={wakeShowValue ? 'primary' : 'outline'}
+                className="w-full"
+                onClick={() => setWakeShowValue(!wakeShowValue)}
+              >
+                {wakeShowValue ? 'Visible' : 'Hidden'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Slider (Single & Dual Range) Playground ─────────
+  if (componentId === 'slider') {
+    return (
+      <div className="space-y-6">
+        {/* Header Controls Card */}
+        <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <SlidersHorizontal className="size-4 text-primary" />
+              Accessible Slider & Multi-Thumb Range
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Accessible React Aria slider supporting single and dual thumbs, tooltip value bubbles, bottom readouts, and keyboard controls.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-muted-foreground mr-1">Tooltip:</span>
+            {(['top-floating', 'bottom', 'default'] as const).map((pos) => (
+              <Button
+                key={pos}
+                size="xs"
+                variant={sliderLabelPos === pos ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setSliderLabelPos(pos)}
+              >
+                {pos === 'default' ? 'Hidden' : pos === 'top-floating' ? 'Tooltip' : 'Bottom'}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Live Interactive Sliders */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Single Thumb Slider */}
+          <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+            <div className="border-b border-border/50 pb-3 flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Single Thumb • CPU Utilization
+                </h4>
+                <p className="text-xs text-muted-foreground mt-0.5">Continuous percentage scrubbing</p>
+              </div>
+              <span className="font-mono text-xs font-bold text-primary px-2 py-0.5 rounded bg-surface-subtle border border-border">
+                {singleSliderVal}%
+              </span>
+            </div>
+
+            <div className="py-6 px-2">
+              <Slider
+                label="Maximum Compute Threshold"
+                value={singleSliderVal}
+                onChange={(val) => setSingleSliderVal(val as number)}
+                labelPosition={sliderLabelPos}
+                labelFormatter={(v) => `${v}%`}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              {[10, 25, 50, 75, 90].map((preset) => (
+                <Button
+                  key={preset}
+                  size="xs"
+                  variant={singleSliderVal === preset ? 'primary' : 'outline'}
+                  className="flex-1"
+                  onClick={() => setSingleSliderVal(preset)}
+                >
+                  {preset}%
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dual Thumb Range Slider */}
+          <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+            <div className="border-b border-border/50 pb-3 flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Dual Thumb • Price Filter Range
+                </h4>
+                <p className="text-xs text-muted-foreground mt-0.5">Two-handle bounded selection</p>
+              </div>
+              <span className="font-mono text-xs font-bold text-primary px-2 py-0.5 rounded bg-surface-subtle border border-border">
+                ${rangeSliderVal[0]} — ${rangeSliderVal[1]}
+              </span>
+            </div>
+
+            <div className="py-6 px-2">
+              <Slider
+                label="Budget Window ($USD)"
+                value={rangeSliderVal}
+                onChange={(val) => setRangeSliderVal(val as number[])}
+                minValue={0}
+                maxValue={100}
+                labelPosition={sliderLabelPos}
+                labelFormatter={(v) => `$${v}`}
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                size="xs"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setRangeSliderVal([10, 40])}
+              >
+                Economy ($10-$40)
+              </Button>
+              <Button
+                size="xs"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setRangeSliderVal([25, 75])}
+              >
+                Standard ($25-$75)
+              </Button>
+              <Button
+                size="xs"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setRangeSliderVal([50, 100])}
+              >
+                Premium ($50-$100)
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -19,6 +19,8 @@ import {
   SliderDetents,
   AICodeBlock,
   Tooltip,
+  ParameterSlider,
+  ParameterColor,
 } from '@/components/ui';
 
 export const ThemeCustomizer: React.FC = () => {
@@ -215,65 +217,36 @@ export const ThemeCustomizer: React.FC = () => {
               </div>
 
               {/* Color Controls */}
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {[
-                  { key: 'primary', label: 'Primary Brand Color' },
+                  { key: 'primary', label: 'Primary Brand' },
                   { key: 'accent', label: 'Accent Highlight' },
-                  { key: 'background', label: 'Background Canvas' },
+                  { key: 'background', label: 'Background' },
                   { key: 'surface', label: 'Surface & Cards' },
-                  { key: 'foreground', label: 'Foreground & Text' },
+                  { key: 'foreground', label: 'Foreground Text' },
                   { key: 'border', label: 'Border Stroke' },
                 ].map(({ key, label }) => {
                   const val = colors[key as keyof typeof colors] as string;
                   return (
-                    <div
+                    <ParameterColor
                       key={key}
-                      className="flex items-center justify-between p-3 rounded-xl bg-surface border border-border shadow-xs"
-                    >
-                      <div>
-                        <div className="text-xs font-medium text-foreground">
-                          {label}
-                        </div>
-                        <div className="text-[11px] font-mono text-muted-foreground uppercase">
-                          {val}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          value={val}
-                          onChange={(e) =>
-                            updateColor(key as any, e.target.value)
-                          }
-                          className="size-7 rounded-lg cursor-pointer border border-border bg-transparent p-0 overflow-hidden"
-                        />
-                      </div>
-                    </div>
+                      label={label}
+                      value={val}
+                      onChange={(c) => updateColor(key as any, c)}
+                    />
                   );
                 })}
 
-                {/* Corner Radius with SliderDetents */}
-                <div className="p-4 rounded-xl bg-surface border border-border space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-foreground">
-                      Global Corner Radius
-                    </span>
-                    <Badge variant="primary" size="sm" className="font-mono">
-                      {colors.radius}px
-                    </Badge>
-                  </div>
-                  <SliderDetents
-                    value={colors.radius}
-                    onValueChange={(r) => updateColor('radius', r)}
-                    min={0}
-                    max={24}
-                    step={2}
-                    detents={radiusDetents}
-                    pull={14}
-                    label="Corner Radius"
-                    format={(v) => `${v}px`}
-                  />
-                </div>
+                {/* Corner Radius with ParameterSlider */}
+                <ParameterSlider
+                  label="Corner Radius"
+                  value={colors.radius}
+                  onChange={(r) => updateColor('radius', r)}
+                  min={0}
+                  max={28}
+                  step={2}
+                  unit="px"
+                />
               </div>
             </div>
           )}
