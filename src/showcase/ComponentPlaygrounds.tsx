@@ -68,6 +68,11 @@ import {
   useTooltip,
   CommandPalette,
   useCommandPalette,
+  SegmentedControl,
+  Accordion,
+  WizardSteps,
+  Pagination,
+  TreeView,
 } from '@/components/ui';
 import {
   Download04Icon,
@@ -96,6 +101,12 @@ import {
   RefreshCw,
   AlertCircle,
   Copy,
+  Folder,
+  FileText,
+  Layers,
+  ListTree,
+  Compass,
+  Rocket,
 } from 'lucide-react';
 
 export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
@@ -205,7 +216,26 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
 
   // Tabs State
   const [activeTab, setActiveTab] = useState('tab1');
-  const [tabVariant, setTabVariant] = useState<any>('pills');
+  const [tabVariant, setTabVariant] = useState<any>('plateau');
+
+  // SegmentedControl State
+  const [segmentedVal, setSegmentedVal] = useState('weekly');
+  const [segmentedVariant, setSegmentedVariant] = useState<'primary' | 'surface'>('primary');
+
+  // Accordion State
+  const [accordionType, setAccordionType] = useState<'single' | 'multiple'>('single');
+  const [accordionCollapsible, setAccordionCollapsible] = useState(true);
+
+  // WizardSteps State
+  const [wizardComplete, setWizardComplete] = useState(false);
+
+  // Pagination State
+  const [pagPage, setPagPage] = useState(4);
+  const [pagCount, setPagCount] = useState(24);
+
+  // TreeView State
+  const [treeSelected, setTreeSelected] = useState<string | null>('button.tsx');
+  const [treeExpanded, setTreeExpanded] = useState<string[]>(['src', 'components']);
 
   // Switch State
   const [switchChecked, setSwitchChecked] = useState(true);
@@ -1295,41 +1325,73 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
     return (
       <div className="space-y-6">
         <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="flex items-center gap-2 border-b border-border/50 pb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mr-2">
-              Tabs Style:
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mr-2">
+                Tabs Style:
+              </span>
+              {(['plateau', 'segmented', 'pills', 'underline'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setTabVariant(v)}
+                  className={`px-3 py-1.5 text-xs rounded-lg border capitalize transition-colors cursor-pointer ${
+                    tabVariant === v
+                      ? 'border-primary bg-primary/10 text-primary font-bold'
+                      : 'border-border text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {v === 'plateau' ? 'Plateau (Spring)' : v}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-xs text-muted-foreground">
+              Active: <strong className="text-foreground">{activeTab}</strong>
             </span>
-            {['pills', 'underline', 'boxed'].map((v) => (
-              <button
-                key={v}
-                onClick={() => setTabVariant(v)}
-                className={`px-2.5 py-1 text-xs rounded-lg border capitalize transition-colors ${
-                  tabVariant === v
-                    ? 'border-primary bg-primary/10 text-primary font-bold'
-                    : 'border-border text-muted-foreground'
-                }`}
-              >
-                {v}
-              </button>
-            ))}
           </div>
 
-          <div className="max-w-md mx-auto">
+          <div className="max-w-xl mx-auto">
             <Tabs
-              variant={tabVariant === 'boxed' ? 'segmented' : tabVariant}
-              activeTab={activeTab}
-              onChange={setActiveTab}
-              tabs={[
-                { id: 'tab1', label: 'Overview' },
-                { id: 'tab2', label: 'Security' },
-                { id: 'tab3', label: 'Integrations' },
+              variant={tabVariant}
+              value={activeTab}
+              onValueChange={setActiveTab}
+              items={[
+                { value: 'tab1', label: 'Overview', badge: 'v2' },
+                { value: 'tab2', label: 'Security' },
+                { value: 'tab3', label: 'Integrations' },
+                { value: 'tab4', label: 'Billing (Disabled)', disabled: true },
               ]}
+              renderPanel={(value) => (
+                <div className="space-y-2">
+                  {value === 'tab1' && (
+                    <>
+                      <h4 className="font-semibold text-foreground text-sm">Cluster Overview & Health</h4>
+                      <p className="text-muted-foreground text-xs leading-relaxed">
+                        Cluster metrics aggregated every 5 seconds across 48 edge nodes with 99.99% uptime.
+                        Sliding plateau tabs measure tab widths via ResizeObserver with spring physics.
+                      </p>
+                    </>
+                  )}
+                  {value === 'tab2' && (
+                    <>
+                      <h4 className="font-semibold text-foreground text-sm">Security & Access Policies</h4>
+                      <p className="text-muted-foreground text-xs leading-relaxed">
+                        Mutual TLS (mTLS) ingress encryption and zero-trust policies active.
+                        Rotate certificate authorities automatically every 90 days.
+                      </p>
+                    </>
+                  )}
+                  {value === 'tab3' && (
+                    <>
+                      <h4 className="font-semibold text-foreground text-sm">Connected Integrations</h4>
+                      <p className="text-muted-foreground text-xs leading-relaxed">
+                        Connected to GitHub Actions, Datadog Real User Monitoring, and Slack notification webhooks.
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
             />
-            <div className="p-4 rounded-xl bg-surface-subtle text-xs text-muted-foreground mt-3">
-              {activeTab === 'tab1' && 'Cluster metrics aggregated every 5 seconds across edge nodes.'}
-              {activeTab === 'tab2' && 'mTLS ingress encryption and zero-trust policies active.'}
-              {activeTab === 'tab3' && 'Connected to GitHub Actions, Datadog, and Slack Webhooks.'}
-            </div>
           </div>
         </div>
       </div>
@@ -3300,6 +3362,411 @@ export const ComponentPlaygrounds: React.FC<{ componentId: string }> = ({
               </div>
             </div>
           )}
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Segmented Control Playground ─────────
+  if (componentId === 'segmented-control') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Layers className="size-4 text-primary" />
+            Segmented Control Options
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Thumb Variant:</span>
+            <Button
+              size="xs"
+              variant={segmentedVariant === 'primary' ? 'primary' : 'outline'}
+              onClick={() => setSegmentedVariant('primary')}
+            >
+              Primary (Themed)
+            </Button>
+            <Button
+              size="xs"
+              variant={segmentedVariant === 'surface' ? 'primary' : 'outline'}
+              onClick={() => setSegmentedVariant('surface')}
+            >
+              Surface
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[300px] space-y-6">
+          <SegmentedControl
+            label="Billing Interval"
+            variant={segmentedVariant}
+            value={segmentedVal}
+            onValueChange={setSegmentedVal}
+            options={[
+              { value: 'daily', label: '1 Day' },
+              { value: 'weekly', label: '1 Week' },
+              { value: 'monthly', label: '1 Month' },
+              { value: 'annual', label: '1 Year' },
+              { value: 'lifetime', label: 'Enterprise', disabled: true },
+            ]}
+          />
+
+          <div className="flex flex-col items-center gap-2 text-center">
+            <div className="text-xs text-muted-foreground">
+              Selected Interval: <strong className="text-foreground uppercase">{segmentedVal}</strong>
+            </div>
+            <p className="text-[11px] text-muted-foreground/80 max-w-sm">
+              Features spring thumb sliding with dual text-inversion mask. Navigate with <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">←</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">→</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">Home</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">End</kbd>.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Accordion Playground ─────────
+  if (componentId === 'accordion') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <ListTree className="size-4 text-primary" />
+            Accordion Settings
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Mode:</span>
+            <Button
+              size="xs"
+              variant={accordionType === 'single' ? 'primary' : 'outline'}
+              onClick={() => setAccordionType('single')}
+            >
+              Single
+            </Button>
+            <Button
+              size="xs"
+              variant={accordionType === 'multiple' ? 'primary' : 'outline'}
+              onClick={() => setAccordionType('multiple')}
+            >
+              Multiple
+            </Button>
+            <span className="text-xs text-muted-foreground ml-2">Collapsible:</span>
+            <Button
+              size="xs"
+              variant={accordionCollapsible ? 'primary' : 'outline'}
+              onClick={() => setAccordionCollapsible(!accordionCollapsible)}
+            >
+              {accordionCollapsible ? 'Enabled' : 'Disabled'}
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-xl">
+            <Accordion
+              type={accordionType}
+              collapsible={accordionCollapsible}
+              defaultOpen={['item-1']}
+              items={[
+                {
+                  id: 'item-1',
+                  title: 'How does dynamic design token theming work?',
+                  meta: 'v2.4',
+                  content:
+                    'All components read CSS custom properties (HSL variables) such as --primary, --surface, --surface-elevated, and --radius. Switching themes or adjusting color pickers automatically triggers instantaneous live CSS restyling with zero JavaScript rerenders.',
+                },
+                {
+                  id: 'item-2',
+                  title: 'Are layout transitions smooth on variable-length content?',
+                  meta: 'ResizeObserver',
+                  content:
+                    'Yes! Under the hood, useAutoHeight uses a performant ResizeObserver to measure the exact bounding box height of panel content, driving spring physics without hardcoded max-height jumps.',
+                },
+                {
+                  id: 'item-3',
+                  title: 'What accessibility standards are supported?',
+                  meta: 'WAI-ARIA',
+                  content:
+                    'Accordions use semantic heading tags, aria-expanded, aria-controls, and full arrow key navigation (ArrowUp, ArrowDown, Home, End). Inactive panels are marked inert for assistive screen readers.',
+                },
+                {
+                  id: 'item-4',
+                  title: 'Can users navigate with prefers-reduced-motion?',
+                  meta: 'A11y',
+                  content:
+                    'Whenever users have reduced motion enabled in their operating system, all height and rotation animations seamlessly collapse into instant switches.',
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Wizard Steps Playground ─────────
+  if (componentId === 'wizard-steps') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Rocket className="size-4 text-primary" />
+            Pipeline Wizard Controller
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant={wizardComplete ? 'outline' : 'primary'}
+              onClick={() => setWizardComplete(false)}
+            >
+              Reset Pipeline
+            </Button>
+            <Button
+              size="xs"
+              variant={wizardComplete ? 'primary' : 'outline'}
+              onClick={() => setWizardComplete(true)}
+            >
+              Simulate Complete
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-lg">
+            <WizardSteps
+              complete={wizardComplete}
+              onComplete={() => {
+                setWizardComplete(true);
+                addToast({
+                  title: 'Pipeline Configured',
+                  description: 'All wizard steps have been finalized successfully.',
+                  type: 'success',
+                });
+              }}
+              steps={[
+                {
+                  id: 'project',
+                  label: 'Project Details',
+                  content: (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-xs font-medium text-foreground block mb-1">
+                          Workspace Name
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue="enterprise-design-system"
+                          className="w-full h-8 px-2.5 rounded-lg border border-border bg-surface text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Configure your project namespace and repository credentials.
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  id: 'target',
+                  label: 'Deployment Target',
+                  content: (
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium text-foreground">Select cloud provider:</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {['AWS Lambda', 'Google Cloud', 'Cloudflare'].map((c, i) => (
+                          <div
+                            key={c}
+                            className={`p-2 rounded-lg border text-xs text-center cursor-pointer ${
+                              i === 1 ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border bg-surface text-muted-foreground'
+                            }`}
+                          >
+                            {c}
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-[11px] text-muted-foreground pt-1">
+                        Edge workers replicate assets across 300+ global points of presence.
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  id: 'security',
+                  label: 'Security & Access',
+                  content: (
+                    <div className="space-y-2 text-xs">
+                      <p className="font-medium text-foreground">Security Compliance Gates:</p>
+                      <div className="space-y-1.5 text-muted-foreground">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" defaultChecked className="rounded text-primary" />
+                          <span>Enable zero-trust identity token verification</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" defaultChecked className="rounded text-primary" />
+                          <span>Enforce TLS 1.3 encryption for edge connections</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" className="rounded text-primary" />
+                          <span>Automate SOC2 compliance audit log exports</span>
+                        </label>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  id: 'review',
+                  label: 'Review & Launch',
+                  content: (
+                    <div className="space-y-2 text-xs">
+                      <p className="font-semibold text-foreground">Review Summary:</p>
+                      <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
+                        <li>Workspace: <strong className="text-foreground">enterprise-design-system</strong></li>
+                        <li>Provider: <strong className="text-foreground">Google Cloud Platform</strong></li>
+                        <li>Zero-Trust security headers enforced</li>
+                      </ul>
+                      <p className="text-[11px] text-muted-foreground pt-2">
+                        Click Finish below to spin up edge instances.
+                      </p>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Pagination Playground ─────────
+  if (componentId === 'pagination') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Compass className="size-4 text-primary" />
+            Pagination Controls
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Total Pages:</span>
+            {[8, 24, 100].map((n) => (
+              <Button
+                key={n}
+                size="xs"
+                variant={pagCount === n ? 'primary' : 'outline'}
+                onClick={() => {
+                  setPagCount(n);
+                  if (pagPage > n) setPagPage(n);
+                }}
+              >
+                {n}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[300px] space-y-6">
+          <Pagination
+            count={pagCount}
+            page={pagPage}
+            onPageChange={setPagPage}
+            siblings={1}
+            boundaries={1}
+          />
+
+          <div className="p-3 rounded-xl bg-surface border border-border text-xs text-center max-w-xs w-full space-y-1">
+            <div className="text-muted-foreground">
+              Current Page: <strong className="text-foreground font-semibold">{pagPage}</strong> of{' '}
+              <strong className="text-foreground font-semibold">{pagCount}</strong>
+            </div>
+            <p className="text-[11px] text-muted-foreground/80">
+              Features spring-animated sliding indicator thumb, rolling number transitions, and live screen-reader announcements.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ───────── Tree View Playground ─────────
+  if (componentId === 'tree-view') {
+    return (
+      <div className="space-y-6">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <ListTree className="size-4 text-primary" />
+            Tree View File Explorer
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => setTreeExpanded(['src', 'components', 'ui', 'showcase'])}
+            >
+              Expand All
+            </Button>
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() => setTreeExpanded([])}
+            >
+              Collapse All
+            </Button>
+          </div>
+        </div>
+
+        <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+          <div className="w-full max-w-sm">
+            <TreeView
+              label="Project Files"
+              expanded={treeExpanded}
+              onExpandedChange={setTreeExpanded}
+              selected={treeSelected}
+              onSelectedChange={setTreeSelected}
+              nodes={[
+                {
+                  id: 'src',
+                  label: 'src',
+                  children: [
+                    {
+                      id: 'components',
+                      label: 'components',
+                      children: [
+                        {
+                          id: 'ui',
+                          label: 'ui',
+                          children: [
+                            { id: 'button.tsx', label: 'button.tsx', meta: '2.8kb' },
+                            { id: 'tabs.tsx', label: 'tabs.tsx', meta: '7.4kb' },
+                            { id: 'accordion.tsx', label: 'accordion.tsx', meta: '5.1kb' },
+                            { id: 'wizard-steps.tsx', label: 'wizard-steps.tsx', meta: '6.2kb' },
+                            { id: 'pagination.tsx', label: 'pagination.tsx', meta: '4.9kb' },
+                            { id: 'tree-view.tsx', label: 'tree-view.tsx', meta: '5.6kb' },
+                          ],
+                        },
+                        {
+                          id: 'showcase',
+                          label: 'showcase',
+                          children: [
+                            { id: 'componentsData.tsx', label: 'componentsData.tsx', meta: '42kb' },
+                            { id: 'ComponentPlaygrounds.tsx', label: 'ComponentPlaygrounds.tsx', meta: '58kb' },
+                          ],
+                        },
+                      ],
+                    },
+                    { id: 'App.tsx', label: 'App.tsx', meta: '1.8kb' },
+                    { id: 'main.tsx', label: 'main.tsx', meta: '0.4kb' },
+                  ],
+                },
+                { id: 'package.json', label: 'package.json', meta: '1.2kb' },
+                { id: 'tsconfig.json', label: 'tsconfig.json', meta: '0.8kb' },
+              ]}
+            />
+
+            {treeSelected && (
+              <div className="mt-4 p-3 rounded-xl bg-surface border border-border text-xs text-muted-foreground flex items-center justify-between">
+                <span>Selected item:</span>
+                <span className="font-mono font-semibold text-primary">{treeSelected}</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

@@ -42,3 +42,8 @@ export * from './presence-avatars';
 export * from './modal';
 export * from './tooltip';
 export * from './command-palette';
+export * from './segmented-control';
+export * from './accordion';
+export * from './wizard-steps';
+export * from './pagination';
+export * from './tree-view';

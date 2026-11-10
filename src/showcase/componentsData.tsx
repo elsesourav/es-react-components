@@ -874,38 +874,66 @@ addToast({
     name: 'Tabs',
     category: 'Navigation',
     description:
-      'Segmented content view navigation supporting pills, underline, and boxed tab appearances with mobile horizontal scrollbar protection.',
-    importCode: `import { Tabs } from 'es-react-components';`,
+      'Spring-indicator sliding plateau tabs with automatic/manual keyboard activation, directional panel transition animations, and backwards-compatible segmented, pills, and underline variants.',
+    importCode: `import { Tabs, useTabs } from 'es-react-components';`,
     usageCode: `<Tabs
-  variant="pills"
-  activeId="tab1"
-  onChange={(id) => console.log(id)}
+  variant="plateau"
+  defaultValue="overview"
   items={[
-    { id: 'tab1', label: 'Overview', content: <p>Metrics...</p> },
-    { id: 'tab2', label: 'Security', content: <p>Tokens...</p> },
+    { value: 'overview', label: 'Overview' },
+    { value: 'security', label: 'Security' },
+    { value: 'integrations', label: 'Integrations' },
+    { value: 'billing', label: 'Billing', disabled: true },
   ]}
+  renderPanel={(value) => (
+    <div className="p-4">Active pane: {value}</div>
+  )}
 />`,
     props: [
       {
         name: 'variant',
-        type: `'pills' | 'underline' | 'boxed'`,
-        defaultVal: `'pills'`,
-        description: 'Indicator tab presentation mode.',
+        type: `'plateau' | 'pills' | 'underline' | 'segmented'`,
+        defaultVal: `'plateau'`,
+        description: 'Visual presentation variant of the tab navigation rail.',
       },
       {
         name: 'items',
-        type: 'Array<{ id: string, label: string, content: React.ReactNode }>',
+        type: 'TabItem[]',
         defaultVal: '[]',
-        description: 'Tab buttons and respective pane bodies.',
+        description: 'Array of tabs with value, label, optional icon, badge, and disabled state.',
       },
       {
-        name: 'activeId',
+        name: 'value',
         type: 'string',
-        defaultVal: '""',
-        description: 'ID of the selected tab.',
+        defaultVal: 'undefined',
+        description: 'Controlled active tab value (or activeTab for legacy compatibility).',
+      },
+      {
+        name: 'defaultValue',
+        type: 'string',
+        defaultVal: 'first enabled',
+        description: 'Initial selected tab for uncontrolled mode.',
+      },
+      {
+        name: 'onValueChange',
+        type: '(value: string) => void',
+        defaultVal: 'undefined',
+        description: 'Event callback triggered when a tab is selected.',
+      },
+      {
+        name: 'activation',
+        type: `'automatic' | 'manual'`,
+        defaultVal: `'automatic'`,
+        description: 'Keyboard navigation selection mode on arrow press.',
+      },
+      {
+        name: 'renderPanel',
+        type: '(value: string) => React.ReactNode',
+        defaultVal: 'undefined',
+        description: 'Direction-aware spring animated panel renderer.',
       },
     ],
-    themeTokens: ['--primary', '--border', '--surface-subtle', '--radius'],
+    themeTokens: ['--primary', '--border', '--surface-elevated', '--surface-subtle', '--radius'],
   },
   {
     id: 'text-loop',
@@ -2200,6 +2228,149 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     ],
     themeTokens: ['--surface-elevated', '--border', '--primary', '--foreground', '--radius'],
   },
+  {
+    id: 'segmented-control',
+    name: 'Segmented Control',
+    category: 'Navigation',
+    description:
+      'Spring-sliding radio group with text inversion mask effect, keyboard navigation (Arrow keys, Home, End), and theme token adaptation.',
+    importCode: `import { SegmentedControl } from 'es-react-components';`,
+    usageCode: `<SegmentedControl
+  label="Time Horizon"
+  options={[
+    { value: 'day', label: '1 Day' },
+    { value: 'week', label: '1 Week' },
+    { value: 'month', label: '1 Month' },
+    { value: 'year', label: '1 Year' },
+  ]}
+  value={horizon}
+  onValueChange={setHorizon}
+/>`,
+    props: [
+      { name: 'options', type: 'SegmentedOption[]', defaultVal: '[]', description: 'List of options with value, label, and optional disabled state.' },
+      { name: 'label', type: 'string', defaultVal: "''", description: 'Accessible label for the radiogroup.' },
+      { name: 'value', type: 'string', defaultVal: 'undefined', description: 'Controlled active value.' },
+      { name: 'defaultValue', type: 'string', defaultVal: 'first option', description: 'Initial value for uncontrolled mode.' },
+      { name: 'onValueChange', type: '(value: string) => void', defaultVal: 'undefined', description: 'Callback fired when an option is selected.' },
+      { name: 'variant', type: "'primary' | 'surface'", defaultVal: "'primary'", description: 'Active thumb pill color theme.' },
+    ],
+    themeTokens: ['--primary', '--surface-subtle', '--border', '--radius'],
+  },
+  {
+    id: 'accordion',
+    name: 'Accordion',
+    category: 'Surfaces & Layout',
+    description:
+      'Smooth animated collapsible disclosure rows powered by ResizeObserver auto-height, spring physics, and keyboard navigation (Arrow keys, Home, End). Supports single or multiple open modes.',
+    importCode: `import { Accordion, useAccordion, useAutoHeight } from 'es-react-components';`,
+    usageCode: `<Accordion
+  type="single"
+  defaultOpen={['item-1']}
+  items={[
+    { id: 'item-1', title: 'What is this library?', content: 'A production-ready React 19 UI component system.' },
+    { id: 'item-2', title: 'Is it theme-customizable?', content: 'Yes! Fully driven by dynamic HSL CSS tokens.' },
+    { id: 'item-3', title: 'Are animations accessible?', content: 'All motion respects prefers-reduced-motion automatically.' },
+  ]}
+/>`,
+    props: [
+      { name: 'items', type: 'AccordionItem[]', defaultVal: '[]', description: 'Accordion entries with id, title, content, and optional meta.' },
+      { name: 'type', type: "'single' | 'multiple'", defaultVal: "'single'", description: 'Whether only one row or multiple can be expanded at once.' },
+      { name: 'defaultOpen', type: 'string[]', defaultVal: '[]', description: 'Initially expanded row ids.' },
+      { name: 'collapsible', type: 'boolean', defaultVal: 'true', description: 'Whether the active single item can be collapsed.' },
+      { name: 'maxPanelHeight', type: 'number', defaultVal: '320', description: 'Maximum scrollable panel height in pixels.' },
+    ],
+    themeTokens: ['--border', '--surface-elevated', '--surface-subtle', '--foreground', '--radius'],
+  },
+  {
+    id: 'wizard-steps',
+    name: 'Wizard Steps',
+    category: 'Navigation',
+    description:
+      'Multi-step pipeline wizard featuring connected track progress bar, direction-aware sliding step panels, keyboard navigation, and completion state.',
+    importCode: `import { WizardSteps, useWizard } from 'es-react-components';`,
+    usageCode: `<WizardSteps
+  steps={[
+    { id: 'account', label: 'Account Details', content: <AccountForm /> },
+    { id: 'billing', label: 'Payment Method', content: <BillingForm /> },
+    { id: 'review', label: 'Review & Confirm', content: <ReviewPane /> },
+  ]}
+  onComplete={() => console.log('All steps completed!')}
+/>`,
+    props: [
+      { name: 'steps', type: 'WizardStep[]', defaultVal: '[]', description: 'Steps array with id, label, and content element.' },
+      { name: 'index', type: 'number', defaultVal: 'undefined', description: 'Controlled active step index.' },
+      { name: 'defaultIndex', type: 'number', defaultVal: '0', description: 'Default step index.' },
+      { name: 'onIndexChange', type: '(index: number, direction: 1 | -1) => void', defaultVal: 'undefined', description: 'Step index change callback.' },
+      { name: 'onComplete', type: '() => void', defaultVal: 'undefined', description: 'Triggered when the final step advances.' },
+      { name: 'complete', type: 'boolean', defaultVal: 'false', description: 'Whether the entire wizard is completed.' },
+    ],
+    themeTokens: ['--primary', '--surface-elevated', '--border', '--foreground', '--radius'],
+  },
+  {
+    id: 'pagination',
+    name: 'Pagination',
+    category: 'Navigation',
+    description:
+      'Compact smart pagination with spring-animated sliding pill thumb, rolling page number transitions, automatic boundary/sibling truncation, and screen-reader announcements.',
+    importCode: `import { Pagination, usePagination, paginate } from 'es-react-components';`,
+    usageCode: `<Pagination
+  count={25}
+  page={currentPage}
+  onPageChange={setCurrentPage}
+  siblings={1}
+  boundaries={1}
+/>`,
+    props: [
+      { name: 'count', type: 'number', defaultVal: '1', description: 'Total number of pages available.' },
+      { name: 'page', type: 'number', defaultVal: 'undefined', description: 'Controlled current page (1-based).' },
+      { name: 'defaultPage', type: 'number', defaultVal: '1', description: 'Initial page in uncontrolled mode.' },
+      { name: 'siblings', type: 'number', defaultVal: '1', description: 'Number of page buttons to show adjacent to current page.' },
+      { name: 'boundaries', type: 'number', defaultVal: '1', description: 'Number of page buttons to show at starts and ends.' },
+      { name: 'onPageChange', type: '(page: number) => void', defaultVal: 'undefined', description: 'Callback fired when page is selected.' },
+    ],
+    themeTokens: ['--primary', '--surface-subtle', '--foreground', '--radius'],
+  },
+  {
+    id: 'tree-view',
+    name: 'Tree View',
+    category: 'Surfaces & Layout',
+    description:
+      'Hierarchical collapsible tree view with rotating spring carets, vertical connecting branch lines, and full WAI-ARIA keyboard navigation (Arrow keys, Home, End, and letter typeahead).',
+    importCode: `import { TreeView, useTreeView } from 'es-react-components';`,
+    usageCode: `<TreeView
+  label="File Explorer"
+  defaultExpanded={['src', 'components']}
+  defaultSelected="button.tsx"
+  nodes={[
+    {
+      id: 'src',
+      label: 'src',
+      children: [
+        {
+          id: 'components',
+          label: 'components',
+          children: [
+            { id: 'button.tsx', label: 'button.tsx', meta: '2.4kb' },
+            { id: 'input.tsx', label: 'input.tsx', meta: '4.8kb' },
+          ],
+        },
+        { id: 'App.tsx', label: 'App.tsx', meta: '1.2kb' },
+      ],
+    },
+    { id: 'package.json', label: 'package.json', meta: '1.1kb' },
+  ]}
+/>`,
+    props: [
+      { name: 'nodes', type: 'TreeNode[]', defaultVal: '[]', description: 'Tree nodes hierarchy with id, label, optional meta, icon, and children.' },
+      { name: 'label', type: 'string', defaultVal: "''", description: 'Accessible label for the treeview.' },
+      { name: 'expanded', type: 'string[]', defaultVal: 'undefined', description: 'Controlled expanded folder ids.' },
+      { name: 'defaultExpanded', type: 'string[]', defaultVal: '[]', description: 'Initially expanded folder ids.' },
+      { name: 'selected', type: 'string | null', defaultVal: 'undefined', description: 'Controlled selected node id.' },
+      { name: 'onSelectedChange', type: '(id: string) => void', defaultVal: 'undefined', description: 'Callback when node is selected.' },
+    ],
+    themeTokens: ['--primary', '--surface-elevated', '--border', '--foreground', '--radius'],
+  },
 ];
+
 
 
