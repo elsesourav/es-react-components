@@ -4,7 +4,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'tree-view',
     name: 'Tree View',
-    category: 'Surfaces & Layout',
+    category: 'Navigation & Menus',
     description:
       'Hierarchical collapsible tree view with rotating spring carets, vertical connecting branch lines, and full WAI-ARIA keyboard navigation (Arrow keys, Home, End, and letter typeahead).',
     importCode: `import { TreeView, useTreeView } from 'es-react-components';`,
@@ -44,7 +44,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'sticky-header',
     name: 'Sticky Header',
-    category: 'Surfaces & Layout',
+    category: 'Scroll & Viewport',
     description:
       'Scroll-condensing responsive header container featuring spring-interpolated title scaling, floating border elevation, leading/trailing action slots, and gradient bottom edge fading.',
     importCode: `import { StickyHeader, useCondense } from 'es-react-components';`,
@@ -74,7 +74,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'hide-on-scroll',
     name: 'Hide On Scroll',
-    category: 'Surfaces & Layout',
+    category: 'Scroll & Viewport',
     description:
       'Dynamic sticky action bar that auto-collapses on downward scroll and reappears on upward scroll, with focus-within auto-pinning for keyboard accessibility.',
     importCode: `import { HideOnScroll, useHideOnScroll } from 'es-react-components';`,
@@ -108,7 +108,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'filter-grid',
     name: 'Filter Grid',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Animated categorical item filtering grid with popLayout transitions, dynamic item count badges, radiogroup chip navigation, and responsive multi-column layouts.',
     importCode: `import { FilterGrid, useFilterGrid } from 'es-react-components';`,
@@ -136,7 +136,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'reorder-list',
     name: 'Reorder List',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Smooth physics-driven drag-and-drop sortable list with complete keyboard accessibility (Space to grab/drop, ArrowUp/Down to move, Escape to revert) and live screen reader feedback.',
     importCode: `import { ReorderList, useReorderList } from 'es-react-components';`,
@@ -161,7 +161,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'lightbox',
     name: 'Lightbox',
-    category: 'Surfaces & Layout',
+    category: 'Feedback & Overlays',
     description:
       'Zoomable modal image inspector with origin-element morph transitions, wheel zoom toward cursor, drag panning with velocity bounds, keyboard shortcuts (+, -, 0, Escape), and portal overlay.',
     importCode: `import { Lightbox, useLightbox } from 'es-react-components';`,
@@ -190,7 +190,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'blur-up-image',
     name: 'Blur-Up Image',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Progressive image loading component with blurred low-res placeholder, async decode detection, smooth spring unblur reveal, and fallback handling.',
     importCode: `import { BlurUpImage, useBlurUpImage } from 'es-react-components';`,
@@ -215,7 +215,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'show-more',
     name: 'Show More',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Smooth collapsible content disclosure with dynamic line-height calculation, spring height transitions, gradient fade veil, and full ARIA keyboard control.',
     importCode: `import { ShowMore, useShowMore } from 'es-react-components';`,
@@ -236,7 +236,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'mono-charts',
     name: 'Mono Rounded Charts',
-    category: 'Surfaces & Layout',
+    category: 'Data & Analytics',
     description:
       'Suite of 5 minimalist monochrome Recharts components: Spline Dynamics (Line), Mono Pill Pillars (Bar), Mono Curved Wave (Area), Mono Rounded Donut, and Fluid Stream Wave, featuring rounded caps, responsive layout adaptation, and dynamic theme switching.',
     importCode: `import {

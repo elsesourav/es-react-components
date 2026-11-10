@@ -4,7 +4,7 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
 {
     id: 'dialog',
     name: 'Dialog',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Accessible modal overlay with backdrop blur, keyboard ESC dismissal, and focus trapping.',
     importCode: `import { Dialog } from 'es-react-components';`,
@@ -41,7 +41,7 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
 {
     id: 'alert',
     name: 'Alert',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Banner callout for critical user feedback across 4 semantic states: info, success, warning, danger.',
     importCode: `import { Alert } from 'es-react-components';`,
@@ -79,7 +79,7 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
 {
     id: 'toast',
     name: 'Toast (SwipeToast)',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Kinetic swipe-to-dismiss toast notifications featuring spring physics, rubberband drag resistance, linear burning fuse progress indicator, pause-on-hover, and WAI-ARIA politeness. Supports both declarative inline/floating mounting (<SwipeToast />) and imperative queuing (useToast().addToast()).',
     importCode: `import { Toast, SwipeToast, ToastProvider, useToast } from 'es-react-components';`,
@@ -204,7 +204,7 @@ addToast({
 {
     id: 'spinner',
     name: 'Spinner & Skeleton',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Animated loading indicators including continuous radial CSS spinner and shimmer skeleton pulses.',
     importCode: `import { Spinner, Skeleton } from 'es-react-components';`,
@@ -224,7 +224,7 @@ addToast({
 {
     id: 'motion-loaders',
     name: 'Motion Loaders',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Smooth, accessible motion loaders powered by Framer Motion: SquareSnake 3x3 staggered wave matrix and BobbingDots harmonic bounce wave.',
     importCode: `import { SquareSnake, BobbingDots } from 'es-react-components';`,
@@ -257,7 +257,7 @@ addToast({
 {
     id: 'ai-approval-card',
     name: 'AI Approval Card',
-    category: 'Feedback',
+    category: 'AI & Agentic UX',
     description:
       'Human-in-the-loop approval workflow card with sliding questions, rolling digit odometer counters, glide hover highlights, and single/multi-choice controls.',
     importCode: `import { AIApprovalCard, ApprovalQuestion } from 'es-react-components';`,
@@ -306,7 +306,7 @@ addToast({
 {
     id: 'task-steps',
     name: 'Task Steps',
-    category: 'Feedback',
+    category: 'AI & Agentic UX',
     description:
       'Multi-stage pipeline indicator with connected track lines, completed badges, active pulsating rings, and failure state alerts.',
     importCode: `import { TaskSteps } from 'es-react-components';`,
@@ -332,7 +332,7 @@ addToast({
 {
     id: 'collapsible-banner',
     name: 'Collapsible Banner',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Foldable announcement and incident banner with spring accordion height collapse, inline action triggers, and dismissal controls.',
     importCode: `import { CollapsibleBanner } from 'es-react-components';`,
@@ -361,7 +361,7 @@ addToast({
 {
     id: 'modal',
     name: 'Modal',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'Accessible dialog window with backdrop blur, scroll locking, Escape key stacking, outside-click detection, and spring scale entrance.',
     importCode: `import { Modal, useModal } from 'es-react-components';`,
@@ -386,7 +386,7 @@ addToast({
 {
     id: 'tooltip',
     name: 'Tooltip',
-    category: 'Feedback',
+    category: 'Feedback & Overlays',
     description:
       'High-performance warm-start tooltips with spring glide transitions, grouping contexts, keyboard focus detection, and blur reveal.',
     importCode: `import { Tooltip, TooltipGroup, useTooltip } from 'es-react-components';`,
@@ -410,7 +410,7 @@ addToast({
 {
     id: 'reading-progress',
     name: 'Reading Progress',
-    category: 'Feedback',
+    category: 'Scroll & Viewport',
     description:
       'Scroll-tracked reading progress meter with estimated minutes remaining calculation, spring fill animations, and animated completion checkmark.',
     importCode: `import { ReadingProgress, useReadingProgress } from 'es-react-components';`,
@@ -434,7 +434,7 @@ addToast({
 {
     id: 'poll-results',
     name: 'Poll Results',
-    category: 'Feedback',
+    category: 'Surfaces & Cards',
     description:
       'Interactive voting poll component featuring spring-animated clip-path progress reveals, percentage counters, winner tick pop animation, and one-vote enforcement.',
     importCode: `import { PollResults, usePollResults } from 'es-react-components';`,

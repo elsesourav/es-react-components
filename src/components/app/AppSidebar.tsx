@@ -19,6 +19,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   onExpandedChange,
   totalComponents,
 }) => {
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
   const branchIds = React.useMemo(() => {
     return treeNodes
       .filter((n) => n.children && n.children.length > 0)
@@ -31,17 +33,25 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
     if (hasExpanded) {
       onExpandedChange([]);
     } else {
-      // In accordion mode, expand only the active component's category or first category
-      const activeNode = selectedId
-        ? treeNodes.find((n) => n.children?.some((c) => c.id === selectedId))
-        : null;
-      onExpandedChange(activeNode ? [activeNode.id] : branchIds.length > 0 ? [branchIds[0]] : []);
+      // Expand all categories for comprehensive, jump-free browsing
+      onExpandedChange(branchIds);
     }
   };
 
+  // Keep active node visible without shifting sidebar position
+  React.useEffect(() => {
+    if (!selectedId || !scrollContainerRef.current) return;
+    const activeEl = scrollContainerRef.current.querySelector<HTMLElement>(
+      `[data-id="${selectedId}"], [aria-selected="true"]`
+    );
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [selectedId]);
+
   return (
-    <aside className="w-64 shrink-0 hidden md:block">
-      <div className="sticky top-[4.5rem] h-[calc(100vh-5.5rem)] flex flex-col gap-2.5 pb-2">
+    <aside className="w-64 shrink-0 hidden md:block self-start sticky top-14 h-[calc(100vh-3.5rem)] py-4 z-20">
+      <div className="h-full flex flex-col gap-2.5 pb-2">
         {/* Pinned Header */}
         <div className="flex items-center justify-between px-1.5 shrink-0">
           <div className="flex items-center gap-2">
@@ -57,17 +67,20 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             type="button"
             onClick={handleToggle}
             className="text-[11px] text-muted-foreground hover:text-foreground font-medium flex items-center gap-1 px-2 py-0.5 rounded-md hover:bg-surface border border-transparent hover:border-border/80 transition-colors cursor-pointer select-none"
-            title={hasExpanded ? 'Collapse open category' : 'Expand active category'}
-            aria-label={hasExpanded ? 'Collapse open category' : 'Expand active category'}
+            title={hasExpanded ? 'Collapse all categories' : 'Expand all categories'}
+            aria-label={hasExpanded ? 'Collapse all categories' : 'Expand all categories'}
           >
             <ChevronsUpDown className="size-3 text-muted-foreground" />
-            <span>{hasExpanded ? 'Collapse' : 'Expand'}</span>
+            <span>{hasExpanded ? 'Collapse All' : 'Expand All'}</span>
           </button>
         </div>
 
         {/* Tree Container with Internal Scroll */}
         <div className="flex-1 min-h-0 rounded-2xl bg-surface/60 border border-border/80 shadow-xs flex flex-col overflow-hidden backdrop-blur-xs">
-          <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50 scrollbar-track-transparent">
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50 scrollbar-track-transparent"
+          >
             <TreeView
               label="Component Directory Tree"
               nodes={treeNodes}
@@ -75,7 +88,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               onSelectedChange={onSelect}
               expanded={expandedCategories}
               onExpandedChange={onExpandedChange}
-              accordion={true}
+              accordion={false}
               className="border-none bg-transparent p-0 shadow-none"
             />
           </div>

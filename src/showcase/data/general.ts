@@ -4,7 +4,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
 {
     id: 'button',
     name: 'Button',
-    category: 'General',
+    category: 'Buttons & Actions',
     description:
       'Interactive button primitive supporting 7 semantic variants, 5 sizes, loading spinners, and icon slots.',
     importCode: `import { Button } from 'es-react-components';`,
@@ -58,7 +58,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
 {
     id: 'badge',
     name: 'Badge',
-    category: 'General',
+    category: 'Typography & Content',
     description:
       'Compact status indicator pill with optional pulsing presence dot and 8 semantic variants.',
     importCode: `import { Badge } from 'es-react-components';`,
@@ -94,7 +94,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
 {
     id: 'avatar',
     name: 'Avatar',
-    category: 'General',
+    category: 'Surfaces & Cards',
     description:
       'Profile image representation with automatic fallback initials and online/offline status ring indicators.',
     importCode: `import { Avatar } from 'es-react-components';`,
@@ -135,7 +135,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
 {
     id: 'text-loop',
     name: 'Text Loop (Curved Ribbon Marquee)',
-    category: 'General',
+    category: 'Typography & Content',
     description:
       'Continuous SVG text marquee scrolling along customizable wave, circle, infinity, arch, or line paths. Features ribbon bands, intersecting cross-ribbons, inertia drag gestures, scroll velocity boosts, and edge fade gradients.',
     importCode: `import { TextLoop } from 'es-react-components';`,

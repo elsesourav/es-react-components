@@ -43,7 +43,6 @@ import {
   CommandPalettePlayground,
   CollapsibleBannerPlayground,
   LightboxPlayground,
-  IssueBoardPlayground,
   AiApprovalCardPlayground,
   AiPromptBarPlayground,
   AiCodeBlockPlayground,
@@ -161,8 +160,6 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <CollapsibleBannerPlayground />;
     case 'lightbox':
       return <LightboxPlayground />;
-    case 'issue-board':
-      return <IssueBoardPlayground />;
     case 'ai-approval-card':
       return <AiApprovalCardPlayground />;
     case 'ai-prompt-bar':

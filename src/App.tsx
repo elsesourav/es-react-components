@@ -30,6 +30,12 @@ import {
   Folder,
   LayoutGrid,
   Cpu,
+  MousePointerClick,
+  FileText,
+  ToggleLeft,
+  ScrollText,
+  Type,
+  BarChart2,
 } from 'lucide-react';
 import { useTheme } from './theme/ThemeContext';
 
@@ -144,11 +150,16 @@ export const App: React.FC = () => {
     ];
 
     const categoryIcons: Record<string, React.ReactNode> = {
-      General: <Sparkles className="size-3.5 text-primary" />,
-      'Surfaces & Layout': <Layers className="size-3.5 text-indigo-400" />,
-      Forms: <SlidersHorizontal className="size-3.5 text-amber-400" />,
-      Feedback: <Zap className="size-3.5 text-rose-400" />,
-      Navigation: <Globe className="size-3.5 text-emerald-400" />,
+      'Buttons & Actions': <MousePointerClick className="size-3.5 text-primary" />,
+      'Inputs & Fields': <FileText className="size-3.5 text-blue-400" />,
+      'Checkbox & Switch': <ToggleLeft className="size-3.5 text-amber-400" />,
+      'Sliders & Range': <SlidersHorizontal className="size-3.5 text-orange-400" />,
+      'Navigation & Menus': <Globe className="size-3.5 text-emerald-400" />,
+      'Scroll & Viewport': <ScrollText className="size-3.5 text-teal-400" />,
+      'Feedback & Overlays': <Zap className="size-3.5 text-rose-400" />,
+      'Typography & Content': <Type className="size-3.5 text-violet-400" />,
+      'Surfaces & Cards': <Layers className="size-3.5 text-indigo-400" />,
+      'Data & Analytics': <BarChart2 className="size-3.5 text-cyan-400" />,
       'AI & Agentic UX': <Cpu className="size-3.5 text-purple-400" />,
     };
 
@@ -185,17 +196,12 @@ export const App: React.FC = () => {
     }
     if (activeComponent) {
       const catId = `cat-${activeComponent.category}`;
-      setExpandedCategories([catId]);
+      setExpandedCategories((prev) => (prev.includes(catId) ? prev : [...prev, catId]));
     }
   }, [activeComponent]);
 
   const handleExpandedChange = (next: string[]) => {
-    if (next.length > 1) {
-      const newlyAdded = next.find((id) => !expandedCategories.includes(id));
-      setExpandedCategories(newlyAdded ? [newlyAdded] : [next[next.length - 1]]);
-    } else {
-      setExpandedCategories(next);
-    }
+    setExpandedCategories(next);
   };
 
   useEffect(() => {

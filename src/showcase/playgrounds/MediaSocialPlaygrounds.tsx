@@ -212,19 +212,20 @@ export const FilterGridPlayground: React.FC = () => {
           }}
           label="Service Inventory"
           columns={filterGridCols}
+          rowHeight={112}
           getKey={(s) => s.id}
           renderItem={(s) => (
-            <div className="p-4 rounded-xl bg-surface border border-border shadow-xs hover:border-primary/40 hover:shadow-sm transition-all h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-[11px] text-muted-foreground">{s.id}</span>
-                  <Badge variant={s.category === 'security' ? 'secondary' : 'default'} size="sm">
-                    {s.category}
-                  </Badge>
-                </div>
-                <div className="font-semibold text-sm text-foreground">{s.name}</div>
+            <div className="flex flex-col justify-between h-full">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[11px] text-muted-foreground">{s.id}</span>
+                <Badge variant={s.category === 'security' ? 'secondary' : 'default'} size="sm">
+                  {s.category}
+                </Badge>
               </div>
-              <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+              <div className="font-semibold text-xs sm:text-sm text-foreground truncate my-1">
+                {s.name}
+              </div>
+              <div className="mt-auto pt-2 border-t border-border/50 flex items-center justify-between text-[11px] text-muted-foreground">
                 <span>Latency: <strong className="text-foreground">{s.latency}</strong></span>
                 <span>Load: <strong className="text-foreground">{s.load}</strong></span>
               </div>

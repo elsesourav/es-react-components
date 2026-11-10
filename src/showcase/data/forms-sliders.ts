@@ -4,7 +4,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'slider-detents',
     name: 'Slider Detents',
-    category: 'Forms',
+    category: 'Sliders & Range',
     description:
       'Accessible numeric slider with magnetic detent snap points, spring carriage thumb, haptic feedback, and keyboard detent traversal.',
     importCode: `import { SliderDetents, useSliderDetents } from 'es-react-components';`,
@@ -34,7 +34,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'markdown-editor',
     name: 'Markdown Editor & Math Preview',
-    category: 'Forms',
+    category: 'Typography & Content',
     description:
       'Universal Markdown editor and live preview built completely from scratch with KaTeX LaTeX math support ($E=mc^2$ and $$\\int f(x)dx$$), split view, GitHub alerts, code blocks, task lists, and theme token styling.',
     importCode: `import { MarkdownEditor, MarkdownRenderer } from 'es-react-components';`,
@@ -99,7 +99,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'parameter-slider',
     name: 'Parameter Slider & Scrubber Controls',
-    category: 'Forms',
+    category: 'Sliders & Range',
     description:
       'High-precision inspector parameter slider with subtle tick track, floating carriage thumb with inner notch indicator, live formatted value readout, and companion switch/color controls.',
     importCode: `import { ParameterSlider, ParameterSwitch, ParameterColor, ParameterGrid } from 'es-react-components';`,
@@ -144,7 +144,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'elastic-slider',
     name: 'Elastic Slider',
-    category: 'Forms',
+    category: 'Sliders & Range',
     description:
       'Organic rubber-band elastic slider with spring physics, overstretch edge resistance, auto-contrasting ink text, inside/outside icon slots, and vertical/horizontal layout modes.',
     importCode: `import { ElasticSlider } from 'es-react-components';`,
@@ -184,7 +184,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'wake-slider',
     name: 'Wake Slider',
-    category: 'Forms',
+    category: 'Sliders & Range',
     description:
       'Hydrodynamic waveform slider driven by spring velocity acoustics. As the user scrubs across bars, an asymmetric wake wave ripples with fluid momentum and smooth dissipation.',
     importCode: `import { WakeSlider } from 'es-react-components';`,
@@ -224,7 +224,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'slider',
     name: 'Slider (Single & Dual Range)',
-    category: 'Forms',
+    category: 'Sliders & Range',
     description:
       'Accessible multi-thumb slider powered by React Aria, supporting single value and dual-thumb range selection, floating tooltip indicators, bottom labels, and keyboard accessibility.',
     importCode: `import { Slider } from 'es-react-components';`,

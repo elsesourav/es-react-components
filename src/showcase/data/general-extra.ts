@@ -4,7 +4,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'split-flap-text',
     name: 'Split Flap Text (Mechanical Departure Board)',
-    category: 'General',
+    category: 'Typography & Content',
     description:
       'Retro mechanical split-flap ticker replicating vintage airport and train arrival boards. Features 3D split-tile flipping physics, cascading character staggering, specular glare reflections, custom charsets, and reduced-motion fallback.',
     importCode: `import { SplitFlapText } from 'es-react-components';`,
@@ -150,7 +150,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'interactive-controls',
     name: 'Interactive Micro-Controls',
-    category: 'General',
+    category: 'Buttons & Actions',
     description:
       'Suite of 11 interactive micro-components: ContextMenuEditDelete, QuestionTooltip, DownloadAnimatedIcons, PipModeIcons, SimplePlusMinusBtn, SegmentedABTabs, QuantityCounter, ListColumnToggle, FollowCheckButton, MenuDotsExpand, and CompactModeSwitch.',
     importCode: `import {
@@ -198,7 +198,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'text-reveal',
     name: 'Text Reveal',
-    category: 'General',
+    category: 'Typography & Content',
     description:
       'Staggered blur and fade text reveal animation by word or character with viewport scroll-triggering, duration pacing, and reduced motion fallbacks.',
     importCode: `import { TextReveal, useTextReveal } from 'es-react-components';`,
@@ -222,7 +222,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'logo-marquee',
     name: 'Logo Marquee',
-    category: 'General',
+    category: 'Surfaces & Cards',
     description:
       'Hardware-accelerated continuous ticker carousel with smooth momentum decay, keyboard tab navigation, pause on hover/interaction, and adaptive multi-copy filling.',
     importCode: `import { LogoMarquee, useLogoMarquee } from 'es-react-components';`,

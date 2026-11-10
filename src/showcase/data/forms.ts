@@ -4,7 +4,7 @@ export const FORMS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'input',
     name: 'Input (All Variants)',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Universal Form Input component supporting all standard & advanced variants: standard, floating, inline-validation, password-strength, otp, tag, and expanding-search.',
     importCode: `// Unified Component syntax:
@@ -69,7 +69,7 @@ import {
 {
     id: 'floating-input',
     name: 'Floating Label Input',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Animated input field with a floating label that smoothly scales up and floats to the top edge when focused or filled. Includes invalid states and character counters.',
     importCode: `import { FloatingLabelInput } from 'es-react-components';`,
@@ -125,7 +125,7 @@ import {
 {
     id: 'otp-input',
     name: 'OTP Input',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Segmented multi-cell verification code input with auto-advance on typing, backspace return, full-code clipboard paste, and error vibration animation.',
     importCode: `import { OtpInput } from 'es-react-components';`,
@@ -169,7 +169,7 @@ import {
 {
     id: 'tag-input',
     name: 'Tag Input',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Token and tag manager input supporting customizable separator keys (Enter, comma, semicolon), max tag limits, duplicate rejection, and two-stage backspace delete.',
     importCode: `import { TagInput } from 'es-react-components';`,
@@ -212,7 +212,7 @@ import {
 {
     id: 'password-input',
     name: 'Password Input & Strength',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Password field with show/hide password eye toggle and integrated real-time password strength meter checking character variety and length requirements.',
     importCode: `import {
@@ -255,7 +255,7 @@ import {
 {
     id: 'expanding-search',
     name: 'Expanding Search',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Collapsible search bar powered by spring physics (motion/react). Smoothly expands from an icon on focus, features live debounced query updates, ESC dismiss, and result counter.',
     importCode: `import { ExpandingSearch, useExpandingSearch } from 'es-react-components';`,
@@ -298,7 +298,7 @@ import {
 {
     id: 'textarea',
     name: 'Textarea',
-    category: 'Forms',
+    category: 'Inputs & Fields',
     description:
       'Multi-line text editor with auto-resizing, character count counters, error states, and theme border focus rings.',
     importCode: `import { Textarea } from 'es-react-components';`,

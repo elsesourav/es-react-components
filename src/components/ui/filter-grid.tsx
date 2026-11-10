@@ -119,7 +119,7 @@ export function FilterGrid<T>({
   defaultValue,
   onValueChange,
   columns = 3,
-  rowHeight = 72,
+  rowHeight = 100,
   maxRows = 4,
   gap = 8,
   emptyLabel = "Nothing matches this filter",

@@ -50,19 +50,23 @@ function lockDocumentScroll() {
   locks += 1;
   if (locks > 1) return;
 
+  const html = document.documentElement;
   const body = document.body;
-  const gap = window.innerWidth - document.documentElement.clientWidth;
-  const overflow = body.style.overflow;
+  const gap = window.innerWidth - html.clientWidth;
+  const htmlOverflow = html.style.overflow;
+  const bodyOverflow = body.style.overflow;
   const paddingRight = body.style.paddingRight;
   const base = Number.parseFloat(window.getComputedStyle(body).paddingRight);
 
+  html.style.overflow = "hidden";
   body.style.overflow = "hidden";
   if (gap > 0) {
     body.style.paddingRight = `${(Number.isFinite(base) ? base : 0) + gap}px`;
   }
 
   releaseLock = () => {
-    body.style.overflow = overflow;
+    html.style.overflow = htmlOverflow;
+    body.style.overflow = bodyOverflow;
     body.style.paddingRight = paddingRight;
   };
 }
@@ -378,6 +382,9 @@ export function Modal({
             aria-hidden="true"
             variants={variants.backdrop}
             style={{ touchAction: "none" }}
+            onTouchMove={(e) => {
+              e.preventDefault();
+            }}
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
           <motion.div
@@ -418,7 +425,10 @@ export function Modal({
             </div>
 
             {children && (
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 text-sm leading-relaxed">
+              <div
+                className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 text-sm leading-relaxed"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
                 {children}
               </div>
             )}

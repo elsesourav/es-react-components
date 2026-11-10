@@ -26,13 +26,19 @@ export const Dialog: React.FC<DialogProps> = ({
       if (e.key === 'Escape') onClose();
     };
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      const html = document.documentElement;
+      const body = document.body;
+      const prevHtml = html.style.overflow;
+      const prevBody = body.style.overflow;
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        html.style.overflow = prevHtml;
+        body.style.overflow = prevBody;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -49,6 +55,8 @@ export const Dialog: React.FC<DialogProps> = ({
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity animate-fade-in"
+        style={{ touchAction: 'none' }}
+        onTouchMove={(e) => e.preventDefault()}
         onClick={onClose}
       />
 

@@ -48,18 +48,30 @@ export const AppHero: React.FC<AppHeroProps> = ({
   onSelectComponent,
   onOpenCommand,
 }) => {
-  const categoryFilters = React.useMemo(
-    () => [
+  const categoryFilters = React.useMemo(() => {
+    const categories = [
+      'Buttons & Actions',
+      'Inputs & Fields',
+      'Checkbox & Switch',
+      'Sliders & Range',
+      'Navigation & Menus',
+      'Scroll & Viewport',
+      'Feedback & Overlays',
+      'Typography & Content',
+      'Surfaces & Cards',
+      'Data & Analytics',
+      'AI & Agentic UX',
+    ] as const;
+
+    return [
       { id: 'all', label: 'All Components', match: () => true },
-      { id: 'General', label: 'General', match: (c: ComponentDoc) => c.category === 'General' },
-      { id: 'Forms', label: 'Forms', match: (c: ComponentDoc) => c.category === 'Forms' },
-      { id: 'Surfaces & Layout', label: 'Surfaces & Layout', match: (c: ComponentDoc) => c.category === 'Surfaces & Layout' },
-      { id: 'Feedback', label: 'Feedback', match: (c: ComponentDoc) => c.category === 'Feedback' },
-      { id: 'Navigation', label: 'Navigation', match: (c: ComponentDoc) => c.category === 'Navigation' },
-      { id: 'AI & Agentic UX', label: 'AI & Agentic UX', match: (c: ComponentDoc) => c.category === 'AI & Agentic UX' },
-    ],
-    []
-  );
+      ...categories.map((cat) => ({
+        id: cat,
+        label: cat,
+        match: (c: ComponentDoc) => c.category === cat,
+      })),
+    ];
+  }, []);
 
   return (
     <div className="space-y-12 animate-fade-in pb-16">

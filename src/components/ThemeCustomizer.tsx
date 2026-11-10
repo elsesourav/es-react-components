@@ -54,6 +54,20 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   } = useTheme();
   const { addToast } = useToast();
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+    };
+  }, [isOpen]);
+
   const cssLines = [
     '/* Custom Theme Tokens (Auto-Generated) */',
     ':root {',
@@ -96,6 +110,8 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
       {isOpen && (
         <div
           className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm transition-opacity"
+          style={{ touchAction: 'none' }}
+          onTouchMove={(e) => e.preventDefault()}
           onClick={() => setIsOpen(false)}
         />
       )}

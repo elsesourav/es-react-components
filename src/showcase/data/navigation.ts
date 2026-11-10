@@ -4,7 +4,7 @@ export const NAVIGATION_COMPONENTS: ComponentDoc[] = [
 {
     id: 'tabs',
     name: 'Tabs',
-    category: 'Navigation',
+    category: 'Navigation & Menus',
     description:
       'Spring-indicator sliding plateau tabs with automatic/manual keyboard activation, directional panel transition animations, and backwards-compatible segmented, pills, and underline variants.',
     importCode: `import { Tabs, useTabs } from 'es-react-components';`,
@@ -70,7 +70,7 @@ export const NAVIGATION_COMPONENTS: ComponentDoc[] = [
 {
     id: 'branched-menu',
     name: 'Branched Menu (Tree Navigation)',
-    category: 'Navigation',
+    category: 'Navigation & Menus',
     description:
       'Tree structure navigation menu with curved SVG vector branches and animated path stroke drawing. Features sliding section indicator pills, accordion folding, and responsive custom dimensions.',
     importCode: `import { BranchedMenu } from 'es-react-components';
@@ -218,7 +218,7 @@ import { Download04Icon, Rocket01Icon, Settings02Icon } from '@hugeicons/core-fr
 {
     id: 'streaming-text',
     name: 'Streaming Text',
-    category: 'AI & Agentic UX',
+    category: 'Typography & Content',
     description:
       'Real-time token typewriter animation for LLM and assistant responses. Features configurable token pacing, pulsing cursor, click-to-skip, and status callbacks.',
     importCode: `import { StreamingText, useStreamingText } from 'es-react-components';`,
@@ -242,7 +242,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
 {
     id: 'command-palette',
     name: 'Command Palette',
-    category: 'Navigation',
+    category: 'Navigation & Menus',
     description:
       'Spotlight-style fuzzy search command palette (⌘K) with real-time scoring, keyboard arrow navigation, shortcut badges, and overlay portal.',
     importCode: `import { CommandPalette, useCommandPalette } from 'es-react-components';`,
@@ -267,7 +267,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
 {
     id: 'segmented-control',
     name: 'Segmented Control',
-    category: 'Navigation',
+    category: 'Checkbox & Switch',
     description:
       'Spring-sliding radio group with text inversion mask effect, keyboard navigation (Arrow keys, Home, End), and theme token adaptation.',
     importCode: `import { SegmentedControl } from 'es-react-components';`,
@@ -295,7 +295,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
 {
     id: 'wizard-steps',
     name: 'Wizard Steps',
-    category: 'Navigation',
+    category: 'Navigation & Menus',
     description:
       'Multi-step pipeline wizard featuring connected track progress bar, direction-aware sliding step panels, keyboard navigation, and completion state.',
     importCode: `import { WizardSteps, useWizard } from 'es-react-components';`,
@@ -320,7 +320,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
 {
     id: 'pagination',
     name: 'Pagination',
-    category: 'Navigation',
+    category: 'Navigation & Menus',
     description:
       'Compact smart pagination with spring-animated sliding pill thumb, rolling page number transitions, automatic boundary/sibling truncation, and screen-reader announcements.',
     importCode: `import { Pagination, usePagination, paginate } from 'es-react-components';`,
@@ -344,7 +344,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
 {
     id: 'scroll-spy',
     name: 'Scroll Spy',
-    category: 'Navigation',
+    category: 'Scroll & Viewport',
     description:
       'On-page section tracker with spring-animated sliding pill thumb (layoutId), programmatic smooth scroll with lock suppression, horizontal chip auto-scroll, and ARIA announcements.',
     importCode: `import { ScrollSpy, useScrollSpy } from 'es-react-components';`,

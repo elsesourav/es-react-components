@@ -108,6 +108,26 @@
     --input: 240 14% 16%;
     --ring: 238.7 83.5% 66.7%;
   }
+
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+  }
 }
 
 /* Custom scrollbars */

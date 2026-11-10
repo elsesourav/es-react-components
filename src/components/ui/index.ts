@@ -31,7 +31,6 @@ export * from './motion-loaders';
 export * from './interactive-controls';
 export * from './markdown-renderer';
 export * from './markdown-editor';
-export * from './issue-board';
 export * from './ai-approval-card';
 export * from './ai-prompt-bar';
 export * from './ai-code-block';

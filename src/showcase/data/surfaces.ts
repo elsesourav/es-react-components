@@ -4,7 +4,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'card',
     name: 'Card',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Structured content container with compound components: CardHeader, CardTitle, CardDescription, CardContent, and CardFooter.',
     importCode: `import {
@@ -46,7 +46,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'stat',
     name: 'Stat',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Dashboard metric indicator showing numeric figures, positive/negative delta trend indicators, and caption notes.',
     importCode: `import { Stat } from 'es-react-components';`,
@@ -87,7 +87,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'liquid-glass-sheet',
     name: 'Liquid Glass Sheet',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Ultra-smooth iOS liquid glass bottom drawer with optical normal-map refraction, chromatic dispersion, spring physics, touch drag-to-dismiss, and animated action rows.',
     importCode: `import { LiquidGlassSheet } from 'es-react-components';`,
@@ -173,7 +173,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'card-coverflow',
     name: 'Card Coverflow',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       '3D perspective coverflow carousel featuring Spring physics, distinct architectural imagery, depth offsets, interactive slide clicks, and pill dot navigation.',
     importCode: `import { CardCoverFlow, DEFAULT_COVERFLOW_IMAGES } from 'es-react-components';`,
@@ -214,7 +214,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'card-carousel',
     name: 'Card Carousel',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Fan-out stack card carousel featuring angular tilt on hover, depth scaling, track translation, and dot controls with curated landscapes.',
     importCode: `import { CardCarousel, DEFAULT_CAROUSEL_IMAGES } from 'es-react-components';`,
@@ -265,49 +265,9 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     themeTokens: ['--surface', '--foreground', '--primary', '--border'],
   },
 {
-    id: 'issue-board',
-    name: 'Issue Board (Kanban)',
-    category: 'Surfaces & Layout',
-    description:
-      'High-performance drag-and-drop Kanban board with lane status management, card sorting, keyboard accessibility, popover filters, and board/list views.',
-    importCode: `import { RudderIssueBoard, BoardIssue } from 'es-react-components';`,
-    usageCode: `<RudderIssueBoard
-  theme="dark"
-  initialIssues={issues}
-  onIssuesChange={(updated) => console.log('Board updated:', updated)}
-/>`,
-    props: [
-      {
-        name: 'theme',
-        type: `'light' | 'dark'`,
-        defaultVal: `'dark'`,
-        description: 'Color theme override for the issue board.',
-      },
-      {
-        name: 'initialIssues',
-        type: 'readonly BoardIssue[]',
-        defaultVal: 'DEFAULT_ISSUES',
-        description: 'Initial array of board issues to populate lanes.',
-      },
-      {
-        name: 'onIssuesChange',
-        type: '(issues: BoardIssue[]) => void',
-        defaultVal: 'undefined',
-        description: 'Callback invoked when cards are moved, sorted, or created.',
-      },
-      {
-        name: 'className',
-        type: 'string',
-        defaultVal: `''`,
-        description: 'Optional additional CSS classes for the board container.',
-      },
-    ],
-    themeTokens: ['--surface', '--foreground', '--border', '--primary'],
-  },
-{
     id: 'ai-code-block',
     name: 'AI Code & Diff Block',
-    category: 'Surfaces & Layout',
+    category: 'AI & Agentic UX',
     description:
       'Editor panel with live syntax highlighting, line numbers, unified diff comparison with word-level changes, diff stat counters, and copy feedback.',
     importCode: `import { AICodeBlock, DiffRow } from 'es-react-components';`,
@@ -359,7 +319,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'load-more',
     name: 'Load More',
-    category: 'Surfaces & Layout',
+    category: 'AI & Agentic UX',
     description:
       'IntersectionObserver-powered sentinel for infinite lists and feeds with automatic page triggering, loading spinners, retry controls, and exhaustion labels.',
     importCode: `import { LoadMore } from 'es-react-components';`,
@@ -383,7 +343,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'presence-avatars',
     name: 'Presence Avatars',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Spring-animated active user rail with image loading states, fallback initials, overflow +N chip button, and live screen-reader announcements.',
     importCode: `import { PresenceAvatars, usePresence } from 'es-react-components';`,
@@ -408,7 +368,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
 {
     id: 'accordion',
     name: 'Accordion',
-    category: 'Surfaces & Layout',
+    category: 'Surfaces & Cards',
     description:
       'Smooth animated collapsible disclosure rows powered by ResizeObserver auto-height, spring physics, and keyboard navigation (Arrow keys, Home, End). Supports single or multiple open modes.',
     importCode: `import { Accordion, useAccordion, useAutoHeight } from 'es-react-components';`,

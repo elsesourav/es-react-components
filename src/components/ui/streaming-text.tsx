@@ -50,20 +50,15 @@ export function useStreamingText({
 
     if (tokenIndex >= totalTokens) {
       setStatus("done");
-      onDoneLatest.current?.();
+      queueMicrotask(() => {
+        onDoneLatest.current?.();
+      });
       return;
     }
 
     const intervalMs = Math.max(10, Math.floor(1000 / tokensPerSecond));
     const timer = setTimeout(() => {
-      setTokenIndex((prev) => {
-        const next = prev + 1;
-        if (next >= totalTokens) {
-          setStatus("done");
-          onDoneLatest.current?.();
-        }
-        return next;
-      });
+      setTokenIndex((prev) => Math.min(totalTokens, prev + 1));
     }, intervalMs);
 
     return () => clearTimeout(timer);

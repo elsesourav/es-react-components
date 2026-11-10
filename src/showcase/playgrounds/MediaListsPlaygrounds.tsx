@@ -76,12 +76,9 @@ export const ReorderListPlayground: React.FC = () => {
           >
             {(item) => (
               <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-3 min-w-0">
-                  <GripVertical className="size-4 text-muted-foreground/60 shrink-0" />
-                  <div className="min-w-0">
-                    <div className="text-xs font-semibold text-foreground truncate">{item.title}</div>
-                    <div className="text-[11px] text-muted-foreground font-mono">Ping: {item.latency}</div>
-                  </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-semibold text-foreground truncate">{item.title}</div>
+                  <div className="text-[11px] text-muted-foreground font-mono">Ping: {item.latency}</div>
                 </div>
                 <Badge
                   variant={item.badge === 'Critical' ? 'danger' : item.badge === 'High' ? 'warning' : 'outline'}

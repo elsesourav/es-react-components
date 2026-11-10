@@ -4,7 +4,7 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'select',
     name: 'Select',
-    category: 'Forms',
+    category: 'Checkbox & Switch',
     description:
       'Unified Select supporting both Native HTML5 options and Spring-Animated Dropdown with icons, hints, and sliding indicator pill.',
     importCode: `// Unified syntax:
@@ -61,7 +61,7 @@ import { Select } from 'es-react-components';
 {
     id: 'dropdown',
     name: 'Dropdown (Animated Select)',
-    category: 'Forms',
+    category: 'Checkbox & Switch',
     description:
       'Rich floating dropdown menu powered by motion/react spring physics. Features active sliding indicator pill, keyboard navigation (ArrowUp, ArrowDown, Enter, Esc), typeahead search, hints, and HSL theme tokens.',
     importCode: `import { Dropdown, useDropdown } from 'es-react-components';`,
@@ -113,7 +113,7 @@ import { Select } from 'es-react-components';
 {
     id: 'switch',
     name: 'Switch',
-    category: 'Forms',
+    category: 'Checkbox & Switch',
     description:
       'Accessible toggle switch primitive with smooth sliding thumb and keyboard spacebar activation.',
     importCode: `import { Switch } from 'es-react-components';`,
@@ -147,7 +147,7 @@ import { Select } from 'es-react-components';
 {
     id: 'checkbox',
     name: 'Checkbox',
-    category: 'Forms',
+    category: 'Checkbox & Switch',
     description:
       'High-contrast accessible checkbox with custom SVG checkmark and title/description layout slots.',
     importCode: `import { Checkbox } from 'es-react-components';`,
@@ -175,7 +175,7 @@ import { Select } from 'es-react-components';
 {
     id: 'peek-rating',
     name: 'Peek Rating (Interactive Star & Shape Rater)',
-    category: 'Forms',
+    category: 'Checkbox & Switch',
     description:
       'Fluid gesture-driven rating selector with spring hover elevation, floating value tooltip, haptic pop animation, and keyboard accessibility. Supports stars, hearts, bolts, and custom icons.',
     importCode: `import { PeekRating } from 'es-react-components';`,
@@ -317,7 +317,7 @@ import { Select } from 'es-react-components';
 {
     id: 'ai-prompt-bar',
     name: 'AI Prompt Bar',
-    category: 'Forms',
+    category: 'AI & Agentic UX',
     description:
       'Feature-packed AI input composer with @ mentions, / commands, model picker, voice dictation, file attachments, and local rainbow canvas sweep.',
     importCode: `import { AIPromptBar } from 'es-react-components';`,
@@ -364,7 +364,7 @@ import { Select } from 'es-react-components';
 {
     id: 'ai-fine-tune-card',
     name: 'AI Fine-Tune Card',
-    category: 'Forms',
+    category: 'AI & Agentic UX',
     description:
       'Compact interactive parameter inspector with scrubbable number sliders (drag label ↔ or use arrow keys), segmented layout selector, and dropdown menu.',
     importCode: `import { AIFineTuneCard, FineTuneField } from 'es-react-components';`,

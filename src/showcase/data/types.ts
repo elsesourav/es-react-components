@@ -1,3 +1,16 @@
+export type ComponentCategory =
+  | 'Buttons & Actions'
+  | 'Inputs & Fields'
+  | 'Checkbox & Switch'
+  | 'Sliders & Range'
+  | 'Navigation & Menus'
+  | 'Scroll & Viewport'
+  | 'Feedback & Overlays'
+  | 'Typography & Content'
+  | 'Surfaces & Cards'
+  | 'Data & Analytics'
+  | 'AI & Agentic UX';
+
 export interface ComponentPropDoc {
   name: string;
   type: string;
@@ -8,7 +21,7 @@ export interface ComponentPropDoc {
 export interface ComponentDoc {
   id: string;
   name: string;
-  category: 'General' | 'Forms' | 'Surfaces & Layout' | 'Feedback' | 'Navigation' | 'AI & Agentic UX';
+  category: ComponentCategory;
   description: string;
   importCode: string;
   usageCode: string;
