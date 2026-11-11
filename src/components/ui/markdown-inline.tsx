@@ -336,7 +336,7 @@ export function MarkdownCodeBlock({
           )}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-primary/30 text-[12px]">
+      <pre className="p-4 overflow-x-auto max-h-[560px] overflow-y-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-primary/30 text-[12px] scrollbar-thin">
         <code>
           {lines.map((line, idx) => (
             <div key={idx} className="table-row">

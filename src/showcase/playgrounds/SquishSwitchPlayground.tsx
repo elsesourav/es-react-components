@@ -3,6 +3,7 @@ import {
   SquishSwitch,
   SquishSwitchSize,
   SquishSwitchVariant,
+  SquishSwitchShape,
   Button,
   Badge,
   useToast,
@@ -18,6 +19,7 @@ export const SquishSwitchPlayground: React.FC = () => {
   const [debugActive, setDebugActive] = useState(false);
   const [autoSync, setAutoSync] = useState(true);
   const [size, setSize] = useState<SquishSwitchSize>('md');
+  const [shape, setShape] = useState<SquishSwitchShape>('pill');
   const [variant, setVariant] = useState<SquishSwitchVariant>('primary');
   const [showOnOffText, setShowOnOffText] = useState(true);
   const [stretch, setStretch] = useState(36);
@@ -26,7 +28,101 @@ export const SquishSwitchPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Configuration & Controls */}
+      {/* 1. Main Interactive Preview Showcase (Preview First) */}
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center space-y-8">
+        <div className="text-center space-y-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+            <Zap className="size-3" />
+            <span>Interactive Drag & Squish Physics</span>
+          </div>
+          <p className="text-xs text-muted-foreground max-w-md mx-auto">
+            Drag the thumb horizontally with mouse or finger to feel kinetic velocity stretching, or click to snap.
+          </p>
+        </div>
+
+        <div className="p-6 sm:p-8 rounded-2xl bg-surface-elevated border border-border shadow-sm max-w-lg w-full space-y-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-foreground">
+                Main Kinetic Switch
+              </div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                Current state: <strong className={active ? 'text-primary' : 'text-muted-foreground'}>{active ? 'Active (ON)' : 'Inactive (OFF)'}</strong>
+                <span className="ml-2 font-mono text-[10px] uppercase opacity-75">[{shape}]</span>
+              </div>
+            </div>
+
+            <SquishSwitch
+              id="main-kinetic-switch"
+              checked={active}
+              onChange={(next) => {
+                setActive(next);
+                addToast({
+                  title: next ? 'Switch Activated' : 'Switch Deactivated',
+                  description: `Status changed to ${next ? 'ON' : 'OFF'}`,
+                  type: next ? 'success' : 'info',
+                });
+              }}
+              size={size}
+              shape={shape}
+              variant={variant}
+              showOnOffText={showOnOffText}
+              stretch={stretch}
+              speed={speed}
+              disabled={disabled}
+            />
+          </div>
+
+          <div className="border-t border-border/50" />
+
+          {/* Practical Application Demos */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-foreground">Global Debug Logging</div>
+                <div className="text-[11px] text-muted-foreground">Tactile industrial rectangle switch</div>
+              </div>
+              <SquishSwitch
+                id="debug-logging-switch"
+                checked={debugActive}
+                onChange={setDebugActive}
+                size="sm"
+                shape="rectangle"
+                variant="warning"
+                showOnOffText
+                onLabel="ON"
+                offLabel="OFF"
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-xs font-semibold text-foreground">Cloud Catalog Auto-Sync</div>
+                <div className="text-[11px] text-muted-foreground">Modern rounded squircle switch</div>
+              </div>
+              <SquishSwitch
+                id="catalog-sync-switch"
+                checked={autoSync}
+                onChange={setAutoSync}
+                size="sm"
+                shape="rounded"
+                variant="success"
+                showOnOffText
+                onLabel="ON"
+                offLabel="OFF"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Status Callout */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
+          <CheckCircle2 className="size-3.5 text-primary" />
+          <span>WAI-ARIA role=&quot;switch&quot; with pointer capture & fluid velocity springs</span>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls & Options (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-3">
           <div className="flex items-center gap-2">
@@ -57,6 +153,34 @@ export const SquishSwitchPlayground: React.FC = () => {
               onClick={() => setSize('lg')}
             >
               Large
+            </Button>
+          </div>
+        </div>
+
+        {/* Shape Silhouette Selector */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="text-xs font-medium text-muted-foreground">Switch Silhouette:</span>
+          <div className="flex items-center gap-2">
+            <Button
+              size="xs"
+              variant={shape === 'pill' ? 'primary' : 'outline'}
+              onClick={() => setShape('pill')}
+            >
+              Pill (Round)
+            </Button>
+            <Button
+              size="xs"
+              variant={shape === 'rectangle' ? 'primary' : 'outline'}
+              onClick={() => setShape('rectangle')}
+            >
+              Rectangle (Tactile)
+            </Button>
+            <Button
+              size="xs"
+              variant={shape === 'rounded' ? 'primary' : 'outline'}
+              onClick={() => setShape('rounded')}
+            >
+              Rounded (Squircle)
             </Button>
           </div>
         </div>
@@ -109,93 +233,6 @@ export const SquishSwitchPlayground: React.FC = () => {
               {v}
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* Main Interactive Showcase */}
-      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center space-y-8">
-        <div className="text-center space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-            <Zap className="size-3" />
-            <span>Interactive Drag & Squish Physics</span>
-          </div>
-          <p className="text-xs text-muted-foreground max-w-md mx-auto">
-            Drag the thumb horizontally with mouse or finger to feel kinetic velocity stretching, or click to snap.
-          </p>
-        </div>
-
-        <div className="p-6 sm:p-8 rounded-2xl bg-surface-elevated border border-border shadow-sm max-w-lg w-full space-y-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-foreground">
-                Main Kinetic Switch
-              </div>
-              <div className="text-xs text-muted-foreground mt-0.5">
-                Current state: <strong className={active ? 'text-primary' : 'text-muted-foreground'}>{active ? 'Active (ON)' : 'Inactive (OFF)'}</strong>
-              </div>
-            </div>
-
-            <SquishSwitch
-              checked={active}
-              onChange={(next) => {
-                setActive(next);
-                addToast({
-                  title: next ? 'Switch Activated' : 'Switch Deactivated',
-                  description: `Status changed to ${next ? 'ON' : 'OFF'}`,
-                  type: next ? 'success' : 'info',
-                });
-              }}
-              size={size}
-              variant={variant}
-              showOnOffText={showOnOffText}
-              stretch={stretch}
-              speed={speed}
-              disabled={disabled}
-            />
-          </div>
-
-          <div className="border-t border-border/50" />
-
-          {/* Practical Application Demos */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs font-semibold text-foreground">Global Debug Logging</div>
-                <div className="text-[11px] text-muted-foreground">Verbose browser inspection stream</div>
-              </div>
-              <SquishSwitch
-                checked={debugActive}
-                onChange={setDebugActive}
-                size="sm"
-                variant="warning"
-                showOnOffText
-                onLabel="ON"
-                offLabel="OFF"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs font-semibold text-foreground">Cloud Catalog Auto-Sync</div>
-                <div className="text-[11px] text-muted-foreground">Reconcile product inventory every 5m</div>
-              </div>
-              <SquishSwitch
-                checked={autoSync}
-                onChange={setAutoSync}
-                size="sm"
-                variant="success"
-                showOnOffText
-                onLabel="ON"
-                offLabel="OFF"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Status Callout */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-          <CheckCircle2 className="size-3.5 text-primary" />
-          <span>WAI-ARIA role=&quot;switch&quot; with pointer capture & fluid velocity springs</span>
         </div>
       </div>
     </div>

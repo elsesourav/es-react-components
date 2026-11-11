@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+export type SwitchShape = 'pill' | 'rectangle' | 'rounded';
+
 export interface SwitchProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   description?: string;
   sizeVariant?: 'sm' | 'md' | 'lg';
+  shape?: SwitchShape;
 }
 
 export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
@@ -19,6 +22,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
       onChange,
       disabled,
       sizeVariant = 'md',
+      shape = 'pill',
       id,
       ...props
     },
@@ -44,15 +48,27 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
     };
 
     const containerSizes = {
-      sm: 'w-8 h-4',
+      sm: 'w-8 h-4.5',
       md: 'w-11 h-6',
       lg: 'w-14 h-7',
     };
 
     const thumbSizes = {
-      sm: 'h-3 w-3 translate-x-0.5 peer-checked:translate-x-4',
-      md: 'h-4 w-4 translate-x-1 peer-checked:translate-x-6',
-      lg: 'h-5 w-5 translate-x-1 peer-checked:translate-x-8',
+      sm: 'size-3.5 translate-x-0 peer-checked:translate-x-3.5',
+      md: 'size-5 translate-x-0 peer-checked:translate-x-5',
+      lg: 'size-6 translate-x-0 peer-checked:translate-x-7',
+    };
+
+    const trackRadius = {
+      pill: 'rounded-full',
+      rectangle: 'rounded-[3px]',
+      rounded: 'rounded-[6px]',
+    };
+
+    const thumbRadius = {
+      pill: 'rounded-full',
+      rectangle: 'rounded-[2px]',
+      rounded: 'rounded-[4px]',
     };
 
     return (
@@ -77,16 +93,25 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           />
           <div
             className={cn(
-              'rounded-full bg-border transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/40 peer-checked:bg-primary',
+              'bg-border transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/40 peer-checked:bg-primary',
+              trackRadius[shape],
               containerSizes[sizeVariant]
             )}
           />
           <div
             className={cn(
-              'absolute rounded-full bg-white shadow-sm transition-transform duration-200 pointer-events-none',
+              'absolute left-0.5 top-0.5 bg-white shadow-sm transition-transform duration-200 pointer-events-none flex items-center justify-center',
+              thumbRadius[shape],
               thumbSizes[sizeVariant]
             )}
-          />
+          >
+            {shape === 'rectangle' && (
+              <span className="flex items-center gap-[1.5px] opacity-35">
+                <span className="w-[1px] h-2 bg-zinc-800 rounded-full" />
+                <span className="w-[1px] h-2 bg-zinc-800 rounded-full" />
+              </span>
+            )}
+          </div>
         </div>
         {(label || description) && (
           <div className="flex flex-col">

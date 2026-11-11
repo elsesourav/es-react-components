@@ -97,16 +97,18 @@ export function MarkdownRenderer({
         continue;
       }
 
-      // 2. Fenced Code Blocks: ``` ... ```
-      if (line.startsWith("```")) {
-        const language = line.slice(3).trim();
+      // 2. Fenced Code Blocks (``` or ```` or more)
+      const fenceMatch = line.match(/^(`{3,})(.*)$/);
+      if (fenceMatch) {
+        const [_, fence, langRaw] = fenceMatch;
+        const language = langRaw.trim();
         const codeLines: string[] = [];
         i++;
-        while (i < lines.length && !lines[i]?.startsWith("```")) {
+        while (i < lines.length && !lines[i]?.startsWith(fence)) {
           codeLines.push(lines[i] ?? "");
           i++;
         }
-        i++; // skip closing ```
+        i++; // skip closing fence
         result.push(
           <MarkdownCodeBlock
             key={`code-block-${blockIndex++}`}

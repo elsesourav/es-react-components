@@ -7,7 +7,7 @@ import {
   ParameterGrid,
 } from '@/components/ui';
 import { useToast } from '@/components/ui';
-import { Globe, Key, Zap } from 'lucide-react';
+import { Globe, Key, Zap, Sliders } from 'lucide-react';
 
 export const InputPlayground: React.FC = () => {
   const { addToast } = useToast();
@@ -23,9 +23,15 @@ export const InputPlayground: React.FC = () => {
   const [floatTouched, setFloatTouched] = useState(false);
   const isFloatBad = floatTouched && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(floatEmail);
   const [inlineEmail, setInlineEmail] = useState('');
+  const [inlineDomain, setInlineDomain] = useState('');
   const checkEmail = (v: string) => {
     if (v.trim() === '') return 'A valid work email is required.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Please enter a complete email address (e.g. name@company.com).';
+    return null;
+  };
+  const checkDomain = (v: string) => {
+    if (v.trim() === '') return 'Subdomain name is required.';
+    if (v.length < 3) return 'Subdomain must be at least 3 characters.';
     return null;
   };
   const [passVal, setPassVal] = useState('SuperSecret!2026');
@@ -36,6 +42,7 @@ export const InputPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview Canvas (Preview First) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 pb-4">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -65,28 +72,6 @@ export const InputPlayground: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSlider
-            label="Scale / Zoom"
-            value={inputScale}
-            onChange={setInputScale}
-            min={80}
-            max={120}
-            step={5}
-            unit="%"
-          />
-          <ParameterSwitch
-            label="Simulate Error State"
-            checked={!!inputError}
-            onChange={(checked) => setInputError(checked ? 'This field has a validation error.' : '')}
-          />
-          <ParameterSwitch
-            label="Disabled Field"
-            checked={inputDisabled}
-            onChange={setInputDisabled}
-          />
-        </ParameterGrid>
 
         <div className="p-6 sm:p-8 rounded-xl bg-surface-subtle/40 border border-border/60 min-h-[220px] flex items-center justify-center">
           <div className="w-full max-w-md space-y-4" style={{ transform: `scale(${inputScale / 100})`, transformOrigin: 'top center' }}>
@@ -138,7 +123,16 @@ export const InputPlayground: React.FC = () => {
                   validate={checkEmail}
                   disabled={inputDisabled}
                   placeholder="teammate@company.com"
-                  hint="Type an invalid email, then a valid email to observe live reactive feedback."
+                />
+                <Input
+                  variant="inline-validation"
+                  label="Subdomain Prefix"
+                  value={inlineDomain}
+                  onChange={setInlineDomain}
+                  validate={checkDomain}
+                  disabled={inputDisabled}
+                  placeholder="acme-corp"
+                  hint="Custom subdomains require at least 3 characters."
                 />
               </div>
             )}
@@ -147,47 +141,46 @@ export const InputPlayground: React.FC = () => {
               <div className="space-y-4 animate-in fade-in">
                 <Input
                   variant="password"
-                  label="Create Account Password"
+                  label="Account Master Password"
                   value={passVal}
                   onChange={setPassVal}
-                  disabled={inputDisabled}
                   showStrengthMeter
-                  showRequirements
+                  disabled={inputDisabled}
+                  hint="Real-time Shannon entropy meter scoring length, symbols, and casing."
                 />
               </div>
             )}
 
             {inputTab === 'otp' && (
-              <div className="flex flex-col items-center justify-center space-y-4 animate-in fade-in">
-                <p className="text-xs text-muted-foreground text-center">
-                  Segmented 6-digit verification code with clipboard paste
-                </p>
+              <div className="space-y-4 animate-in fade-in flex flex-col items-center">
+                <span className="text-xs text-muted-foreground">Verification Passcode</span>
                 <Input
                   variant="otp"
                   length={6}
                   value={otpVal}
-                  disabled={inputDisabled}
-                  onChange={(code) => {
-                    setOtpVal(code);
-                    if (otpStatus === 'error') setOtpStatus('idle');
-                  }}
+                  onChange={setOtpVal}
                   status={otpStatus}
-                  errorMessage="That verification token is invalid."
-                  hint="Auto-advances to next input & handles backspace"
+                  disabled={inputDisabled}
                   onComplete={(code) => {
-                    addToast({
-                      title: 'OTP Completed',
-                      description: `Entered code: ${code}`,
-                      type: 'success',
-                    });
+                    if (code === '123456') {
+                      setOtpStatus('success');
+                      addToast({ title: 'Authentication Verified', type: 'success' });
+                    } else {
+                      setOtpStatus('error');
+                      addToast({ title: 'Invalid PIN', description: 'Try 123456', type: 'error' });
+                    }
                   }}
                 />
-                <button
-                  onClick={() => setOtpStatus(otpStatus === 'error' ? 'idle' : 'error')}
-                  className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-foreground cursor-pointer"
-                >
-                  {otpStatus === 'error' ? 'Clear Error Shake' : 'Simulate Code Failure'}
-                </button>
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => { setOtpVal(''); setOtpStatus('idle'); }}
+                    className="text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
+                  >
+                    Reset Code
+                  </button>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <span className="text-xs text-primary font-mono">Demo PIN: 123456</span>
+                </div>
               </div>
             )}
 
@@ -195,28 +188,23 @@ export const InputPlayground: React.FC = () => {
               <div className="space-y-4 animate-in fade-in">
                 <Input
                   variant="tag"
-                  label="Project Keywords"
+                  label="Deployment Tags"
                   value={tagsVal}
                   onChange={setTagsVal}
                   disabled={inputDisabled}
-                  max={6}
-                  separators={[',', ';']}
-                  hint="Type a keyword and press Enter or comma. Backspace to delete."
+                  placeholder="Add technology tag..."
+                  hint="Press Enter or comma to create a new tag chip."
                 />
               </div>
             )}
 
             {inputTab === 'search' && (
-              <div className="space-y-4 animate-in fade-in">
-                <div className="flex justify-between items-center text-xs text-muted-foreground">
-                  <span>Spring Physics Collapsible Search</span>
-                  <span className="font-mono">{searchVal ? `"${searchVal}"` : 'idle'}</span>
-                </div>
-                <div className="flex justify-end">
+              <div className="space-y-4 animate-in fade-in flex flex-col items-center justify-center p-4">
+                <span className="text-xs text-muted-foreground mb-2">Click to expand compact search input</span>
+                <div className="w-full flex justify-center">
                   <Input
                     variant="search"
-                    label="Documentation Search"
-                    placeholder="Type to search library..."
+                    placeholder="Search logs & traces..."
                     value={searchVal}
                     disabled={inputDisabled}
                     onChange={setSearchVal}
@@ -258,6 +246,38 @@ export const InputPlayground: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 border-b border-border/50 pb-3">
+          <Sliders className="size-4 text-primary" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Input Parameter Controls
+          </span>
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Scale / Zoom"
+            value={inputScale}
+            onChange={setInputScale}
+            min={80}
+            max={120}
+            step={5}
+            unit="%"
+          />
+          <ParameterSwitch
+            label="Simulate Error State"
+            checked={!!inputError}
+            onChange={(checked) => setInputError(checked ? 'This field has a validation error.' : '')}
+          />
+          <ParameterSwitch
+            label="Disabled Field"
+            checked={inputDisabled}
+            onChange={setInputDisabled}
+          />
+        </ParameterGrid>
+      </div>
     </div>
   );
 };
@@ -270,8 +290,25 @@ export const TextareaPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <div className="max-w-lg mx-auto">
+          <Textarea
+            label="Product Roadmap Summary"
+            placeholder="Outline your architectural specifications here..."
+            maxLength={maxLen}
+            characterCount={showCount}
+            rows={rows}
+            disabled={isDisabled}
+            helperText="Supports markdown formatting and line breaks."
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="border-b border-border/50 pb-3">
+        <div className="flex items-center gap-2 border-b border-border/50 pb-3">
+          <Sliders className="size-4 text-primary" />
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Textarea Parameter Controls
           </span>
@@ -305,20 +342,6 @@ export const TextareaPlayground: React.FC = () => {
             onChange={setIsDisabled}
           />
         </ParameterGrid>
-      </div>
-
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <div className="max-w-lg mx-auto">
-          <Textarea
-            label="Product Roadmap Summary"
-            placeholder="Outline your architectural specifications here..."
-            maxLength={maxLen}
-            characterCount={showCount}
-            rows={rows}
-            disabled={isDisabled}
-            helperText="Supports markdown formatting and line breaks."
-          />
-        </div>
       </div>
     </div>
   );

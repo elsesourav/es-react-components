@@ -18,54 +18,7 @@ export const SegmentedABTabsPlayground: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Configuration Toolbar */}
-      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4 text-xs shadow-xs">
-        <div className="flex items-center gap-2">
-          <Sparkles className="size-4 text-primary" />
-          <span className="font-semibold text-foreground">Segmented A/B Tabs Playground</span>
-          <Badge size="sm" variant="outline" className="font-mono text-[10px]">
-            Active: {tabAB}
-          </Badge>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground text-[11px]">Size:</span>
-            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
-              {(['sm', 'md', 'lg'] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSelectedSize(s)}
-                  className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-semibold uppercase transition-all",
-                    selectedSize === s
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsDisabled((prev) => !prev)}
-            className={cn(
-              "px-3 py-1.5 rounded-lg border text-xs font-medium transition-all",
-              isDisabled
-                ? "bg-destructive/15 border-destructive text-destructive font-semibold"
-                : "border-border text-muted-foreground hover:text-foreground bg-surface-subtle/40"
-            )}
-          >
-            {isDisabled ? "Disabled: ON" : "Disabled: OFF"}
-          </button>
-        </div>
-      </div>
-
-      {/* Featured Showcase Card (Matching Image 4: "15. Segmented A/B Tabs") */}
+      {/* 1. Featured Showcase Card (Preview First) */}
       <div className="p-8 sm:p-12 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center gap-5 text-center relative overflow-hidden shadow-sm">
         <div className="flex items-center gap-2">
           <Layers className="size-4 text-primary" />
@@ -96,7 +49,54 @@ export const SegmentedABTabsPlayground: React.FC = () => {
         </p>
       </div>
 
-      {/* Practical Production Variants Grid */}
+      {/* 2. Configuration Toolbar (Controls Second) */}
+      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4 text-xs shadow-xs">
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-4 text-primary" />
+          <span className="font-semibold text-foreground">Segmented A/B Tabs Controls</span>
+          <Badge size="sm" variant="outline" className="font-mono text-[10px]">
+            Active: {tabAB}
+          </Badge>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-[11px]">Size:</span>
+            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
+              {(['sm', 'md', 'lg'] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSelectedSize(s)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-md text-xs font-semibold uppercase transition-all cursor-pointer",
+                    selectedSize === s
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsDisabled((prev) => !prev)}
+            className={cn(
+              "px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer",
+              isDisabled
+                ? "bg-destructive/15 border-destructive text-destructive font-semibold"
+                : "border-border text-muted-foreground hover:text-foreground bg-surface-subtle/40"
+            )}
+          >
+            {isDisabled ? "Disabled: ON" : "Disabled: OFF"}
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Practical Production Variants Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Variant 1: Billing Frequency */}
         <div className="p-6 rounded-2xl bg-surface border border-border flex flex-col items-center justify-between gap-4 min-h-[180px]">

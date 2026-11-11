@@ -1,0 +1,499 @@
+{
+  "dialog": {
+    "name": "Dialog",
+    "filename": "dialog.tsx",
+    "filepath": "src/components/ui/dialog.tsx",
+    "lines": 97,
+    "bytes": 2618
+  },
+  "alert": {
+    "name": "Alert",
+    "filename": "alert.tsx",
+    "filepath": "src/components/ui/alert.tsx",
+    "lines": 78,
+    "bytes": 2191
+  },
+  "toast": {
+    "name": "Toast (SwipeToast)",
+    "filename": "toast.tsx",
+    "filepath": "src/components/ui/toast.tsx",
+    "lines": 192,
+    "bytes": 5071
+  },
+  "spinner": {
+    "name": "Spinner & Skeleton",
+    "filename": "spinner.tsx",
+    "filepath": "src/components/ui/spinner.tsx",
+    "lines": 72,
+    "bytes": 1545
+  },
+  "motion-loaders": {
+    "name": "Motion Loaders",
+    "filename": "motion-loaders.tsx",
+    "filepath": "src/components/ui/motion-loaders.tsx",
+    "lines": 114,
+    "bytes": 2619
+  },
+  "ai-approval-card": {
+    "name": "AI Approval Card",
+    "filename": "ai-approval-card.tsx",
+    "filepath": "src/components/ui/ai-approval-card.tsx",
+    "lines": 493,
+    "bytes": 20780
+  },
+  "task-steps": {
+    "name": "Task Steps",
+    "filename": "task-steps.tsx",
+    "filepath": "src/components/ui/task-steps.tsx",
+    "lines": 145,
+    "bytes": 5046
+  },
+  "collapsible-banner": {
+    "name": "Collapsible Banner",
+    "filename": "collapsible-banner.tsx",
+    "filepath": "src/components/ui/collapsible-banner.tsx",
+    "lines": 131,
+    "bytes": 4260
+  },
+  "modal": {
+    "name": "Modal",
+    "filename": "modal.tsx",
+    "filepath": "src/components/ui/modal.tsx",
+    "lines": 429,
+    "bytes": 12145
+  },
+  "tooltip": {
+    "name": "Tooltip",
+    "filename": "tooltip.tsx",
+    "filepath": "src/components/ui/tooltip.tsx",
+    "lines": 293,
+    "bytes": 8493
+  },
+  "reading-progress": {
+    "name": "Reading Progress",
+    "filename": "reading-progress.tsx",
+    "filepath": "src/components/ui/reading-progress.tsx",
+    "lines": 232,
+    "bytes": 7090
+  },
+  "poll-results": {
+    "name": "Poll Results",
+    "filename": "poll-results.tsx",
+    "filepath": "src/components/ui/poll-results.tsx",
+    "lines": 282,
+    "bytes": 7932
+  },
+  "ai-prompt-bar": {
+    "name": "AI Prompt Bar",
+    "filename": "ai-prompt-bar.tsx",
+    "filepath": "src/components/ui/ai-prompt-bar.tsx",
+    "lines": 397,
+    "bytes": 13327
+  },
+  "ai-fine-tune-card": {
+    "name": "AI Fine-Tune Card",
+    "filename": "ai-fine-tune-card.tsx",
+    "filepath": "src/components/ui/ai-fine-tune-card.tsx",
+    "lines": 407,
+    "bytes": 14701
+  },
+  "select": {
+    "name": "Select",
+    "filename": "select.tsx",
+    "filepath": "src/components/ui/select.tsx",
+    "lines": 117,
+    "bytes": 3487
+  },
+  "dropdown": {
+    "name": "Dropdown (Animated Select)",
+    "filename": "dropdown.tsx",
+    "filepath": "src/components/ui/dropdown.tsx",
+    "lines": 480,
+    "bytes": 15734
+  },
+  "switch": {
+    "name": "Switch",
+    "filename": "switch.tsx",
+    "filepath": "src/components/ui/switch.tsx",
+    "lines": 134,
+    "bytes": 3739
+  },
+  "squish-switch": {
+    "name": "Squish Switch (On/Off)",
+    "filename": "squish-switch.tsx",
+    "filepath": "src/components/ui/squish-switch.tsx",
+    "lines": 403,
+    "bytes": 12837
+  },
+  "checkbox": {
+    "name": "Checkbox",
+    "filename": "checkbox.tsx",
+    "filepath": "src/components/ui/checkbox.tsx",
+    "lines": 108,
+    "bytes": 2924
+  },
+  "peek-rating": {
+    "name": "Peek Rating (Interactive Star & Shape Rater)",
+    "filename": "peek-rating.tsx",
+    "filepath": "src/components/ui/peek-rating.tsx",
+    "lines": 491,
+    "bytes": 17075
+  },
+  "quantity-counter": {
+    "name": "Quantity Counter",
+    "filename": "quantity-counter.tsx",
+    "filepath": "src/components/ui/quantity-counter.tsx",
+    "lines": 175,
+    "bytes": 5309
+  },
+  "slider-detents": {
+    "name": "Slider Detents",
+    "filename": "slider-detents.tsx",
+    "filepath": "src/components/ui/slider-detents.tsx",
+    "lines": 404,
+    "bytes": 11257
+  },
+  "parameter-slider": {
+    "name": "Parameter Slider (Multi-Variant Scrubber System)",
+    "filename": "parameter-slider.tsx",
+    "filepath": "src/components/ui/parameter-slider.tsx",
+    "lines": 316,
+    "bytes": 10273
+  },
+  "elastic-slider": {
+    "name": "Elastic Slider",
+    "filename": "elastic-slider.tsx",
+    "filepath": "src/components/ui/elastic-slider.tsx",
+    "lines": 312,
+    "bytes": 10325
+  },
+  "wake-slider": {
+    "name": "Wake Slider",
+    "filename": "wake-slider.tsx",
+    "filepath": "src/components/ui/wake-slider.tsx",
+    "lines": 310,
+    "bytes": 11688
+  },
+  "slider": {
+    "name": "Slider (Single & Dual Range)",
+    "filename": "slider.tsx",
+    "filepath": "src/components/ui/slider.tsx",
+    "lines": 126,
+    "bytes": 4853
+  },
+  "input": {
+    "name": "Input (All Variants)",
+    "filename": "input.tsx",
+    "filepath": "src/components/ui/input.tsx",
+    "lines": 172,
+    "bytes": 5276
+  },
+  "floating-input": {
+    "name": "Floating Label Input",
+    "filename": "floating-label-input.tsx",
+    "filepath": "src/components/ui/floating-label-input.tsx",
+    "lines": 114,
+    "bytes": 3316
+  },
+  "inline-validation": {
+    "name": "Inline Validation Input",
+    "filename": "inline-validation-input.tsx",
+    "filepath": "src/components/ui/inline-validation-input.tsx",
+    "lines": 112,
+    "bytes": 3448
+  },
+  "otp-input": {
+    "name": "OTP Input",
+    "filename": "otp-input.tsx",
+    "filepath": "src/components/ui/otp-input.tsx",
+    "lines": 178,
+    "bytes": 5279
+  },
+  "tag-input": {
+    "name": "Tag Input",
+    "filename": "tag-input.tsx",
+    "filepath": "src/components/ui/tag-input.tsx",
+    "lines": 192,
+    "bytes": 5842
+  },
+  "password-input": {
+    "name": "Password Input & Strength",
+    "filename": "password-input.tsx",
+    "filepath": "src/components/ui/password-input.tsx",
+    "lines": 221,
+    "bytes": 6338
+  },
+  "expanding-search": {
+    "name": "Expanding Search",
+    "filename": "expanding-search.tsx",
+    "filepath": "src/components/ui/expanding-search.tsx",
+    "lines": 421,
+    "bytes": 12373
+  },
+  "textarea": {
+    "name": "Textarea",
+    "filename": "textarea.tsx",
+    "filepath": "src/components/ui/textarea.tsx",
+    "lines": 86,
+    "bytes": 2452
+  },
+  "split-flap-text": {
+    "name": "Split Flap Text (Mechanical Departure Board)",
+    "filename": "split-flap-text.tsx",
+    "filepath": "src/components/ui/split-flap-text.tsx",
+    "lines": 494,
+    "bytes": 15451
+  },
+  "markdown-editor": {
+    "name": "Markdown Editor & Math Preview",
+    "filename": "markdown-editor.tsx",
+    "filepath": "src/components/ui/markdown-editor.tsx",
+    "lines": 364,
+    "bytes": 13219
+  },
+  "text-reveal": {
+    "name": "Text Reveal",
+    "filename": "text-reveal.tsx",
+    "filepath": "src/components/ui/text-reveal.tsx",
+    "lines": 149,
+    "bytes": 3743
+  },
+  "logo-marquee": {
+    "name": "Logo Marquee",
+    "filename": "logo-marquee.tsx",
+    "filepath": "src/components/ui/logo-marquee.tsx",
+    "lines": 329,
+    "bytes": 9546
+  },
+  "markdown-renderer": {
+    "name": "Markdown & LaTeX Renderer",
+    "filename": "markdown-renderer.tsx",
+    "filepath": "src/components/ui/markdown-renderer.tsx",
+    "lines": 499,
+    "bytes": 16415
+  },
+  "button": {
+    "name": "Button",
+    "filename": "button.tsx",
+    "filepath": "src/components/ui/button.tsx",
+    "lines": 85,
+    "bytes": 2797
+  },
+  "badge": {
+    "name": "Badge",
+    "filename": "badge.tsx",
+    "filepath": "src/components/ui/badge.tsx",
+    "lines": 87,
+    "bytes": 2188
+  },
+  "avatar": {
+    "name": "Avatar",
+    "filename": "avatar.tsx",
+    "filepath": "src/components/ui/avatar.tsx",
+    "lines": 95,
+    "bytes": 2352
+  },
+  "text-loop": {
+    "name": "Text Loop (Curved Ribbon Marquee)",
+    "filename": "text-loop.tsx",
+    "filepath": "src/components/ui/text-loop.tsx",
+    "lines": 473,
+    "bytes": 14219
+  },
+  "search-button": {
+    "name": "Top Search & Animated Placeholder",
+    "filename": "search-button.tsx",
+    "filepath": "src/components/ui/search-button.tsx",
+    "lines": 142,
+    "bytes": 4388
+  },
+  "tabs": {
+    "name": "Tabs",
+    "filename": "tabs.tsx",
+    "filepath": "src/components/ui/tabs.tsx",
+    "lines": 348,
+    "bytes": 12520
+  },
+  "branched-menu": {
+    "name": "Branched Menu (Tree Navigation)",
+    "filename": "branched-menu.tsx",
+    "filepath": "src/components/ui/branched-menu.tsx",
+    "lines": 306,
+    "bytes": 10739
+  },
+  "streaming-text": {
+    "name": "Streaming Text",
+    "filename": "streaming-text.tsx",
+    "filepath": "src/components/ui/streaming-text.tsx",
+    "lines": 140,
+    "bytes": 3573
+  },
+  "command-palette": {
+    "name": "Command Palette",
+    "filename": "command-palette.tsx",
+    "filepath": "src/components/ui/command-palette.tsx",
+    "lines": 2,
+    "bytes": 41
+  },
+  "segmented-control": {
+    "name": "Segmented Control",
+    "filename": "segmented-control.tsx",
+    "filepath": "src/components/ui/segmented-control.tsx",
+    "lines": 217,
+    "bytes": 6310
+  },
+  "wizard-steps": {
+    "name": "Wizard Steps",
+    "filename": "wizard-steps.tsx",
+    "filepath": "src/components/ui/wizard-steps.tsx",
+    "lines": 444,
+    "bytes": 14476
+  },
+  "pagination": {
+    "name": "Pagination",
+    "filename": "pagination.tsx",
+    "filepath": "src/components/ui/pagination.tsx",
+    "lines": 285,
+    "bytes": 7890
+  },
+  "scroll-spy": {
+    "name": "Scroll Spy",
+    "filename": "scroll-spy.tsx",
+    "filepath": "src/components/ui/scroll-spy.tsx",
+    "lines": 318,
+    "bytes": 9817
+  },
+  "segmented-ab-tabs": {
+    "name": "Segmented A/B Tabs",
+    "filename": "segmented-ab-tabs.tsx",
+    "filepath": "src/components/ui/segmented-ab-tabs.tsx",
+    "lines": 119,
+    "bytes": 3543
+  },
+  "tree-view": {
+    "name": "Tree View",
+    "filename": "tree-view.tsx",
+    "filepath": "src/components/ui/tree-view.tsx",
+    "lines": 387,
+    "bytes": 10958
+  },
+  "sticky-header": {
+    "name": "Sticky Header",
+    "filename": "sticky-header.tsx",
+    "filepath": "src/components/ui/sticky-header.tsx",
+    "lines": 191,
+    "bytes": 5693
+  },
+  "hide-on-scroll": {
+    "name": "Hide On Scroll",
+    "filename": "hide-on-scroll.tsx",
+    "filepath": "src/components/ui/hide-on-scroll.tsx",
+    "lines": 232,
+    "bytes": 6318
+  },
+  "filter-grid": {
+    "name": "Filter Grid",
+    "filename": "filter-grid.tsx",
+    "filepath": "src/components/ui/filter-grid.tsx",
+    "lines": 338,
+    "bytes": 10507
+  },
+  "reorder-list": {
+    "name": "Reorder List",
+    "filename": "reorder-list.tsx",
+    "filepath": "src/components/ui/reorder-list.tsx",
+    "lines": 254,
+    "bytes": 7699
+  },
+  "lightbox": {
+    "name": "Lightbox",
+    "filename": "lightbox.tsx",
+    "filepath": "src/components/ui/lightbox.tsx",
+    "lines": 393,
+    "bytes": 10086
+  },
+  "blur-up-image": {
+    "name": "Blur-Up Image",
+    "filename": "blur-up-image.tsx",
+    "filepath": "src/components/ui/blur-up-image.tsx",
+    "lines": 229,
+    "bytes": 5807
+  },
+  "show-more": {
+    "name": "Show More",
+    "filename": "show-more.tsx",
+    "filepath": "src/components/ui/show-more.tsx",
+    "lines": 257,
+    "bytes": 7149
+  },
+  "mono-charts": {
+    "name": "Mono Rounded Charts",
+    "filename": "mono-charts.tsx",
+    "filepath": "src/components/ui/mono-charts.tsx",
+    "lines": 47,
+    "bytes": 1380
+  },
+  "card": {
+    "name": "Card",
+    "filename": "card.tsx",
+    "filepath": "src/components/ui/card.tsx",
+    "lines": 90,
+    "bytes": 2616
+  },
+  "stat": {
+    "name": "Stat",
+    "filename": "stat.tsx",
+    "filepath": "src/components/ui/stat.tsx",
+    "lines": 89,
+    "bytes": 2498
+  },
+  "liquid-glass-sheet": {
+    "name": "Liquid Glass Sheet",
+    "filename": "liquid-glass-sheet.tsx",
+    "filepath": "src/components/ui/liquid-glass-sheet.tsx",
+    "lines": 415,
+    "bytes": 14123
+  },
+  "card-coverflow": {
+    "name": "Card Coverflow",
+    "filename": "card-coverflow.tsx",
+    "filepath": "src/components/ui/card-coverflow.tsx",
+    "lines": 181,
+    "bytes": 6754
+  },
+  "card-carousel": {
+    "name": "Card Carousel",
+    "filename": "card-carousel.tsx",
+    "filepath": "src/components/ui/card-carousel.tsx",
+    "lines": 209,
+    "bytes": 7646
+  },
+  "ai-code-block": {
+    "name": "AI Code & Diff Block",
+    "filename": "ai-code-block.tsx",
+    "filepath": "src/components/ui/ai-code-block.tsx",
+    "lines": 379,
+    "bytes": 14393
+  },
+  "load-more": {
+    "name": "Load More",
+    "filename": "load-more.tsx",
+    "filepath": "src/components/ui/load-more.tsx",
+    "lines": 114,
+    "bytes": 3201
+  },
+  "presence-avatars": {
+    "name": "Presence Avatars",
+    "filename": "presence-avatars.tsx",
+    "filepath": "src/components/ui/presence-avatars.tsx",
+    "lines": 306,
+    "bytes": 8659
+  },
+  "accordion": {
+    "name": "Accordion",
+    "filename": "accordion.tsx",
+    "filepath": "src/components/ui/accordion.tsx",
+    "lines": 410,
+    "bytes": 10388
+  }
+}

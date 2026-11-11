@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { ComponentDoc } from './data/types';
+import { getComponentSource } from './data/componentSources';
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
 import { Card } from '@/components/ui/card';
 
@@ -8,10 +9,20 @@ export interface ComponentMarkdownDocProps {
 }
 
 export const ComponentMarkdownDoc: React.FC<ComponentMarkdownDocProps> = ({ component }) => {
+  const sourceInfo = useMemo(() => getComponentSource(component.id), [component.id]);
+
   const markdownContent = useMemo(() => {
     const propsRows = component.props && component.props.length > 0
       ? component.props.map((p) => `| \`${p.name}\` | \`${p.type}\` | \`${p.defaultVal || '-'}\` | ${p.description} |`).join('\n')
       : '| `className` | `string` | `-` | Optional CSS class styling |';
+
+    const sourceCode = sourceInfo?.code || component.usageCode;
+    const sourceFilename = sourceInfo?.filename || `${component.id}.tsx`;
+    const sourceFilepath = sourceInfo?.filepath || `src/components/ui/${sourceFilename}`;
+    const lineCount = sourceInfo?.lineCount || sourceCode.split('\n').length;
+
+    // Use 4 backticks if inner code contains triple backticks to prevent premature fence closing
+    const fence = sourceCode.includes('```') ? '````' : '```';
 
     return `
 ## 1. Installation & Import
@@ -30,13 +41,19 @@ ${component.importCode}
 ${component.usageCode}
 \`\`\`
 
-## 3. Properties & API
+## 3. Source Code (\`${sourceFilepath}\` · ${lineCount} lines)
+
+${fence}tsx
+${sourceCode}
+${fence}
+
+## 4. Properties & API
 
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 ${propsRows}
 `.trim();
-  }, [component]);
+  }, [component, sourceInfo]);
 
   return (
     <div className="space-y-4">

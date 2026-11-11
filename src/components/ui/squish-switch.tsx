@@ -17,18 +17,19 @@ const clamp = (value: number, min: number, max: number): number =>
 
 const FLOW_SPRING = { stiffness: 320, damping: 40, mass: 0.6 };
 const SWELL_SPRING = { stiffness: 520, damping: 34, mass: 0.6 };
-const MAX_STRETCH = 0.45;
+const MAX_STRETCH = 0.35;
 const STRETCH_SPEED = 600;
 const TAP_SLOP = { fine: 4, coarse: 8 };
 
 export const SQUISH_SWITCH_SIZES = {
-  sm: { width: 46, height: 24, radius: 12 },
-  md: { width: 60, height: 30, radius: 15 },
-  lg: { width: 76, height: 38, radius: 19 },
+  sm: { width: 48, height: 26, pad: 2, radius: 13 },
+  md: { width: 62, height: 32, pad: 2.5, radius: 16 },
+  lg: { width: 78, height: 40, pad: 3, radius: 20 },
 } as const;
 
 export type SquishSwitchSize = keyof typeof SQUISH_SWITCH_SIZES;
 export type SquishSwitchVariant = "primary" | "success" | "warning" | "danger" | "neutral";
+export type SquishSwitchShape = "pill" | "rectangle" | "rounded";
 
 export interface SquishSwitchProps {
   checked?: boolean;
@@ -40,6 +41,7 @@ export interface SquishSwitchProps {
   disabled?: boolean;
   size?: SquishSwitchSize;
   variant?: SquishSwitchVariant;
+  shape?: SquishSwitchShape;
   showOnOffText?: boolean;
   onLabel?: string;
   offLabel?: string;
@@ -74,6 +76,7 @@ export function SquishSwitch({
   disabled = false,
   size = "md",
   variant = "primary",
+  shape = "pill",
   showOnOffText = false,
   onLabel = "ON",
   offLabel = "OFF",
@@ -82,7 +85,7 @@ export function SquishSwitch({
   radius: radiusProp,
   speed = 50,
   stretch = 36,
-  hoverScale = 1.04,
+  hoverScale = 1.035,
   ariaLabel,
   className = "",
   id,
@@ -91,17 +94,36 @@ export function SquishSwitch({
   const sizePreset = SQUISH_SWITCH_SIZES[size] || SQUISH_SWITCH_SIZES.md;
   const width = widthProp ?? sizePreset.width;
   const height = heightProp ?? sizePreset.height;
-  const radius = radiusProp ?? sizePreset.radius;
+
+  // Account for the 1px button border on both sides
+  const borderWidth = 1;
+  const innerWidth = width - borderWidth * 2;
+  const innerHeight = height - borderWidth * 2;
+
+  // Symmetric padding ensures subpixel centered alignment on both X and Y axes
+  const pad = sizePreset.pad;
+  const thumbSize = innerHeight - pad * 2;
+  const min = pad;
+  const max = innerWidth - pad - thumbSize;
+  const mid = (min + max) / 2;
+
+  // Shape radius computation
+  let trackRadius: number;
+  let thumbRadius: number;
+
+  if (shape === "rectangle") {
+    trackRadius = Math.max(3, Math.round(height * 0.12));
+    thumbRadius = Math.max(2, Math.round(thumbSize * 0.1));
+  } else if (shape === "rounded") {
+    trackRadius = Math.max(6, Math.round(height * 0.26));
+    thumbRadius = Math.max(4, Math.round(thumbSize * 0.2));
+  } else {
+    // default: pill
+    trackRadius = radiusProp ?? sizePreset.radius;
+    thumbRadius = 9999;
+  }
 
   const reduce = useReducedMotion();
-  const inset = Math.max(3, Math.round(height * 0.1));
-  const thumb = height - inset * 2;
-  const min = inset;
-  const max = width - inset - thumb;
-  const mid = (min + max) / 2;
-  const trackRadius = Math.min(radius, height / 2);
-  const thumbRadius = Math.max(2, trackRadius - inset);
-
   const isControlled = checked !== undefined;
   const [inner, setInner] = useState(defaultChecked);
   const on = isControlled ? Boolean(checked) : inner;
@@ -228,10 +250,10 @@ export function SquishSwitch({
   };
 
   const variantOnStyles: Record<SquishSwitchVariant, string> = {
-    primary: "bg-primary border-primary/90 text-primary-foreground shadow-sm shadow-primary/25",
-    success: "bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/25",
-    warning: "bg-amber-500 border-amber-500 text-black shadow-sm shadow-amber-500/25",
-    danger: "bg-rose-600 border-rose-600 text-white shadow-sm shadow-rose-600/25",
+    primary: "bg-primary border-primary text-primary-foreground shadow-sm shadow-primary/20",
+    success: "bg-emerald-600 border-emerald-600 text-white shadow-sm shadow-emerald-600/20",
+    warning: "bg-amber-500 border-amber-500 text-black shadow-sm shadow-amber-500/20",
+    danger: "bg-rose-600 border-rose-600 text-white shadow-sm shadow-rose-600/20",
     neutral: "bg-foreground border-foreground text-background shadow-sm",
   };
 
@@ -295,16 +317,16 @@ export function SquishSwitch({
           <span
             ref={trackRef}
             className="relative w-full h-full overflow-hidden pointer-events-none"
-            style={{ borderRadius: `${trackRadius}px` }}
+            style={{ borderRadius: `${Math.max(0, trackRadius - 1)}px` }}
           >
-            {/* Embedded ON / OFF micro labels */}
+            {/* Embedded ON / OFF micro labels - vertically and horizontally balanced */}
             {showOnOffText && (
-              <>
+              <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none select-none">
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute left-2 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold tracking-tight transition-opacity duration-150 pointer-events-none select-none",
-                    on ? "opacity-90" : "opacity-0"
+                    "text-[9px] font-mono font-bold tracking-tight leading-none transition-all duration-200",
+                    on ? "opacity-95 scale-100" : "opacity-0 scale-90"
                   )}
                 >
                   {onLabel}
@@ -312,35 +334,42 @@ export function SquishSwitch({
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-mono font-bold tracking-tight transition-opacity duration-150 pointer-events-none select-none text-muted-foreground",
-                    !on ? "opacity-90" : "opacity-0"
+                    "text-[9px] font-mono font-bold tracking-tight leading-none transition-all duration-200 text-muted-foreground",
+                    !on ? "opacity-95 scale-100" : "opacity-0 scale-90"
                   )}
                 >
                   {offLabel}
                 </span>
-              </>
+              </div>
             )}
 
-            {/* Kinetic Squishing Thumb */}
+            {/* Kinetic Squishing Thumb - exact pixel centered on X & Y */}
             <motion.span
               className={cn(
-                "absolute rounded-full shadow-md transition-colors duration-200 pointer-events-none flex items-center justify-center",
+                "absolute shadow-md transition-colors duration-200 pointer-events-none flex items-center justify-center",
                 on
                   ? variantThumbOnStyles[variant]
                   : "bg-foreground/90 text-background dark:bg-foreground dark:text-background"
               )}
               aria-hidden="true"
               style={{
-                top: `${inset}px`,
+                top: `${pad}px`,
                 left: 0,
-                width: `${thumb}px`,
-                height: `${thumb}px`,
+                width: `${thumbSize}px`,
+                height: `${thumbSize}px`,
                 borderRadius: `${thumbRadius}px`,
                 x,
                 scaleX,
                 scaleY,
               }}
-            />
+            >
+              {shape === "rectangle" && (
+                <span className="flex items-center gap-0.5 opacity-40">
+                  <span className="w-[1px] h-2.5 bg-current rounded-full" />
+                  <span className="w-[1px] h-2.5 bg-current rounded-full" />
+                </span>
+              )}
+            </motion.span>
           </span>
         </button>
       </div>

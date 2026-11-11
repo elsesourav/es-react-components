@@ -7,7 +7,7 @@ import {
   ParameterGrid,
 } from '@/components/ui';
 import { useToast } from '@/components/ui';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Sliders } from 'lucide-react';
 
 export const ButtonPlayground: React.FC = () => {
   const { addToast } = useToast();
@@ -21,8 +21,37 @@ export const ButtonPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border/80 flex flex-col items-center justify-center min-h-[180px] gap-4 shadow-2xs">
+        <div style={{ transform: `scale(${btnScale / 100})`, transition: 'transform 0.15s ease' }}>
+          <Button
+            variant={btnVariant}
+            size={btnSize}
+            isLoading={btnLoading}
+            disabled={btnDisabled}
+            style={{ borderRadius: `${btnRadius}px` }}
+            leftIcon={btnSize !== 'icon' ? <Sparkles className="h-4 w-4" /> : undefined}
+            rightIcon={btnSize !== 'icon' ? <ArrowRight className="h-4 w-4" /> : undefined}
+            onClick={() =>
+              addToast({
+                title: 'Button Clicked!',
+                description: `Triggered variant="${btnVariant}" size="${btnSize}" radius="${btnRadius}px"`,
+                type: 'info',
+              })
+            }
+          >
+            {btnSize === 'icon' ? <Sparkles className="h-4 w-4" /> : 'Button Action'}
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground text-center max-w-md">
+          Interactive button with spring hover feedback, loader spinner state, icon support, and radius customization.
+        </p>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="border-b border-border/50 pb-3">
+        <div className="flex items-center gap-2 border-b border-border/50 pb-3">
+          <Sliders className="size-4 text-primary" />
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Interactive Parameter Controls
           </span>
@@ -59,7 +88,7 @@ export const ButtonPlayground: React.FC = () => {
           />
         </ParameterGrid>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-border/40">
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-2">
               Variant
@@ -110,32 +139,6 @@ export const ButtonPlayground: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <div className="p-10 rounded-xl bg-surface-subtle/50 border border-border/60 flex flex-col items-center justify-center min-h-[160px] gap-4">
-          <div style={{ transform: `scale(${btnScale / 100})`, transition: 'transform 0.15s ease' }}>
-            <Button
-              variant={btnVariant}
-              size={btnSize}
-              isLoading={btnLoading}
-              disabled={btnDisabled}
-              style={{ borderRadius: `${btnRadius}px` }}
-              leftIcon={btnSize !== 'icon' ? <Sparkles className="h-4 w-4" /> : undefined}
-              rightIcon={btnSize !== 'icon' ? <ArrowRight className="h-4 w-4" /> : undefined}
-              onClick={() =>
-                addToast({
-                  title: 'Button Clicked!',
-                  description: `Triggered variant="${btnVariant}" size="${btnSize}" radius="${btnRadius}px"`,
-                  type: 'info',
-                })
-              }
-            >
-              {btnSize === 'icon' ? <Sparkles className="h-4 w-4" /> : 'Button Action'}
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Adjust corner radius, scale, loading, or disabled state in real time with the parameter controls above.
-          </p>
-        </div>
       </div>
 
       <div className="space-y-3">
@@ -163,8 +166,22 @@ export const BadgePlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-10 sm:p-14 rounded-2xl bg-surface-subtle/50 border border-border/70 flex flex-col items-center justify-center min-h-[160px] gap-3 shadow-2xs">
+        <div style={{ transform: `scale(${badgeScale / 100})`, transition: 'transform 0.15s ease' }}>
+          <Badge variant={badgeVariant} dot={badgeDot} size="md">
+            {badgeVariant} status
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Real-time badge preview with dynamic variant themes, optional status indicator dot, and zoom scaling.
+        </p>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="border-b border-border/50 pb-3">
+        <div className="flex items-center gap-2 border-b border-border/50 pb-3">
+          <Sliders className="size-4 text-primary" />
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Interactive Parameter Controls
           </span>
@@ -187,7 +204,7 @@ export const BadgePlayground: React.FC = () => {
           />
         </ParameterGrid>
 
-        <div>
+        <div className="border-t border-border/40 pt-4">
           <label className="block text-xs font-medium text-muted-foreground mb-2">
             Variant
           </label>
@@ -214,14 +231,6 @@ export const BadgePlayground: React.FC = () => {
                 {v}
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="p-10 rounded-xl bg-surface-subtle/50 border border-border/60 flex items-center justify-center min-h-[140px]">
-          <div style={{ transform: `scale(${badgeScale / 100})`, transition: 'transform 0.15s ease' }}>
-            <Badge variant={badgeVariant} dot={badgeDot} size="md">
-              {badgeVariant} status
-            </Badge>
           </div>
         </div>
       </div>

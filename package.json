@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync:sources": "node scripts/sync_component_sources.cjs",
+    "prebuild": "node scripts/sync_component_sources.cjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "deploy": "bash scripts/deploy.sh"

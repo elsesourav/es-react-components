@@ -37,78 +37,7 @@ export const SearchButtonPlayground: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Controls Toolbar */}
-      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4 text-xs shadow-xs">
-        <div className="flex items-center gap-2">
-          <Search className="size-4 text-primary" />
-          <span className="font-semibold text-foreground">Top Search & Animated Placeholder</span>
-          <Badge size="sm" variant="outline" className="font-mono text-[10px]">
-            Global ⌘K
-          </Badge>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Size Selector */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground text-[11px]">Size:</span>
-            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
-              {(['sm', 'md', 'lg'] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSelectedSize(s)}
-                  className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-semibold uppercase transition-all",
-                    selectedSize === s
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Shape Variant Selector */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground text-[11px]">Shape:</span>
-            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
-              {(['pill', 'rounded'] as const).map((v) => (
-                <button
-                  key={v}
-                  type="button"
-                  onClick={() => setSelectedVariant(v)}
-                  className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-semibold capitalize transition-all",
-                    selectedVariant === v
-                      ? "bg-primary text-primary-foreground shadow-xs"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {v}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Disabled State Toggle */}
-          <button
-            type="button"
-            onClick={() => setIsDisabled((prev) => !prev)}
-            className={cn(
-              "px-3 py-1.5 rounded-lg border text-xs font-medium transition-all",
-              isDisabled
-                ? "bg-destructive/15 border-destructive text-destructive font-semibold"
-                : "border-border text-muted-foreground hover:text-foreground bg-surface-subtle/40"
-            )}
-          >
-            {isDisabled ? "Disabled: ON" : "Disabled: OFF"}
-          </button>
-        </div>
-      </div>
-
-      {/* Featured Search Component Card */}
+      {/* 1. Featured Search Component Card (Preview First) */}
       <div className="p-8 sm:p-12 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center gap-6 text-center relative overflow-hidden shadow-sm">
         <div className="space-y-1.5">
           <div className="flex items-center justify-center gap-2">
@@ -145,6 +74,77 @@ export const SearchButtonPlayground: React.FC = () => {
         <p className="text-[11px] font-mono text-muted-foreground">
           Features vertical spring text carousel with reduced-motion fallback & theme token styling.
         </p>
+      </div>
+
+      {/* 2. Controls Toolbar (Controls Second) */}
+      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4 text-xs shadow-xs">
+        <div className="flex items-center gap-2">
+          <Search className="size-4 text-primary" />
+          <span className="font-semibold text-foreground">Top Search Controls</span>
+          <Badge size="sm" variant="outline" className="font-mono text-[10px]">
+            Global ⌘K
+          </Badge>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Size Selector */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-[11px]">Size:</span>
+            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
+              {(['sm', 'md', 'lg'] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSelectedSize(s)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-md text-xs font-semibold uppercase transition-all cursor-pointer",
+                    selectedSize === s
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Shape Variant Selector */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground text-[11px]">Shape:</span>
+            <div className="inline-flex rounded-lg border border-border bg-surface-subtle/50 p-0.5">
+              {(['pill', 'rounded'] as const).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setSelectedVariant(v)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-md text-xs font-semibold capitalize transition-all cursor-pointer",
+                    selectedVariant === v
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Disabled State Toggle */}
+          <button
+            type="button"
+            onClick={() => setIsDisabled((prev) => !prev)}
+            className={cn(
+              "px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer",
+              isDisabled
+                ? "bg-destructive/15 border-destructive text-destructive font-semibold"
+                : "border-border text-muted-foreground hover:text-foreground bg-surface-subtle/40"
+            )}
+          >
+            {isDisabled ? "Disabled: ON" : "Disabled: OFF"}
+          </button>
+        </div>
       </div>
 
       {/* Production Variations Grid */}

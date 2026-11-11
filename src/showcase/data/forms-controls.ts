@@ -141,6 +141,18 @@ import { Select } from 'es-react-components';
         defaultVal: 'false',
         description: 'Active state toggle.',
       },
+      {
+        name: 'sizeVariant',
+        type: "'sm' | 'md' | 'lg'",
+        defaultVal: "'md'",
+        description: 'Size preset.',
+      },
+      {
+        name: 'shape',
+        type: "'pill' | 'rectangle' | 'rounded'",
+        defaultVal: "'pill'",
+        description: 'Track and thumb geometry: pill (capsule), rectangle (tactile micro-notches), or rounded (squircle).',
+      },
     ],
     themeTokens: ['--primary', '--surface-sunken', '--border', '--surface-elevated'],
   },
@@ -190,6 +202,12 @@ import { Select } from 'es-react-components';
         type: "'sm' | 'md' | 'lg'",
         defaultVal: "'md'",
         description: 'Preset track and thumb dimensions.',
+      },
+      {
+        name: 'shape',
+        type: "'pill' | 'rectangle' | 'rounded'",
+        defaultVal: "'pill'",
+        description: 'Track and thumb geometry: pill (capsule), rectangle (industrial tactile micro-ridges), or rounded (squircle).',
       },
       {
         name: 'variant',
