@@ -26,4 +26,7 @@ export type CommandPaletteProps = {
   maxRows?: number;
   autoFocus?: boolean;
   className?: string;
+  scopes?: string[];
+  activeScope?: string;
+  onScopeChange?: (scope: string) => void;
 };

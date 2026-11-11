@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Tooltip, Logo, NativeSelect } from '../ui';
+import { Badge, Tooltip, Logo, NativeSelect, SearchButton } from '../ui';
 import {
   Search,
   Sun,
@@ -62,21 +62,21 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
       </div>
 
       {/* Center: Global Search Trigger (Desktop & Tablet) */}
-      <div className="relative max-w-xs w-full hidden md:block mx-4">
-        <button
-          type="button"
+      <div className="relative max-w-xs lg:max-w-sm w-full hidden md:block mx-4">
+        <SearchButton
           onClick={onOpenCommand}
-          className="w-full h-8 bg-surface border border-border/80 rounded-lg pl-8 pr-2.5 text-xs text-muted-foreground hover:border-primary/50 focus:outline-none flex items-center justify-between shadow-2xs transition-colors cursor-pointer"
-          aria-label="Search components"
-        >
-          <div className="flex items-center gap-2 truncate">
-            <Search className="size-3.5 text-muted-foreground absolute left-2.5" />
-            <span className="truncate">Search {totalComponents}+ components...</span>
-          </div>
-          <kbd className="px-1.5 py-0.5 rounded border border-border/80 bg-surface-subtle font-mono text-[9px] text-muted-foreground font-semibold shrink-0">
-            ⌘K
-          </kbd>
-        </button>
+          prefix="Search "
+          words={[
+            `${totalComponents}+ components`,
+            "buttons & inputs",
+            "sliders & range",
+            "navigation & tabs",
+            "charts & analytics",
+            "AI & prompt bars",
+          ]}
+          sectionLabel="Components >"
+          className="w-full"
+        />
       </div>
 
       {/* Right: Actions & Theme Controls */}

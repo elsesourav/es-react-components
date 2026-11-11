@@ -298,5 +298,35 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
       },
     ],
     themeTokens: ['--primary', '--primary-foreground', '--foreground', '--border'],
+  },
+  {
+    id: 'search-button',
+    name: 'Top Search & Animated Placeholder',
+    category: 'Buttons & Actions',
+    description:
+      'Theme-driven top navigation search trigger button with embedded spring-animated vertical text placeholder carousel, contextual breadcrumb scopes, global Cmd+K / Ctrl+K / "/" keyboard shortcut listeners, and pill/rounded styling variants.',
+    importCode: `import { SearchButton, AnimatedSearchPlaceholder } from 'es-react-components';`,
+    usageCode: `<SearchButton
+  onClick={() => setOpen(true)}
+  prefix="Search "
+  words={["components", "buttons & inputs", "sliders & range", "charts"]}
+  sectionLabel="Components >"
+  shortcutText="⌘ K"
+  size="md"
+  variant="pill"
+/>`,
+    props: [
+      { name: 'onClick', type: '() => void', defaultVal: 'undefined', description: 'Callback invoked when search button is clicked or activated by shortcut.' },
+      { name: 'prefix', type: 'string', defaultVal: "'Search '", description: 'Fixed leading text prefix before rotating words.' },
+      { name: 'words', type: 'string[]', defaultVal: 'undefined', description: 'Array of rotating suffix words animated vertically with spring physics.' },
+      { name: 'interval', type: 'number', defaultVal: '2400', description: 'Hold duration in milliseconds before cycling to the next word.' },
+      { name: 'shortcutText', type: 'string', defaultVal: "'⌘ K'", description: 'Keyboard shortcut pill label shown on the right.' },
+      { name: 'sectionLabel', type: 'string', defaultVal: 'undefined', description: 'Optional contextual section or breadcrumb tag (e.g. "Components >").' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Visual button sizing scale.' },
+      { name: 'variant', type: "'pill' | 'rounded'", defaultVal: "'pill'", description: 'Border radius shape: pill (rounded-full) or rounded (rounded-xl).' },
+      { name: 'enableGlobalShortcut', type: 'boolean', defaultVal: 'true', description: 'Enables global Cmd+K, Ctrl+K, and "/" keyboard listeners.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables button interactions.' },
+    ],
+    themeTokens: ['--surface', '--border', '--foreground', '--muted-foreground', '--primary', '--surface-subtle'],
   }
 ];

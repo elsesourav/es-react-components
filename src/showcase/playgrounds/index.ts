@@ -8,3 +8,4 @@ export { CardPlayground, AvatarPlayground, StatPlayground, LiquidGlassSheetPlayg
 export { MotionLoadersPlayground, LoadMorePlayground, MonoChartsPlayground } from './ChartPlaygrounds';
 export { SegmentedABTabsPlayground } from './SegmentedABTabsPlayground';
 export { QuantityCounterPlayground } from './QuantityCounterPlayground';
+export { SearchButtonPlayground } from './SearchButtonPlayground';

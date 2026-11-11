@@ -28,6 +28,9 @@ export function CommandPalette({
   maxRows = 8,
   autoFocus = false,
   className = "",
+  scopes,
+  activeScope = "All",
+  onScopeChange,
 }: CommandPaletteProps) {
   const uid = useId();
   const reduced = useReducedMotion();
@@ -131,6 +134,32 @@ export function CommandPalette({
           {count}
         </span>
       </div>
+
+      {scopes && scopes.length > 0 && (
+        <div className="flex items-center gap-1 px-3.5 py-1.5 border-b border-border/60 bg-surface/40 text-xs overflow-x-auto scrollbar-none">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mr-1 select-none shrink-0">
+            Scope:
+          </span>
+          {scopes.map((scope) => {
+            const isSelected = activeScope === scope;
+            return (
+              <button
+                key={scope}
+                type="button"
+                onClick={() => onScopeChange?.(scope)}
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-all cursor-pointer shrink-0 ${
+                  isSelected
+                    ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface-subtle"
+                }`}
+              >
+                {scope}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       <div className="relative" style={{ height: Math.min(height, PAD * 2 + Math.min(count || 1, maxRows) * ROW + Math.max(0, Math.min(count || 1, maxRows) - 1) * GAP) }}>
         <ul
           ref={listRef}

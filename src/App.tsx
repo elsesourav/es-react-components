@@ -63,8 +63,23 @@ export const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [activeScope, setActiveScope] = useState('All');
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const { toggleDark, setPreset } = useTheme();
+
+  const scopes = useMemo(
+    () => [
+      'All',
+      'Buttons & Actions',
+      'Inputs & Fields',
+      'Checkbox & Switch',
+      'Sliders & Range',
+      'Navigation & Menus',
+      'Surfaces & Cards',
+      'AI & Agentic UX',
+    ],
+    []
+  );
 
   const [expandedCategories, setExpandedCategories] = useState<string[]>(() => []);
 
@@ -264,6 +279,14 @@ export const App: React.FC = () => {
     return [...actionCommands, ...componentCommands];
   }, []);
 
+  const scopedCommandItems = useMemo(() => {
+    if (activeScope === 'All') return commandItems;
+    return commandItems.filter((item) => {
+      if (item.id.startsWith('act-')) return true;
+      return item.hint === activeScope;
+    });
+  }, [commandItems, activeScope]);
+
   const handleCommandSelect = (item: CommandItem) => {
     setCommandOpen(false);
     if (item.id === 'act-overview') {
@@ -295,8 +318,11 @@ export const App: React.FC = () => {
       <CommandPalette
         open={commandOpen}
         onDismiss={() => setCommandOpen(false)}
-        items={commandItems}
+        items={scopedCommandItems}
         onSelect={handleCommandSelect}
+        scopes={scopes}
+        activeScope={activeScope}
+        onScopeChange={setActiveScope}
         placeholder="Type a component name, category, or command..."
       />
 
