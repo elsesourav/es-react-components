@@ -64,7 +64,8 @@ import {
   LogoMarqueePlayground,
   BlurUpImagePlayground,
   ShowMorePlayground,
-  InteractiveControlsPlayground,
+  SegmentedABTabsPlayground,
+  QuantityCounterPlayground,
   MotionLoadersPlayground,
   LoadMorePlayground,
   MonoChartsPlayground
@@ -206,8 +207,10 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <BlurUpImagePlayground />;
     case 'show-more':
       return <ShowMorePlayground />;
-    case 'interactive-controls':
-      return <InteractiveControlsPlayground />;
+    case 'segmented-ab-tabs':
+      return <SegmentedABTabsPlayground />;
+    case 'quantity-counter':
+      return <QuantityCounterPlayground />;
     case 'motion-loaders':
       return <MotionLoadersPlayground />;
     case 'load-more':

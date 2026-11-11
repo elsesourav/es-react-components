@@ -152,7 +152,9 @@ export const AccordionPlayground: React.FC = () => {
 export const FilterGridPlayground: React.FC = () => {
   const { addToast } = useToast();
   const [filterGridCat, setFilterGridCat] = useState('all');
-  const [filterGridCols, setFilterGridCols] = useState(3);
+  const [filterGridCols, setFilterGridCols] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 1 : 3
+  );
 
   const services = [
     { id: 'srv-1', name: 'API Gateway', category: 'compute', status: 'Healthy', latency: '4ms', load: '32%' },
@@ -177,14 +179,14 @@ export const FilterGridPlayground: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-foreground">Columns:</span>
-          {[2, 3, 4].map((cols) => (
+          {[1, 2, 3, 4].map((cols) => (
             <Button
               key={cols}
               size="xs"
               variant={filterGridCols === cols ? 'primary' : 'outline'}
               onClick={() => setFilterGridCols(cols)}
             >
-              {cols} Cols
+              {cols} {cols === 1 ? 'Col' : 'Cols'}
             </Button>
           ))}
         </div>
@@ -225,9 +227,9 @@ export const FilterGridPlayground: React.FC = () => {
               <div className="font-semibold text-xs sm:text-sm text-foreground truncate my-1">
                 {s.name}
               </div>
-              <div className="mt-auto pt-2 border-t border-border/50 flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>Latency: <strong className="text-foreground">{s.latency}</strong></span>
-                <span>Load: <strong className="text-foreground">{s.load}</strong></span>
+              <div className="mt-auto pt-2 border-t border-border/50 flex items-center justify-between text-[10px] sm:text-[11px] text-muted-foreground">
+                <span className="truncate">Lat: <strong className="text-foreground">{s.latency}</strong></span>
+                <span className="truncate">Load: <strong className="text-foreground">{s.load}</strong></span>
               </div>
             </div>
           )}

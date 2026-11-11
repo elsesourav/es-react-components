@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   useCallback,
   useId,
   useMemo,
@@ -119,7 +119,7 @@ export function FilterGrid<T>({
   defaultValue,
   onValueChange,
   columns = 3,
-  rowHeight = 100,
+  rowHeight = 112,
   maxRows = 4,
   gap = 8,
   emptyLabel = "Nothing matches this filter",
@@ -222,8 +222,8 @@ export function FilterGrid<T>({
               onClick={() => choose(filter.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
               className={cn(
-                "group relative inline-grid h-8 select-none place-items-center rounded-[var(--radius)] px-3 outline-none cursor-pointer",
-                "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1"
+                "group relative inline-grid h-8 select-none place-items-center rounded-[var(--radius)] px-3 outline-none cursor-pointer transition-colors",
+                "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1 focus-visible:ring-offset-background"
               )}
               style={{ touchAction: "manipulation" }}
             >
@@ -243,7 +243,6 @@ export function FilterGrid<T>({
                   on ? "border-transparent" : "border-border bg-surface hover:bg-surface-subtle"
                 )}
               />
-
               <span className="relative col-start-1 row-start-1 inline-grid">
                 <motion.span
                   aria-hidden
@@ -253,7 +252,7 @@ export function FilterGrid<T>({
                   className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-foreground"
                 >
                   {filter.label}
-                  <span className="text-[10px] tabular-nums font-mono text-muted-foreground">
+                  <span className="text-[10.5px] tabular-nums font-mono text-muted-foreground">
                     {counts[filter.id]}
                   </span>
                 </motion.span>
@@ -265,7 +264,7 @@ export function FilterGrid<T>({
                   className="col-start-1 row-start-1 inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-primary-foreground"
                 >
                   {filter.label}
-                  <span className="text-[10px] tabular-nums font-mono opacity-80">
+                  <span className="text-[10.5px] tabular-nums font-mono opacity-80">
                     {counts[filter.id]}
                   </span>
                 </motion.span>
@@ -277,14 +276,13 @@ export function FilterGrid<T>({
           );
         })}
       </div>
-
       <div className="relative mt-3">
         <ul
           id={gridId}
           ref={gridRef}
           tabIndex={-1}
           className={cn(
-            "relative overflow-y-auto overscroll-contain outline-none",
+            "relative overflow-y-auto overscroll-contain outline-none scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50 scrollbar-track-transparent",
             capped ? "[scrollbar-gutter:stable]" : ""
           )}
           style={{
@@ -305,8 +303,8 @@ export function FilterGrid<T>({
                 exit={{ opacity: 0, scale: 0.98, transition: leave }}
                 transition={step}
                 className={cn(
-                  "min-w-0 overflow-hidden rounded-[var(--radius)] border border-border bg-surface-elevated p-3 shadow-sm",
-                  "transition-all duration-150 hover:border-primary/40"
+                  "min-w-0 overflow-hidden rounded-[var(--radius)] border border-border bg-surface-elevated p-3 shadow-xs",
+                  "transition-all duration-150 hover:border-primary/40 hover:shadow-sm"
                 )}
               >
                 {renderItem(item)}
@@ -314,7 +312,6 @@ export function FilterGrid<T>({
             ))}
           </AnimatePresence>
         </ul>
-
         <AnimatePresence initial={false}>
           {visible.length === 0 && (
             <motion.div
@@ -332,7 +329,6 @@ export function FilterGrid<T>({
           )}
         </AnimatePresence>
       </div>
-
       <p aria-live="polite" className="sr-only">
         {activeLabel}: {visible.length} of {total} shown
       </p>

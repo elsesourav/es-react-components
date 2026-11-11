@@ -399,5 +399,32 @@ import { Select } from 'es-react-components';
       },
     ],
     themeTokens: ['--surface', '--foreground', '--border', '--primary'],
+  },
+  {
+    id: 'quantity-counter',
+    name: 'Quantity Counter',
+    category: 'Checkbox & Switch',
+    description:
+      'Rounded pill counter with tactile minus/plus button triggers, spring-animated numeric digit flip/pop transitions, boundary min/max clamping, and accessible spinbutton keyboard controls.',
+    importCode: `import { QuantityCounter } from 'es-react-components';`,
+    usageCode: `<QuantityCounter
+  defaultValue={4}
+  min={1}
+  max={10}
+  step={1}
+  onChange={(qty) => console.log('Quantity:', qty)}
+/>`,
+    props: [
+      { name: 'value', type: 'number', defaultVal: 'undefined', description: 'Controlled numeric counter value.' },
+      { name: 'defaultValue', type: 'number', defaultVal: '1', description: 'Uncontrolled initial counter value.' },
+      { name: 'min', type: 'number', defaultVal: '1', description: 'Minimum quantity bound.' },
+      { name: 'max', type: 'number', defaultVal: '99', description: 'Maximum quantity bound.' },
+      { name: 'step', type: 'number', defaultVal: '1', description: 'Increment/decrement step size.' },
+      { name: 'unit', type: 'string', defaultVal: "''", description: 'Optional unit suffix label (e.g. "x", "GB", "kg").' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Counter scale sizing.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables counter buttons and interaction.' },
+      { name: 'onChange', type: '(qty: number) => void', defaultVal: 'undefined', description: 'Callback invoked on quantity changes.' },
+    ],
+    themeTokens: ['--surface', '--surface-subtle', '--border', '--foreground', '--primary'],
   }
 ];

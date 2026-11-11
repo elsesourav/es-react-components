@@ -366,5 +366,27 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
       { name: 'label', type: 'string', defaultVal: "'On this page'", description: 'Accessible navigation landmark label.' },
     ],
     themeTokens: ['--primary', '--primary-foreground', '--surface-subtle', '--border', '--radius'],
+  },
+  {
+    id: 'segmented-ab-tabs',
+    name: 'Segmented A/B Tabs',
+    category: 'Navigation & Menus',
+    description:
+      'High-contrast pill tabs with smooth spring layout physics, active pill halo ring outline, tactile click transitions, ARIA tablist/tab accessibility, and size variations (sm, md, lg).',
+    importCode: `import { SegmentedABTabs } from 'es-react-components';`,
+    usageCode: `<SegmentedABTabs
+  options={['A', 'B']}
+  defaultValue="A"
+  onChange={(tab) => console.log('Selected:', tab)}
+/>`,
+    props: [
+      { name: 'options', type: '[string, string] | string[]', defaultVal: "['A', 'B']", description: 'Array of tab labels or binary options.' },
+      { name: 'value', type: 'string', defaultVal: 'undefined', description: 'Controlled active tab identifier.' },
+      { name: 'defaultValue', type: 'string', defaultVal: "'A'", description: 'Uncontrolled initial selected tab.' },
+      { name: 'onChange', type: '(tab: string) => void', defaultVal: 'undefined', description: 'Callback fired on tab change.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Visual sizing scale.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables all tab selection actions.' },
+    ],
+    themeTokens: ['--primary', '--primary-foreground', '--surface-subtle', '--border', '--foreground'],
   }
 ];

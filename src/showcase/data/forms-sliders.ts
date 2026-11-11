@@ -32,76 +32,11 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
     themeTokens: ['--primary', '--surface-subtle', '--border', '--foreground', '--radius'],
   },
 {
-    id: 'markdown-editor',
-    name: 'Markdown Editor & Math Preview',
-    category: 'Typography & Content',
-    description:
-      'Universal Markdown editor and live preview built completely from scratch with KaTeX LaTeX math support ($E=mc^2$ and $$\\int f(x)dx$$), split view, GitHub alerts, code blocks, task lists, and theme token styling.',
-    importCode: `import { MarkdownEditor, MarkdownRenderer } from 'es-react-components';`,
-    usageCode: `<MarkdownEditor
-  label="Article Draft"
-  mode="split"
-  defaultValue="# Deep Learning Physics\\n\\nHere is the relativistic energy equation:\\n\\n$$E^2 = (mc^2)^2 + (pc)^2$$\\n\\nAnd Schrödinger equation:\\n\\n$$i\\\\hbar\\\\frac{\\\\partial}{\\\\partial t}\\\\Psi = \\\\hat{H}\\\\Psi$$\\n\\n> [!TIP]\\n> Full KaTeX LaTeX math formulas render seamlessly!"
-  onChange={(val) => console.log('Markdown:', val)}
-/>`,
-    props: [
-      {
-        name: 'value / defaultValue',
-        type: 'string',
-        defaultVal: "''",
-        description: 'Controlled or uncontrolled markdown text string.',
-      },
-      {
-        name: 'mode / defaultMode',
-        type: `'write' | 'preview' | 'split'`,
-        defaultVal: `'split'`,
-        description: 'Active layout view presentation mode.',
-      },
-      {
-        name: 'label',
-        type: 'string',
-        defaultVal: 'undefined',
-        description: 'Header label above editor.',
-      },
-      {
-        name: 'placeholder',
-        type: 'string',
-        defaultVal: "'Write markdown with headers, code blocks...'",
-        description: 'Textarea input placeholder.',
-      },
-      {
-        name: 'rows / minHeight',
-        type: 'number | string',
-        defaultVal: '14 / "360px"',
-        description: 'Editor panel dimensions.',
-      },
-      {
-        name: 'showToolbar',
-        type: 'boolean',
-        defaultVal: 'true',
-        description: 'Displays formatting quick-action toolbar.',
-      },
-      {
-        name: 'showWordCount',
-        type: 'boolean',
-        defaultVal: 'true',
-        description: 'Displays live word, character, and estimated reading time counts.',
-      },
-      {
-        name: 'onChange',
-        type: '(val: string) => void',
-        defaultVal: 'undefined',
-        description: 'Callback invoked on content change.',
-      },
-    ],
-    themeTokens: ['--surface', '--surface-subtle', '--border', '--primary', '--foreground'],
-  },
-{
     id: 'parameter-slider',
-    name: 'Parameter Slider & Scrubber Controls',
+    name: 'Parameter Slider (Multi-Variant Scrubber System)',
     category: 'Sliders & Range',
     description:
-      'High-precision inspector parameter slider with subtle tick track, floating carriage thumb with inner notch indicator, live formatted value readout, and companion switch/color controls.',
+      'High-precision inspector control system with multi-variant components: Continuous & Stepped Range Sliders with subtle tick ruler, glowing white needle indicator, and live numeric units (px, s, ms, %); Color Picker Pill with circular swatch and uppercase hex pill badge; and companion Pill Toggle Switches.',
     importCode: `import { ParameterSlider, ParameterSwitch, ParameterColor, ParameterGrid } from 'es-react-components';`,
     usageCode: `<ParameterGrid columns={3}>
   <ParameterSlider

@@ -156,8 +156,8 @@ export function ParameterSlider({
         }}
         className={cn(
           "absolute top-1/2 -translate-y-1/2 h-7 w-[5px] rounded-full pointer-events-none z-20 transition-transform duration-75",
-          "bg-foreground dark:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.45)]",
-          isDragging && "scale-y-105 shadow-[0_0_12px_rgba(255,255,255,0.7)] dark:shadow-[0_0_14px_rgba(255,255,255,0.85)]"
+          "bg-foreground dark:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.7)]",
+          isDragging && "scale-y-105 shadow-[0_0_12px_rgba(255,255,255,0.85)] dark:shadow-[0_0_14px_rgba(255,255,255,0.95)]"
         )}
       />
     </div>
@@ -181,10 +181,21 @@ export function ParameterSwitch({
 }: ParameterSwitchProps) {
   return (
     <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-pressed={checked}
+      aria-label={label}
+      onKeyDown={(e) => {
+        if (disabled) return;
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          onChange(!checked);
+        }
+      }}
       onClick={() => !disabled && onChange(!checked)}
       className={cn(
-        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer",
-        disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
+        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+        disabled ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:border-border-strong",
         className
       )}
     >
@@ -193,24 +204,19 @@ export function ParameterSwitch({
       </span>
 
       {/* Pill Switch */}
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        aria-label={label}
-        disabled={disabled}
+      <span
         className={cn(
-          "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
-          checked ? "bg-primary" : "bg-surface-subtle border border-border/80"
+          "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors duration-200 ease-in-out",
+          checked ? "bg-primary" : "bg-muted-foreground/30 dark:bg-zinc-700/60"
         )}
       >
         <span
           className={cn(
             "pointer-events-none inline-block size-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out",
-            checked ? "translate-x-4" : "translate-x-0"
+            checked ? "translate-x-4" : "translate-x-0.5"
           )}
         />
-      </button>
+      </span>
     </div>
   );
 }
@@ -234,10 +240,20 @@ export function ParameterColor({
 
   return (
     <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={`Color ${label}: ${value}`}
+      onKeyDown={(e) => {
+        if (disabled) return;
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          inputRef.current?.click();
+        }
+      }}
       onClick={() => !disabled && inputRef.current?.click()}
       className={cn(
-        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer",
-        disabled ? "opacity-50 pointer-events-none" : "hover:border-border-strong",
+        "group relative flex items-center justify-between gap-3 h-11 px-3.5 rounded-xl bg-surface border border-border/80 shadow-xs transition-all duration-150 select-none cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+        disabled ? "opacity-50 pointer-events-none cursor-not-allowed" : "hover:border-border-strong",
         className
       )}
     >
@@ -246,14 +262,14 @@ export function ParameterColor({
       </span>
 
       <div className="flex items-center gap-2">
-        {/* Color Preview Swatch */}
+        {/* Circular Color Preview Swatch (Matches Image 2) */}
         <span
           style={{ backgroundColor: value }}
-          className="size-4 rounded-md border border-black/20 shadow-xs shrink-0"
+          className="size-5 rounded-full border border-black/15 dark:border-white/20 shadow-xs shrink-0 transition-transform group-hover:scale-105"
         />
 
-        {/* Hex Text Box */}
-        <span className="font-mono text-xs font-semibold text-foreground dark:text-zinc-100 uppercase px-2 py-0.5 rounded-md bg-surface-subtle border border-border/60">
+        {/* Hex Text Pill Badge (Matches Image 2) */}
+        <span className="font-mono text-xs font-semibold text-foreground dark:text-zinc-100 uppercase px-2.5 py-0.5 rounded-full bg-surface-subtle border border-border/80 tracking-wide">
           {value}
         </span>
 

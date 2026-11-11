@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { Reorder, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -188,13 +188,12 @@ export function ReorderList<T>({
         values={items as T[]}
         onReorder={onReorder}
         aria-label={label}
-        className="m-0 list-none space-y-2 p-0"
+        className="m-0 list-none space-y-1.5 p-0"
       >
         {items.map((item) => {
           const id = getId(item);
           const held = list.grabbed === id;
           const lifted = held || list.dragging === id;
-
           return (
             <Reorder.Item
               key={id}
@@ -213,26 +212,28 @@ export function ReorderList<T>({
               whileDrag={reduced ? undefined : { scale: 1.02 }}
               style={{ touchAction: "pan-x" }}
               className={cn(
-                "relative flex items-center gap-3 rounded-[var(--radius)] border px-3.5 py-2.5 outline-none transition-all duration-150",
-                "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1",
+                "relative flex items-center gap-2.5 rounded-[var(--radius)] border px-3 py-2.5 outline-none transition-[border-color,box-shadow,background-color] duration-150",
+                "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                 lifted
-                  ? "z-10 cursor-grabbing border-primary/50 bg-surface-elevated shadow-lg shadow-primary/10"
-                  : "cursor-grab border-border bg-surface-elevated shadow-sm hover:border-primary/30",
-                held && "border-primary bg-primary/10 ring-2 ring-primary/20"
+                  ? "z-10 cursor-grabbing border-primary/50 bg-surface-elevated shadow-lg shadow-primary/10 ring-1 ring-primary/20"
+                  : "cursor-grab border-border bg-surface-elevated shadow-xs hover:border-primary/30",
+                held
+                  ? "border-primary bg-primary/10 ring-2 ring-primary/30"
+                  : "hover:bg-surface-elevated/90"
               )}
             >
               <span
                 aria-hidden
                 className={cn(
-                  "shrink-0 transition-colors",
-                  lifted ? "text-primary" : "text-muted-foreground/60"
+                  "shrink-0 transition-colors duration-150",
+                  lifted
+                    ? "text-primary"
+                    : "text-muted-foreground/60 hover:text-foreground"
                 )}
               >
                 {GRIP}
               </span>
-
               <span className="sr-only">{getLabel(item)}</span>
-
               <div aria-hidden className="min-w-0 flex-1">
                 {children(item)}
               </div>
@@ -240,12 +241,10 @@ export function ReorderList<T>({
           );
         })}
       </Reorder.Group>
-
       <span id={hintId} className="sr-only">
         Drag to reorder. With the keyboard, Space grabs the row, the arrow keys
         move it, Space drops it, and Escape puts everything back.
       </span>
-
       <span role="status" aria-live="polite" className="sr-only">
         {list.spoken}
       </span>

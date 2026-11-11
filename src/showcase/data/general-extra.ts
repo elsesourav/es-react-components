@@ -148,52 +148,69 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
     themeTokens: ['--surface-elevated', '--foreground', '--border', '--radius-md'],
   },
 {
-    id: 'interactive-controls',
-    name: 'Interactive Micro-Controls',
-    category: 'Buttons & Actions',
+    id: 'markdown-editor',
+    name: 'Markdown Editor & Math Preview',
+    category: 'Typography & Content',
     description:
-      'Suite of 11 interactive micro-components: ContextMenuEditDelete, QuestionTooltip, DownloadAnimatedIcons, PipModeIcons, SimplePlusMinusBtn, SegmentedABTabs, QuantityCounter, ListColumnToggle, FollowCheckButton, MenuDotsExpand, and CompactModeSwitch.',
-    importCode: `import {
-  ContextMenuEditDelete,
-  QuestionTooltip,
-  DownloadAnimatedIcons,
-  PipModeIcons,
-  SimplePlusMinusBtn,
-  SegmentedABTabs,
-  QuantityCounter,
-  ListColumnToggle,
-  FollowCheckButton,
-  MenuDotsExpand,
-  CompactModeSwitch,
-} from 'es-react-components';`,
-    usageCode: `<div className="flex flex-wrap items-center gap-4">
-  <ContextMenuEditDelete theme="dark" />
-  <QuestionTooltip theme="dark" text="Helpful tooltip preview" />
-  <DownloadAnimatedIcons theme="dark" />
-  <PipModeIcons theme="dark" />
-  <SimplePlusMinusBtn theme="dark" />
-  <SegmentedABTabs theme="dark" />
-  <QuantityCounter theme="dark" />
-  <ListColumnToggle theme="dark" />
-  <FollowCheckButton theme="dark" />
-  <MenuDotsExpand theme="dark" />
-  <CompactModeSwitch theme="dark" />
-</div>`,
+      'Universal Markdown editor and live preview built completely from scratch with KaTeX LaTeX math support ($E=mc^2$ and $$\\int f(x)dx$$), split view, GitHub alerts, code blocks, task lists, and theme token styling.',
+    importCode: `import { MarkdownEditor, MarkdownRenderer } from 'es-react-components';`,
+    usageCode: `<MarkdownEditor
+  label="Article Draft"
+  mode="split"
+  defaultValue="# Deep Learning Physics\\n\\nHere is the relativistic energy equation:\\n\\n$$E^2 = (mc^2)^2 + (pc)^2$$\\n\\nAnd Schrödinger equation:\\n\\n$$i\\\\hbar\\\\frac{\\\\partial}{\\\\partial t}\\\\Psi = \\\\hat{H}\\\\Psi$$\\n\\n> [!TIP]\\n> Full KaTeX LaTeX math formulas render seamlessly!"
+  onChange={(val) => console.log('Markdown:', val)}
+/>`,
     props: [
       {
-        name: 'theme',
-        type: `'dark' | 'light'`,
-        defaultVal: `'dark'`,
-        description: 'Color theme styling for micro-controls.',
+        name: 'value / defaultValue',
+        type: 'string',
+        defaultVal: "''",
+        description: 'Controlled or uncontrolled markdown text string.',
       },
       {
-        name: 'onChange / onToggle / onClick',
-        type: 'Function',
+        name: 'mode / defaultMode',
+        type: `'write' | 'preview' | 'split'`,
+        defaultVal: `'split'`,
+        description: 'Active layout view presentation mode.',
+      },
+      {
+        name: 'label',
+        type: 'string',
         defaultVal: 'undefined',
-        description: 'Event callbacks specific to each interactive control.',
+        description: 'Header label above editor.',
+      },
+      {
+        name: 'placeholder',
+        type: 'string',
+        defaultVal: "'Write markdown with headers, code blocks...'",
+        description: 'Textarea input placeholder.',
+      },
+      {
+        name: 'rows / minHeight',
+        type: 'number | string',
+        defaultVal: '14 / "360px"',
+        description: 'Editor panel dimensions.',
+      },
+      {
+        name: 'showToolbar',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Displays formatting quick-action toolbar.',
+      },
+      {
+        name: 'showWordCount',
+        type: 'boolean',
+        defaultVal: 'true',
+        description: 'Displays live word, character, and estimated reading time counts.',
+      },
+      {
+        name: 'onChange',
+        type: '(val: string) => void',
+        defaultVal: 'undefined',
+        description: 'Callback invoked on content change.',
       },
     ],
-    themeTokens: ['--surface', '--foreground', '--primary', '--border'],
+    themeTokens: ['--surface', '--surface-subtle', '--border', '--primary', '--foreground'],
   },
 {
     id: 'text-reveal',

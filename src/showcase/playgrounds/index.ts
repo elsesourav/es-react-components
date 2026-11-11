@@ -5,4 +5,6 @@ export { ButtonPlayground, BadgePlayground, PeekRatingPlayground, FloatingInputP
 export { DialogPlayground, AlertPlayground, ToastPlayground, SpinnerPlayground, ModalPlayground, TooltipPlayground, CommandPalettePlayground, CollapsibleBannerPlayground, LightboxPlayground } from './FeedbackPlaygrounds';
 export { AiApprovalCardPlayground, AiPromptBarPlayground, AiCodeBlockPlayground, AiFineTuneCardPlayground, TaskStepsPlayground } from './AIPlaygrounds';
 export { CardPlayground, AvatarPlayground, StatPlayground, LiquidGlassSheetPlayground, CardCoverflowPlayground, CardCarouselPlayground, PresenceAvatarsPlayground, AccordionPlayground, FilterGridPlayground, PollResultsPlayground, ReorderListPlayground, LogoMarqueePlayground, BlurUpImagePlayground, ShowMorePlayground } from './MediaPlaygrounds';
-export { InteractiveControlsPlayground, MotionLoadersPlayground, LoadMorePlayground, MonoChartsPlayground } from './ChartPlaygrounds';
+export { MotionLoadersPlayground, LoadMorePlayground, MonoChartsPlayground } from './ChartPlaygrounds';
+export { SegmentedABTabsPlayground } from './SegmentedABTabsPlayground';
+export { QuantityCounterPlayground } from './QuantityCounterPlayground';
