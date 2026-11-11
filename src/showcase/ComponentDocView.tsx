@@ -5,13 +5,9 @@ import { ComponentMarkdownDoc } from './ComponentMarkdownDoc';
 import {
   Tabs,
   Badge,
-  Button,
-  Card,
-  AICodeBlock,
   Tooltip,
-  Logo,
 } from '@/components/ui';
-import { Terminal, Sliders, Code2, BookOpen, Check, Copy, Palette, ChevronRight, Sparkles } from 'lucide-react';
+import { Terminal, Sliders, Code2, Check, Copy } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { useTheme } from '@/theme/ThemeContext';
 
@@ -24,7 +20,7 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
   component,
   onSelectOverview,
 }) => {
-  const [activeTab, setActiveTab] = useState<'preview' | 'code' | 'props' | 'theme'>('preview');
+  const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
   const [copiedImport, setCopiedImport] = useState(false);
   const { addToast } = useToast();
   const { colors } = useTheme();
@@ -107,7 +103,7 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
         </div>
       </div>
 
-      {/* Main Tabs Navigation */}
+      {/* Clean 2-Section Tabs Navigation (Matching User Request) */}
       <Tabs
         variant="segmented"
         activeTab={activeTab}
@@ -123,18 +119,6 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
             label: 'Usage & Code',
             icon: <Code2 className="h-4 w-4" />,
           },
-          {
-            id: 'props',
-            label: `Props & API`,
-            badge: component.props.length,
-            icon: <BookOpen className="h-4 w-4" />,
-          },
-          {
-            id: 'theme',
-            label: `Theme Tokens`,
-            badge: component.themeTokens.length,
-            icon: <Palette className="h-4 w-4" />,
-          },
         ]}
       />
 
@@ -145,72 +129,6 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
 
       {activeTab === 'code' && (
         <ComponentMarkdownDoc component={component} />
-      )}
-
-      {activeTab === 'props' && (
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-border bg-surface-subtle/50 text-muted-foreground">
-                  <th className="py-3 px-4 font-semibold">Prop</th>
-                  <th className="py-3 px-4 font-semibold">Type</th>
-                  <th className="py-3 px-4 font-semibold">Default</th>
-                  <th className="py-3 px-4 font-semibold">Description</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {component.props.map((p) => (
-                  <tr key={p.name} className="hover:bg-surface-subtle/30 transition-colors">
-                    <td className="py-3 px-4 font-mono font-medium text-primary">
-                      {p.name}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-xs text-muted-foreground">
-                      {p.type}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-xs text-foreground/80">
-                      {p.defaultVal || '-'}
-                    </td>
-                    <td className="py-3 px-4 text-foreground/90">
-                      {p.description}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      )}
-
-      {activeTab === 'theme' && (
-        <Card className="p-6">
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-base font-bold text-foreground">Theme Token Dependencies</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                This component dynamically responds to the following design tokens registered in the HSL Engine:
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-2">
-              {component.themeTokens.map((token) => {
-                const clean = token.replace(/^--/, '');
-                const directColor = (colors as any)[clean];
-                return (
-                  <div
-                    key={token}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-mono"
-                  >
-                    <span
-                      className="size-3 rounded-full border border-border/80 shadow-2xs shrink-0"
-                      style={{ backgroundColor: directColor || `hsl(var(${token}))` }}
-                    />
-                    <span className="text-foreground">{token}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </Card>
       )}
     </div>
   );

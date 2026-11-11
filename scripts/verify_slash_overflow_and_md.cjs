@@ -83,6 +83,10 @@ async function run() {
     });
     await new Promise(r => setTimeout(r, 800));
 
+    // Capture the clean 2-section tabs (Interactive Preview & Usage & Code)
+    await page.screenshot({ path: path.join(ARTIFACT_DIR, '165-simple-two-tabs-preview.png') });
+    console.log('Captured 165-simple-two-tabs-preview.png');
+
     // Click "Usage & Code" tab
     console.log('5. Clicking "Usage & Code" tab...');
     await page.evaluate(() => {
@@ -92,46 +96,24 @@ async function run() {
     });
     await new Promise(r => setTimeout(r, 600));
 
-    // Verify markdown content does NOT contain churnBatch or pistachio
+    // Verify markdown content with js snippets
     const contentCheck = await page.evaluate(() => {
       const text = document.body.innerText;
       return {
-        hasChurn: text.includes('churnBatch'),
-        hasPistachio: text.includes('pistachio'),
         hasSearchButton: text.includes('SearchButton'),
-        hasInstallation: text.includes('Installation & Import'),
-        hasRealWorld: text.includes('Real-World Use Case')
+        hasImportStatement: text.includes('1. Import Statement'),
+        hasUsageExample: text.includes('2. Usage Example'),
+        hasPropsAPI: text.includes('3. Properties & API'),
+        hasJsTag: Array.from(document.querySelectorAll('span')).some(s => s.textContent === 'JS' || s.textContent === 'js')
       };
     });
     console.log('Content check in MD Format:', contentCheck);
 
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, '162-md-code-format-search-button.png') });
-    console.log('Captured 162-md-code-format-search-button.png');
+    await page.screenshot({ path: path.join(ARTIFACT_DIR, '166-simple-two-tabs-code-md.png') });
+    console.log('Captured 166-simple-two-tabs-code-md.png');
 
-    // Test 4: Switch to "Implementation Snippet" sub-tab in ComponentMarkdownDoc
-    console.log('6. Switching to Implementation Snippet sub-tab...');
-    await page.evaluate(() => {
-      const buttons = Array.from(document.querySelectorAll('button, [role="tab"]'));
-      const snippetTab = buttons.find(b => b.textContent && b.textContent.includes('Implementation Snippet'));
-      if (snippetTab) snippetTab.click();
-    });
-    await new Promise(r => setTimeout(r, 600));
-
-    const aiCodeCheck = await page.evaluate(() => {
-      const text = document.body.innerText;
-      return {
-        hasChurn: text.includes('churnBatch'),
-        hasPistachio: text.includes('pistachio'),
-        hasSearchButton: text.includes('SearchButton')
-      };
-    });
-    console.log('AICodeBlock check:', aiCodeCheck);
-
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, '163-ai-code-block-actual-code.png') });
-    console.log('Captured 163-ai-code-block-actual-code.png');
-
-    // Test 5: Check Segmented A/B Tabs in MD format
-    console.log('7. Checking Segmented A/B Tabs MD format...');
+    // Test 4: Check Segmented A/B Tabs in MD format
+    console.log('6. Checking Segmented A/B Tabs MD format...');
     await page.evaluate(() => {
       const items = Array.from(document.querySelectorAll('button, [role="treeitem"]'));
       const target = items.find(el => el.textContent && el.textContent.includes('Segmented A/B Tabs'));
@@ -147,8 +129,8 @@ async function run() {
     });
     await new Promise(r => setTimeout(r, 600));
 
-    await page.screenshot({ path: path.join(ARTIFACT_DIR, '164-md-code-segmented-tabs.png') });
-    console.log('Captured 164-md-code-segmented-tabs.png');
+    await page.screenshot({ path: path.join(ARTIFACT_DIR, '167-simple-two-tabs-segmented-tabs-md.png') });
+    console.log('Captured 167-simple-two-tabs-segmented-tabs-md.png');
 
     console.log('=== ALL TESTS COMPLETED SUCCESSFULLY ===');
   } catch (err) {
