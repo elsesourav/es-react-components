@@ -318,7 +318,7 @@ export const App: React.FC = () => {
       />
 
       {/* 2. Main Content Column on the Right */}
-      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-background">
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-background overflow-x-hidden">
         <AppNavbar
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
           onOpenCommand={() => setCommandOpen(true)}

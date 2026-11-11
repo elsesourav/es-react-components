@@ -39,6 +39,7 @@ import {
   type UseLightboxOptions,
   useLightbox,
 } from "./use-lightbox";
+import { lockScroll } from "@/lib/scrollLock";
 
 export { useLightbox, type UseLightboxOptions };
 
@@ -188,17 +189,10 @@ function Stage({
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
-    const body = document.body;
-    const overflow = body.style.overflow;
-    const padding = body.style.paddingRight;
-    const gap = window.innerWidth - document.documentElement.clientWidth;
-    const base = Number.parseFloat(getComputedStyle(body).paddingRight) || 0;
-    body.style.overflow = "hidden";
-    if (gap > 0) body.style.paddingRight = `${base + gap}px`;
+    const unlock = lockScroll();
     frame?.focus({ preventScroll: true });
     return () => {
-      body.style.overflow = overflow;
-      body.style.paddingRight = padding;
+      unlock();
       if (previous?.isConnected) previous.focus({ preventScroll: true });
     };
   }, [frameRef]);

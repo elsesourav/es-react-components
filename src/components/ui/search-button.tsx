@@ -53,10 +53,8 @@ export function SearchButton({
         return;
       }
 
-      if (
-        ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") ||
-        (!e.metaKey && !e.ctrlKey && !e.altKey && e.key === "/")
-      ) {
+      // Search dialog only triggers on Cmd+K / Ctrl+K ('/' is reserved for sidebar filter)
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         buttonRef.current?.focus({ preventScroll: true });
         onClick?.();

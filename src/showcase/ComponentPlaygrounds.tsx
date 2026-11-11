@@ -67,6 +67,7 @@ import {
   SegmentedABTabsPlayground,
   QuantityCounterPlayground,
   SearchButtonPlayground,
+  SquishSwitchPlayground,
   MotionLoadersPlayground,
   LoadMorePlayground,
   MonoChartsPlayground
@@ -214,6 +215,9 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <QuantityCounterPlayground />;
     case 'search-button':
       return <SearchButtonPlayground />;
+    case 'squish-switch':
+    case 'on-off-switch':
+      return <SquishSwitchPlayground />;
     case 'motion-loaders':
       return <MotionLoadersPlayground />;
     case 'load-more':

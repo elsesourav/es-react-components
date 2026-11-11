@@ -12,6 +12,7 @@ export * from './textarea';
 export * from './select';
 export * from './dropdown';
 export * from './switch';
+export * from './squish-switch';
 export * from './checkbox';
 export * from './dialog';
 export * from './alert';

@@ -12,6 +12,7 @@ import React, {
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
+import { lockScroll } from "@/lib/scrollLock";
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 const LEAVE = [0.4, 0, 1, 1] as const;
@@ -43,39 +44,19 @@ function focusableWithin(root: HTMLElement): HTMLElement[] {
   );
 }
 
-let locks = 0;
-let releaseLock: (() => void) | null = null;
+let activeUnlockFn: (() => void) | null = null;
 
 function lockDocumentScroll() {
-  locks += 1;
-  if (locks > 1) return;
-
-  const html = document.documentElement;
-  const body = document.body;
-  const gap = window.innerWidth - html.clientWidth;
-  const htmlOverflow = html.style.overflow;
-  const bodyOverflow = body.style.overflow;
-  const paddingRight = body.style.paddingRight;
-  const base = Number.parseFloat(window.getComputedStyle(body).paddingRight);
-
-  html.style.overflow = "hidden";
-  body.style.overflow = "hidden";
-  if (gap > 0) {
-    body.style.paddingRight = `${(Number.isFinite(base) ? base : 0) + gap}px`;
+  if (!activeUnlockFn) {
+    activeUnlockFn = lockScroll();
   }
-
-  releaseLock = () => {
-    html.style.overflow = htmlOverflow;
-    body.style.overflow = bodyOverflow;
-    body.style.paddingRight = paddingRight;
-  };
 }
 
 function unlockDocumentScroll() {
-  locks = Math.max(0, locks - 1);
-  if (locks > 0) return;
-  releaseLock?.();
-  releaseLock = null;
+  if (activeUnlockFn) {
+    activeUnlockFn();
+    activeUnlockFn = null;
+  }
 }
 
 const stack: object[] = [];

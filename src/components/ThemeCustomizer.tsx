@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useTheme, THEME_PRESETS, ThemePresetKey } from '@/theme/ThemeContext';
 import { useToast } from '@/components/ui/toast';
+import { lockScroll } from '@/lib/scrollLock';
 import {
   Button,
   Badge,
@@ -56,16 +57,7 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
 
   React.useEffect(() => {
     if (!isOpen) return;
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    };
+    return lockScroll();
   }, [isOpen]);
 
   const cssLines = [

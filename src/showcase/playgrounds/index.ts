@@ -9,3 +9,4 @@ export { MotionLoadersPlayground, LoadMorePlayground, MonoChartsPlayground } fro
 export { SegmentedABTabsPlayground } from './SegmentedABTabsPlayground';
 export { QuantityCounterPlayground } from './QuantityCounterPlayground';
 export { SearchButtonPlayground } from './SearchButtonPlayground';
+export { SquishSwitchPlayground } from './SquishSwitchPlayground';

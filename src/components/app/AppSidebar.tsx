@@ -54,6 +54,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
         filterInputRef.current?.focus();
+        filterInputRef.current?.select();
       }
     };
     window.addEventListener('keydown', handleKeyDown);

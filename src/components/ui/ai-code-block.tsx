@@ -65,13 +65,31 @@ export type CodeBlockProps = {
 
 export function CodeBlock({
   variant,
-  lines = DEFAULT_CODE_LINES,
+  lines,
   code,
-  diff = DEFAULT_DIFF_ROWS,
+  diff,
   filename = FILE,
   labels,
   onCopy,
 }: CodeBlockProps) {
+  const effectiveLines = React.useMemo(() => {
+    if (lines && lines.length > 0) return lines;
+    if (code && typeof code === "string" && code.trim().length > 0) {
+      return code.split("\n");
+    }
+    return DEFAULT_CODE_LINES;
+  }, [lines, code]);
+
+  const effectiveDiff = React.useMemo(() => {
+    if (diff && diff.length > 0) return diff;
+    return effectiveLines.map((line, idx) => ({
+      old: idx + 1,
+      cur: idx + 1,
+      type: "ctx" as const,
+      pieces: [{ text: line }],
+    }));
+  }, [diff, effectiveLines]);
+
   const [copied, setCopied] = useState(false);
   const [view, setView] = useState("Code");
   const [hasSwitchedView, setHasSwitchedView] = useState(false);
@@ -114,13 +132,13 @@ export function CodeBlock({
       observer?.disconnect();
       window.removeEventListener("resize", handleResize);
     };
-  }, [lines, diff]);
+  }, [effectiveLines, effectiveDiff]);
 
   const text = { ...DEFAULT_LABELS, ...labels };
   const raw =
     code ??
     (isDiff
-      ? diff
+      ? effectiveDiff
           .map(
             (row) =>
               `${row.type === "add" ? "+" : row.type === "del" ? "-" : " "}${row.pieces
@@ -128,7 +146,7 @@ export function CodeBlock({
                 .join("")}`
           )
           .join("\n")
-      : lines.join("\n"));
+      : effectiveLines.join("\n"));
 
   const copy = useCallback(() => {
     setCopyError(false);
@@ -147,8 +165,8 @@ export function CodeBlock({
       .catch(() => setCopyError(true));
   }, [raw, onCopy]);
 
-  const added = diff.filter((r) => r.type === "add").length;
-  const removed = diff.filter((r) => r.type === "del").length;
+  const added = effectiveDiff.filter((r) => r.type === "add").length;
+  const removed = effectiveDiff.filter((r) => r.type === "del").length;
 
   return (
     <div className="w-full max-w-2xl mx-auto overflow-hidden rounded-lg border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-surface,#fff)] text-[color:var(--mova-ai-ink,#202020)] shadow-[var(--mova-ai-shadow-card,none)]">
@@ -274,17 +292,17 @@ export function CodeBlock({
             className="pointer-events-none invisible absolute inset-0 select-none"
           >
             <div ref={codeMeasureRef} className="absolute inset-x-0 top-0">
-              <CodeContent isDiff={false} lines={lines} diff={diff} />
+              <CodeContent isDiff={false} lines={effectiveLines} diff={effectiveDiff} />
             </div>
             <div ref={diffMeasureRef} className="absolute inset-x-0 top-0">
-              <CodeContent isDiff={true} lines={lines} diff={diff} />
+              <CodeContent isDiff={true} lines={effectiveLines} diff={effectiveDiff} />
             </div>
           </div>
           <div
             key={isDiff ? "diff" : "code"}
             className={hasSwitchedView ? "mova-ai-code-view-enter" : undefined}
           >
-            <CodeContent isDiff={isDiff} lines={lines} diff={diff} />
+            <CodeContent isDiff={isDiff} lines={effectiveLines} diff={effectiveDiff} />
           </div>
         </div>
       </div>

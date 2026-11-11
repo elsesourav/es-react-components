@@ -144,6 +144,100 @@ import { Select } from 'es-react-components';
     ],
     themeTokens: ['--primary', '--surface-sunken', '--border', '--surface-elevated'],
   },
+  {
+    id: 'squish-switch',
+    name: 'Squish Switch (On/Off)',
+    category: 'Checkbox & Switch',
+    description:
+      'Elastic kinetic physics toggle switch with velocity-driven thumb squish stretching, tactile pointer drag tracking, embedded ON/OFF micro badges, and full HSL theme token integration.',
+    importCode: `import { SquishSwitch, OnOffSwitch } from 'es-react-components';`,
+    usageCode: `<SquishSwitch
+  checked={enabled}
+  onChange={setEnabled}
+  label="Auto-Sync Catalog"
+  description="Broadcast state updates over WebSockets automatically."
+  showOnOffText
+  variant="primary"
+  size="md"
+/>`,
+    props: [
+      {
+        name: 'checked',
+        type: 'boolean',
+        defaultVal: 'undefined',
+        description: 'Controlled boolean state.',
+      },
+      {
+        name: 'defaultChecked',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Initial state for uncontrolled usage.',
+      },
+      {
+        name: 'onChange / onCheckedChange',
+        type: '(checked: boolean) => void',
+        defaultVal: 'undefined',
+        description: 'Callback dispatched on state transition.',
+      },
+      {
+        name: 'showOnOffText',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders embedded ON / OFF micro typography inside track.',
+      },
+      {
+        name: 'size',
+        type: "'sm' | 'md' | 'lg'",
+        defaultVal: "'md'",
+        description: 'Preset track and thumb dimensions.',
+      },
+      {
+        name: 'variant',
+        type: "'primary' | 'success' | 'warning' | 'danger' | 'neutral'",
+        defaultVal: "'primary'",
+        description: 'Theme color variant mapped to system HSL tokens.',
+      },
+      {
+        name: 'stretch',
+        type: 'number',
+        defaultVal: '36',
+        description: 'Kinetic stretch factor on pointer drag velocity (0-100).',
+      },
+      {
+        name: 'speed',
+        type: 'number',
+        defaultVal: '50',
+        description: 'Spring snap stiffness and transition velocity (0-100).',
+      },
+      {
+        name: 'label',
+        type: 'ReactNode',
+        defaultVal: 'undefined',
+        description: 'Accompanying title label.',
+      },
+      {
+        name: 'description',
+        type: 'ReactNode',
+        defaultVal: 'undefined',
+        description: 'Optional descriptive subtitle.',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Mutes interaction and dims opacity.',
+      },
+    ],
+    themeTokens: [
+      '--primary',
+      '--primary-foreground',
+      '--surface-elevated',
+      '--border',
+      '--foreground',
+      '--muted-foreground',
+      '--radius',
+    ],
+  },
 {
     id: 'checkbox',
     name: 'Checkbox',

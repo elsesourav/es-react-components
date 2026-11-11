@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Search, X } from "lucide-react";
 import type { CommandPaletteProps } from "./types";
 import { useCommandPalette } from "./useCommandPalette";
+import { lockScroll } from "@/lib/scrollLock";
 
 const CELL = { type: "spring", stiffness: 520, damping: 34, mass: 0.45 } as const;
 const CROSSFADE = { type: "spring", stiffness: 260, damping: 34, mass: 0.8 } as const;
@@ -309,20 +310,7 @@ function PaletteLayer({
 
   useEffect(() => {
     if (!open) return;
-    const root = document.documentElement;
-    const body = document.body;
-    const rootOverflow = root.style.overflow;
-    const bodyOverflow = body.style.overflow;
-    const padding = body.style.paddingRight;
-    const gutter = window.innerWidth - root.clientWidth;
-    root.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    if (gutter > 0) body.style.paddingRight = `${gutter}px`;
-    return () => {
-      root.style.overflow = rootOverflow;
-      body.style.overflow = bodyOverflow;
-      body.style.paddingRight = padding;
-    };
+    return lockScroll();
   }, [open]);
 
   if (!host) return null;

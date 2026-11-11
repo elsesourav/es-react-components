@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ComponentDoc } from './componentsData';
 import { ComponentPlaygrounds } from './ComponentPlaygrounds';
+import { ComponentMarkdownDoc } from './ComponentMarkdownDoc';
 import {
   Tabs,
   Badge,
@@ -143,19 +144,7 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
       )}
 
       {activeTab === 'code' && (
-        <div className="space-y-6">
-          <Card>
-            <div className="p-4 sm:p-6 space-y-4">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
-                Full Implementation Snippet
-              </h3>
-              <AICodeBlock
-                code={component.usageCode}
-                filename={`${component.id}-example.tsx`}
-              />
-            </div>
-          </Card>
-        </div>
+        <ComponentMarkdownDoc component={component} />
       )}
 
       {activeTab === 'props' && (

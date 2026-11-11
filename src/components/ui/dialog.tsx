@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
+import { lockScroll } from '@/lib/scrollLock';
 import { cn } from '@/lib/utils';
 
 export interface DialogProps {
@@ -26,16 +27,10 @@ export const Dialog: React.FC<DialogProps> = ({
       if (e.key === 'Escape') onClose();
     };
     if (isOpen) {
-      const html = document.documentElement;
-      const body = document.body;
-      const prevHtml = html.style.overflow;
-      const prevBody = body.style.overflow;
-      html.style.overflow = 'hidden';
-      body.style.overflow = 'hidden';
+      const unlock = lockScroll();
       window.addEventListener('keydown', handleKeyDown);
       return () => {
-        html.style.overflow = prevHtml;
-        body.style.overflow = prevBody;
+        unlock();
         window.removeEventListener('keydown', handleKeyDown);
       };
     }
