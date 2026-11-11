@@ -118,9 +118,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   }, [selectedId]);
 
   return (
-    <aside className="w-64 lg:w-72 shrink-0 hidden md:flex flex-col h-screen border-r border-border/70 bg-surface/30 backdrop-blur-md z-30 select-none overflow-hidden">
+    <aside className="w-64 lg:w-72 shrink-0 hidden md:flex flex-col h-full border-r border-border/70 bg-surface/30 backdrop-blur-md z-30 select-none overflow-hidden">
       {/* 1. Brand Header (Matching Reference Image 2 Top-Left) */}
-      <div className="h-14 px-4 flex items-center justify-between border-b border-border/60 shrink-0">
+      <div className="h-14 px-4 flex items-center justify-between border-b border-border/80 bg-surface/50 shrink-0">
         <button
           type="button"
           onClick={() => onSelect('__overview__')}
@@ -189,7 +189,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       {/* 4. Compact Tree Navigation List */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto px-2 py-2 scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50 scrollbar-track-transparent space-y-0.5"
+        className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-2 py-2 scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50 scrollbar-track-transparent space-y-0.5"
       >
         <TreeView
           label="Component Directory"

@@ -12,6 +12,7 @@ git worktree add -B gh-pages "$WORKTREE_DIR"
 rm -rf "$WORKTREE_DIR"/*
 cp -r dist/* "$WORKTREE_DIR"/
 touch "$WORKTREE_DIR"/.nojekyll
+cp "$WORKTREE_DIR"/index.html "$WORKTREE_DIR"/404.html
 
 cd "$WORKTREE_DIR"
 git add -A

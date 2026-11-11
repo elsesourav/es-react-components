@@ -307,8 +307,17 @@ export const App: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   return (
-    <div className="h-screen w-full bg-background text-foreground flex flex-row font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200 overflow-hidden">
+    <div className="fixed inset-0 w-full h-full bg-background text-foreground flex flex-row font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200 overflow-hidden">
       {/* 1. Permanent Left Sidebar (Flush Left, Full Height, Matching Reference Image 2) */}
       <AppSidebar
         treeNodes={treeNodes}
@@ -323,7 +332,7 @@ export const App: React.FC = () => {
       <div
         ref={mainScrollRef}
         id="main-scroll-container"
-        className="flex-1 min-w-0 h-screen flex flex-col bg-background overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50"
+        className="flex-1 min-w-0 h-full flex flex-col bg-background overflow-y-auto overflow-x-hidden overscroll-contain scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50"
       >
         <AppNavbar
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
