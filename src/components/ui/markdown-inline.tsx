@@ -116,7 +116,176 @@ export function MathFormula({
 }
 
 /**
- * Performant Code Block with copy-to-clipboard functionality.
+ * High-performance, zero-dependency multi-language syntax highlighter (TSX, TS, JS, BASH, CSS, JSON).
+ */
+function highlightCodeLine(line: string, lang = "js"): React.ReactNode[] {
+  if (!line) return [<span key="empty"> </span>];
+  const l = lang.toLowerCase().trim();
+
+  // 1. Bash / Shell scripts
+  if (l === "bash" || l === "sh" || l === "shell" || l === "zsh") {
+    const BASH_REGEX = /(\b(?:pnpm|npm|yarn|bun|npx|git|cd|mkdir|rm|curl|node|export)\b|\b(?:add|install|run|build|dev|init|commit|push|pull|clone|checkout)\b|--?[a-zA-Z0-9_-]+|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#[^$]*$)/g;
+    const nodes: React.ReactNode[] = [];
+    let last = 0;
+    let k = 0;
+    for (const match of line.matchAll(BASH_REGEX)) {
+      const idx = match.index ?? 0;
+      const t = match[0];
+      if (idx > last) nodes.push(<span key={k++} className="text-zinc-300">{line.slice(last, idx)}</span>);
+      if (t.startsWith("#")) {
+        nodes.push(<span key={k++} className="text-zinc-500 italic">{t}</span>);
+      } else if (/^(?:pnpm|npm|yarn|bun|npx|git|curl|node)$/.test(t)) {
+        nodes.push(<span key={k++} className="text-emerald-400 font-bold">{t}</span>);
+      } else if (/^(?:add|install|run|build|dev|commit|push|pull|clone)$/.test(t)) {
+        nodes.push(<span key={k++} className="text-cyan-400 font-semibold">{t}</span>);
+      } else if (t.startsWith("-")) {
+        nodes.push(<span key={k++} className="text-amber-400 font-mono">{t}</span>);
+      } else {
+        nodes.push(<span key={k++} className="text-emerald-300">{t}</span>);
+      }
+      last = idx + t.length;
+    }
+    if (last < line.length) nodes.push(<span key={k++} className="text-purple-300 font-medium">{line.slice(last)}</span>);
+    return nodes;
+  }
+
+  // 2. CSS / SCSS
+  if (l === "css" || l === "scss") {
+    const CSS_REGEX = /(\/\*[\s\S]*?\*\/|--[a-zA-Z0-9_-]+|:[a-zA-Z-]+|\b[a-zA-Z-]+(?=\s*:)|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+(?:px|rem|em|%|vh|vw|s|ms)?\b|var\([^)]+\))/g;
+    const nodes: React.ReactNode[] = [];
+    let last = 0;
+    let k = 0;
+    for (const match of line.matchAll(CSS_REGEX)) {
+      const idx = match.index ?? 0;
+      const t = match[0];
+      if (idx > last) nodes.push(<span key={k++} className="text-zinc-300">{line.slice(last, idx)}</span>);
+      if (t.startsWith("/*")) nodes.push(<span key={k++} className="text-zinc-500 italic">{t}</span>);
+      else if (t.startsWith("--") || t.startsWith("var(")) nodes.push(<span key={k++} className="text-purple-400 font-semibold">{t}</span>);
+      else if (/^\d/.test(t)) nodes.push(<span key={k++} className="text-amber-300">{t}</span>);
+      else nodes.push(<span key={k++} className="text-cyan-400">{t}</span>);
+      last = idx + t.length;
+    }
+    if (last < line.length) nodes.push(<span key={k++} className="text-zinc-300">{line.slice(last)}</span>);
+    return nodes;
+  }
+
+  // 3. JSON
+  if (l === "json") {
+    const JSON_REGEX = /("(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+(?:\.\d+)?\b)/g;
+    const nodes: React.ReactNode[] = [];
+    let last = 0;
+    let k = 0;
+    for (const match of line.matchAll(JSON_REGEX)) {
+      const idx = match.index ?? 0;
+      const t = match[0];
+      if (idx > last) nodes.push(<span key={k++} className="text-zinc-400">{line.slice(last, idx)}</span>);
+      if (t.endsWith('"') && line[idx + t.length] === ':') nodes.push(<span key={k++} className="text-cyan-400 font-medium">{t}</span>);
+      else if (t.startsWith('"')) nodes.push(<span key={k++} className="text-emerald-400">{t}</span>);
+      else if (/^(?:true|false|null)$/.test(t)) nodes.push(<span key={k++} className="text-purple-400 font-semibold">{t}</span>);
+      else nodes.push(<span key={k++} className="text-amber-300">{t}</span>);
+      last = idx + t.length;
+    }
+    if (last < line.length) nodes.push(<span key={k++} className="text-zinc-400">{line.slice(last)}</span>);
+    return nodes;
+  }
+
+  // 4. TSX / TS / JSX / JS (Default)
+  const commentMatch = line.match(/^(\s*)(\/\/.*)$/);
+  if (commentMatch) {
+    return [
+      <span key="lead">{commentMatch[1]}</span>,
+      <span key="comment" className="text-zinc-500 italic">{commentMatch[2]}</span>,
+    ];
+  }
+
+  const REGEX = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`[^`]*`|<\/?[A-Za-z][\w.-]*|\/?>|\b(?:import|from|export|default|async|await|function|const|let|var|return|if|else|for|while|type|interface|as|typeof)\b|\b(?:true|false|null|undefined)\b|\b\d+(?:\.\d+)?\b|[A-Za-z_$][\w$]*(?=\s*\()|=>|\/\/.*$)/g;
+
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let key = 0;
+
+  for (const match of line.matchAll(REGEX)) {
+    const idx = match.index ?? 0;
+    const token = match[0];
+
+    if (idx > lastIndex) {
+      nodes.push(
+        <span key={key++} className="text-zinc-300">
+          {line.slice(lastIndex, idx)}
+        </span>
+      );
+    }
+
+    if (token.startsWith("//")) {
+      nodes.push(
+        <span key={key++} className="text-zinc-500 italic">
+          {token}
+        </span>
+      );
+    } else if (token.startsWith('"') || token.startsWith("'") || token.startsWith("`")) {
+      nodes.push(
+        <span key={key++} className="text-emerald-400">
+          {token}
+        </span>
+      );
+    } else if (token.startsWith("<") || token === ">" || token === "/>") {
+      nodes.push(
+        <span key={key++} className="text-cyan-400 font-medium">
+          {token}
+        </span>
+      );
+    } else if (
+      /^(?:import|from|export|default|async|await|function|const|let|var|return|if|else|for|while|type|interface|as|typeof)$/.test(
+        token
+      )
+    ) {
+      nodes.push(
+        <span key={key++} className="text-purple-400 font-semibold">
+          {token}
+        </span>
+      );
+    } else if (/^(?:true|false|null|undefined)$/.test(token)) {
+      nodes.push(
+        <span key={key++} className="text-amber-400 font-mono">
+          {token}
+        </span>
+      );
+    } else if (/^\d/.test(token)) {
+      nodes.push(
+        <span key={key++} className="text-amber-300">
+          {token}
+        </span>
+      );
+    } else if (token === "=>") {
+      nodes.push(
+        <span key={key++} className="text-pink-400 font-bold">
+          {token}
+        </span>
+      );
+    } else {
+      nodes.push(
+        <span key={key++} className="text-blue-400 font-medium">
+          {token}
+        </span>
+      );
+    }
+
+    lastIndex = idx + token.length;
+  }
+
+  if (lastIndex < line.length) {
+    nodes.push(
+      <span key={key++} className="text-zinc-300">
+        {line.slice(lastIndex)}
+      </span>
+    );
+  }
+
+  return nodes;
+}
+
+/**
+ * Performant Code Block with copy-to-clipboard functionality and live syntax highlighting.
  */
 export function MarkdownCodeBlock({
   code,
@@ -139,10 +308,12 @@ export function MarkdownCodeBlock({
     }
   };
 
+  const lines = code.split("\n");
+
   return (
     <div className="my-5 rounded-2xl overflow-hidden border border-border bg-zinc-950 text-zinc-100 font-mono text-xs shadow-lg">
-      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-900 border-b border-zinc-800 text-zinc-400 text-[11px]">
-        <span className="uppercase tracking-wider font-semibold text-zinc-300 flex items-center gap-1.5">
+      <div className="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b border-zinc-800 text-zinc-400 text-[11px]">
+        <span className="uppercase tracking-wider font-semibold text-zinc-300 flex items-center gap-1.5 font-mono">
           <Terminal className="w-3.5 h-3.5 text-primary" />
           <span>{language || "code"}</span>
         </span>
@@ -165,8 +336,19 @@ export function MarkdownCodeBlock({
           )}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-primary/30">
-        <code>{code}</code>
+      <pre className="p-4 overflow-x-auto max-w-full text-zinc-200 leading-relaxed font-mono selection:bg-primary/30 text-[12px]">
+        <code>
+          {lines.map((line, idx) => (
+            <div key={idx} className="table-row">
+              <span className="table-cell pr-4 select-none text-right font-mono text-[11px] text-zinc-600">
+                {idx + 1}
+              </span>
+              <span className="table-cell">
+                {highlightCodeLine(line, language)}
+              </span>
+            </div>
+          ))}
+        </code>
       </pre>
     </div>
   );

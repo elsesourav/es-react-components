@@ -14,15 +14,19 @@ export const ComponentMarkdownDoc: React.FC<ComponentMarkdownDocProps> = ({ comp
       : '| `className` | `string` | `-` | Optional CSS class styling |';
 
     return `
-## 1. Import Statement
+## 1. Installation & Import
 
-\`\`\`js
+\`\`\`bash
+pnpm add es-react-components motion
+\`\`\`
+
+\`\`\`tsx
 ${component.importCode}
 \`\`\`
 
 ## 2. Usage Example
 
-\`\`\`js
+\`\`\`tsx
 ${component.usageCode}
 \`\`\`
 
