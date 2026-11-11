@@ -4,6 +4,7 @@ import { SURFACES_COMPONENTS } from './surfaces';
 import { SURFACES_EXTRA_COMPONENTS } from './surfaces-extra';
 import { FORMS_COMPONENTS } from './forms';
 import { FORMS_CONTROLS_COMPONENTS } from './forms-controls';
+import { FORMS_AI_CONTROLS_COMPONENTS } from './forms-ai-controls';
 import { FORMS_SLIDERS_COMPONENTS } from './forms-sliders';
 import { FEEDBACK_COMPONENTS } from './feedback';
 import { NAVIGATION_COMPONENTS } from './navigation';
@@ -18,6 +19,7 @@ export const COMPONENTS_DATA: ComponentDoc[] = [
   ...SURFACES_EXTRA_COMPONENTS,
   ...FORMS_COMPONENTS,
   ...FORMS_CONTROLS_COMPONENTS,
+  ...FORMS_AI_CONTROLS_COMPONENTS,
   ...FORMS_SLIDERS_COMPONENTS,
   ...FEEDBACK_COMPONENTS,
   ...NAVIGATION_COMPONENTS,
