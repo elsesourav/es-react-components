@@ -7,6 +7,7 @@ let lockCount = 0;
 let previousHtmlOverflow = '';
 let previousBodyOverflow = '';
 let previousTouchAction = '';
+let previousMainOverflow = '';
 
 export function lockScroll(): () => void {
   if (typeof document === 'undefined') return () => {};
@@ -20,6 +21,12 @@ export function lockScroll(): () => void {
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
+
+    const main = document.getElementById('main-scroll-container');
+    if (main) {
+      previousMainOverflow = main.style.overflow;
+      main.style.overflow = 'hidden';
+    }
   }
 
   let released = false;
@@ -32,6 +39,11 @@ export function lockScroll(): () => void {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
+
+      const main = document.getElementById('main-scroll-container');
+      if (main) {
+        main.style.overflow = previousMainOverflow;
+      }
     }
   };
 }
@@ -45,4 +57,9 @@ export function forceUnlockScroll(): void {
   document.documentElement.style.overflow = '';
   document.body.style.overflow = '';
   document.body.style.touchAction = '';
+
+  const main = document.getElementById('main-scroll-container');
+  if (main) {
+    main.style.overflow = '';
+  }
 }

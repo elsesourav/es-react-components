@@ -100,19 +100,25 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
     }
   }, [filterQuery, branchIds, onExpandedChange]);
 
-  // Keep active node visible without jumping
+  // Keep active node visible without scrolling ancestors
   useEffect(() => {
     if (!selectedId || !scrollContainerRef.current) return;
-    const activeEl = scrollContainerRef.current.querySelector<HTMLElement>(
+    const container = scrollContainerRef.current;
+    const activeEl = container.querySelector<HTMLElement>(
       `[data-id="${selectedId}"], [aria-selected="true"]`
     );
     if (activeEl) {
-      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const cRect = container.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+      if (elRect.top < cRect.top || elRect.bottom > cRect.bottom) {
+        const offset = elRect.top - cRect.top + container.scrollTop - 40;
+        container.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
+      }
     }
   }, [selectedId]);
 
   return (
-    <aside className="w-64 lg:w-72 shrink-0 hidden md:flex flex-col h-screen sticky top-0 border-r border-border/70 bg-surface/30 backdrop-blur-md z-30 select-none">
+    <aside className="w-64 lg:w-72 shrink-0 hidden md:flex flex-col h-screen border-r border-border/70 bg-surface/30 backdrop-blur-md z-30 select-none overflow-hidden">
       {/* 1. Brand Header (Matching Reference Image 2 Top-Left) */}
       <div className="h-14 px-4 flex items-center justify-between border-b border-border/60 shrink-0">
         <button

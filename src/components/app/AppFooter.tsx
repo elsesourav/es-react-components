@@ -11,7 +11,7 @@ export const AppFooter: React.FC<AppFooterProps> = ({
   onOpenThemeCustomizer,
 }) => {
   return (
-    <footer className="mt-auto border-t border-border/70 bg-surface/50 backdrop-blur-xs py-6 px-4 sm:px-6 lg:px-8 transition-colors">
+    <footer className="mt-auto shrink-0 border-t border-border/70 bg-surface/50 backdrop-blur-xs py-6 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
         {/* Brand Lockup */}
         <div className="flex items-center gap-2.5">

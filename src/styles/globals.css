@@ -109,24 +109,24 @@
     --ring: 238.7 83.5% 66.7%;
   }
 
-  html {
+  html,
+  body {
+    height: 100%;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
   body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-    min-height: 100vh;
+    min-height: 100%;
     -webkit-overflow-scrolling: touch;
   }
 
   #root {
+    height: 100%;
     width: 100%;
     max-width: 100%;
-    min-height: 100vh;
+    overflow: hidden;
   }
 }
 

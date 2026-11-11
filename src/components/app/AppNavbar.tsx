@@ -31,7 +31,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   const { isDark, toggleDark, preset, setPreset } = useTheme();
 
   return (
-    <header className="sticky top-0 z-20 h-14 w-full border-b border-border/70 bg-background/85 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 lg:px-8 transition-colors select-none">
+    <header className="sticky top-0 z-20 h-14 shrink-0 w-full border-b border-border/70 bg-background/85 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 lg:px-8 transition-colors select-none">
       {/* Left: Mobile Menu Trigger + Breadcrumb (Matching Reference Image 2 Top-Left) */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
         {/* Mobile Hamburger Trigger (< md) */}

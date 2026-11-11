@@ -65,6 +65,7 @@ export const App: React.FC = () => {
   const [commandOpen, setCommandOpen] = useState(false);
   const [activeScope, setActiveScope] = useState('All');
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
+  const mainScrollRef = useRef<HTMLDivElement>(null);
   const { toggleDark, setPreset } = useTheme();
 
   const scopes = useMemo(
@@ -151,7 +152,8 @@ export const App: React.FC = () => {
   const handleSelectComponent = (id: string | null) => {
     setSelectedId(id);
     setMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainScrollRef.current?.scrollTo({ top: 0, behavior: 'instant' });
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const treeNodes: TreeNode[] = useMemo(() => {
@@ -306,7 +308,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground flex flex-row font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200">
+    <div className="h-screen w-full bg-background text-foreground flex flex-row font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200 overflow-hidden">
       {/* 1. Permanent Left Sidebar (Flush Left, Full Height, Matching Reference Image 2) */}
       <AppSidebar
         treeNodes={treeNodes}
@@ -318,7 +320,11 @@ export const App: React.FC = () => {
       />
 
       {/* 2. Main Content Column on the Right */}
-      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-background overflow-x-hidden">
+      <div
+        ref={mainScrollRef}
+        id="main-scroll-container"
+        className="flex-1 min-w-0 h-screen flex flex-col bg-background overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-border/80 hover:scrollbar-thumb-primary/50"
+      >
         <AppNavbar
           onOpenMobileMenu={() => setMobileMenuOpen(true)}
           onOpenCommand={() => setCommandOpen(true)}
