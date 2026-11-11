@@ -68,6 +68,9 @@ import {
   QuantityCounterPlayground,
   SearchButtonPlayground,
   SquishSwitchPlayground,
+  ArcadeButtonPlayground,
+  ArcadeSwitchPlayground,
+  LeaderboardTablePlayground,
   MotionLoadersPlayground,
   LoadMorePlayground,
   MonoChartsPlayground
@@ -218,6 +221,12 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
     case 'squish-switch':
     case 'on-off-switch':
       return <SquishSwitchPlayground />;
+    case 'arcade-button':
+      return <ArcadeButtonPlayground />;
+    case 'arcade-switch':
+      return <ArcadeSwitchPlayground />;
+    case 'leaderboard-table':
+      return <LeaderboardTablePlayground />;
     case 'motion-loaders':
       return <MotionLoadersPlayground />;
     case 'load-more':

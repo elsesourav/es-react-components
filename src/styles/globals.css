@@ -148,3 +148,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground));
 }
+
+@keyframes shine-sweep {
+  0% {
+    left: -120%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  45% {
+    left: 180%;
+    opacity: 0;
+  }
+  100% {
+    left: 180%;
+    opacity: 0;
+  }
+}

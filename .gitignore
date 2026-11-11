@@ -4,3 +4,4 @@ dist
 *.local
 .turbo
 tsconfig.tsbuildinfo
+screenshots/

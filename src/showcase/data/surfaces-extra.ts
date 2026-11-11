@@ -269,5 +269,32 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
       { name: 'curve (Area)', type: "'monotone' | 'natural'", defaultVal: "'monotone'", description: 'Spline interpolation algorithm for area curves.' },
     ],
     themeTokens: ['--surface', '--foreground', '--border', '--primary', '--card'],
+  },
+  {
+    id: 'leaderboard-table',
+    name: 'Leaderboard Table (Arcade Ranking)',
+    category: 'Surfaces & Cards',
+    description:
+      'Breakout Ball inspired competitive arcade high-score ranking table with golden trophy header, podium crown/medal badges (#1, #2, #3), completion stopwatch times, live search filtering, column sort toggling, and current-user row illumination.',
+    importCode: `import { LeaderboardTable } from 'es-react-components';`,
+    usageCode: `<LeaderboardTable
+  title="Players Ranking"
+  subtitle="Global Breakout Ball Leaderboard"
+  searchable
+  highlightPodium
+  maxRows={8}
+  onSelectPlayer={(player) => console.log('Selected player:', player)}
+/>`,
+    props: [
+      { name: 'title', type: 'string', defaultVal: "'Players Ranking'", description: 'Header title text with trophy icon.' },
+      { name: 'subtitle', type: 'string', defaultVal: "'Global Breakout Ball Leaderboard'", description: 'Subtext displayed below the title.' },
+      { name: 'items', type: 'LeaderboardItem[]', defaultVal: 'DEFAULT_PLAYERS', description: 'Array of player ranking items.' },
+      { name: 'currentUserId', type: 'string', defaultVal: 'undefined', description: 'ID of player to highlight with glowing "YOU" badge.' },
+      { name: 'searchable', type: 'boolean', defaultVal: 'true', description: 'Renders player search input filter in the table header.' },
+      { name: 'highlightPodium', type: 'boolean', defaultVal: 'true', description: 'Enables gold, silver, and bronze medal badges for top 3.' },
+      { name: 'maxRows', type: 'number', defaultVal: '8', description: 'Maximum visible rows before scrolling.' },
+      { name: 'onSelectPlayer', type: '(player: LeaderboardItem) => void', defaultVal: 'undefined', description: 'Callback fired when a player row is clicked.' },
+    ],
+    themeTokens: ['--surface', '--surface-elevated', '--border', '--foreground', '--primary'],
   }
 ];

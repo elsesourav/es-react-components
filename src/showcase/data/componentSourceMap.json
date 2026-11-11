@@ -181,6 +181,13 @@
     "lines": 126,
     "bytes": 4853
   },
+  "arcade-switch": {
+    "name": "Arcade Switch (Retro Toggle & Paddle Slider)",
+    "filename": "arcade-switch.tsx",
+    "filepath": "src/components/ui/arcade-switch.tsx",
+    "lines": 241,
+    "bytes": 6495
+  },
   "input": {
     "name": "Input (All Variants)",
     "filename": "input.tsx",
@@ -307,6 +314,13 @@
     "lines": 142,
     "bytes": 4388
   },
+  "arcade-button": {
+    "name": "Arcade Button (Glossy Candy 3D)",
+    "filename": "arcade-button.tsx",
+    "filepath": "src/components/ui/arcade-button.tsx",
+    "lines": 244,
+    "bytes": 7344
+  },
   "tabs": {
     "name": "Tabs",
     "filename": "tabs.tsx",
@@ -432,6 +446,13 @@
     "filepath": "src/components/ui/mono-charts.tsx",
     "lines": 47,
     "bytes": 1380
+  },
+  "leaderboard-table": {
+    "name": "Leaderboard Table (Arcade Ranking)",
+    "filename": "leaderboard-table.tsx",
+    "filepath": "src/components/ui/leaderboard-table.tsx",
+    "lines": 282,
+    "bytes": 11469
   },
   "card": {
     "name": "Card",

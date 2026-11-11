@@ -10,3 +10,6 @@ export { SegmentedABTabsPlayground } from './SegmentedABTabsPlayground';
 export { QuantityCounterPlayground } from './QuantityCounterPlayground';
 export { SearchButtonPlayground } from './SearchButtonPlayground';
 export { SquishSwitchPlayground } from './SquishSwitchPlayground';
+export { ArcadeButtonPlayground } from './ArcadeButtonPlayground';
+export { ArcadeSwitchPlayground } from './ArcadeSwitchPlayground';
+export { LeaderboardTablePlayground } from './LeaderboardTablePlayground';

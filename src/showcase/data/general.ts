@@ -328,5 +328,33 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
       { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables button interactions.' },
     ],
     themeTokens: ['--surface', '--border', '--foreground', '--muted-foreground', '--primary', '--surface-subtle'],
+  },
+  {
+    id: 'arcade-button',
+    name: 'Arcade Button (Glossy Candy 3D)',
+    category: 'Buttons & Actions',
+    description:
+      'Lustrous 3D jelly/arcade push button inspired by Breakout Ball. Features specular top lens reflection, animated sweeping light beam, spring press physics recoil, tactile sound-ready click feel, and rich color themes.',
+    importCode: `import { ArcadeButton } from 'es-react-components';`,
+    usageCode: `<ArcadeButton
+  variant="candy-pink"
+  size="lg"
+  shape="pill"
+  shine
+  glow
+  onClick={() => console.log('START clicked!')}
+>
+  START
+</ArcadeButton>`,
+    props: [
+      { name: 'variant', type: "'candy-pink' | 'arcade-magenta' | 'neon-cyan' | 'arcade-green' | 'cyber-purple' | 'amber-gold' | 'retro-silver'", defaultVal: "'candy-pink'", description: 'Color gradient and ambient glow hue styling.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl'", defaultVal: "'md'", description: 'Sizing scale with proportional typography and padding.' },
+      { name: 'shape', type: "'pill' | 'rounded' | 'square'", defaultVal: "'pill'", description: 'Border curvature geometry.' },
+      { name: 'shine', type: 'boolean', defaultVal: 'true', description: 'Enables diagonal sweeping light shine highlight ray.' },
+      { name: 'glow', type: 'boolean', defaultVal: 'true', description: 'Displays an ambient colored backdrop neon glow.' },
+      { name: 'isLoading', type: 'boolean', defaultVal: 'false', description: 'Renders loading spinner state and inhibits clicks.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables button interaction and dims opacity.' },
+    ],
+    themeTokens: ['--primary', '--foreground', '--surface', '--border'],
   }
 ];

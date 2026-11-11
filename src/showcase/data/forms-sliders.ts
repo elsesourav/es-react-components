@@ -183,5 +183,45 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
       { name: 'isDisabled', type: 'boolean', defaultVal: 'false', description: 'Disables slider interaction.' },
     ],
     themeTokens: ['--primary', '--surface-elevated', '--border', '--muted', '--foreground', '--radius'],
+  },
+  {
+    id: 'arcade-switch',
+    name: 'Arcade Switch (Retro Toggle & Paddle Slider)',
+    category: 'Checkbox & Switch',
+    description:
+      'Tactile retro arcade toggle switch and wide paddle range slider inspired by Breakout Ball. Features metallic silver beveled rim, multi-layered inset track shadows, neon active glow, and 3D white squircle thumb with engraved ON/OFF indicators.',
+    importCode: `import { ArcadeSwitch } from 'es-react-components';`,
+    usageCode: `// Toggle Switch Mode:
+<ArcadeSwitch
+  checked={isEnabled}
+  onChange={setIsEnabled}
+  variant="neon-green"
+  size="md"
+  showText
+/>
+
+// Paddle Range Slider Mode:
+<ArcadeSwitch
+  sliderMode
+  sliderValue={volume}
+  onSliderChange={setVolume}
+  variant="neon-green"
+  size="md"
+/>`,
+    props: [
+      { name: 'checked', type: 'boolean', defaultVal: 'false', description: 'Controlled on/off boolean state for toggle mode.' },
+      { name: 'defaultChecked', type: 'boolean', defaultVal: 'false', description: 'Initial uncontrolled boolean state.' },
+      { name: 'onChange', type: '(checked: boolean) => void', defaultVal: 'undefined', description: 'Callback fired when toggle state changes.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Dimension scale.' },
+      { name: 'variant', type: "'neon-green' | 'candy-pink' | 'neon-cyan' | 'amber-gold' | 'cyber-purple'", defaultVal: "'neon-green'", description: 'Active track color hue.' },
+      { name: 'showText', type: 'boolean', defaultVal: 'true', description: 'Renders engraved text on the white thumb.' },
+      { name: 'onLabel', type: 'string', defaultVal: "'ON'", description: 'Text displayed when switch is active.' },
+      { name: 'offLabel', type: 'string', defaultVal: "'OFF'", description: 'Text displayed when switch is inactive.' },
+      { name: 'sliderMode', type: 'boolean', defaultVal: 'false', description: 'Enables continuous paddle range slider mode (Image 2 style).' },
+      { name: 'sliderValue', type: 'number', defaultVal: '50', description: 'Continuous numeric value (0-100) when sliderMode is enabled.' },
+      { name: 'onSliderChange', type: '(val: number) => void', defaultVal: 'undefined', description: 'Callback fired when slider position changes.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables user interactions and dims opacity.' },
+    ],
+    themeTokens: ['--primary', '--surface', '--border', '--foreground'],
   }
 ];
