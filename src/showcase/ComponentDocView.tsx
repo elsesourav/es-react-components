@@ -52,45 +52,28 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16">
-      {/* Component Hero & Title Section */}
-      <div className="space-y-3 sm:space-y-4 border-b border-border/70 pb-5 sm:pb-7">
-        {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium flex-wrap">
-          <button
-            type="button"
-            onClick={handleBreadcrumbClick}
-            className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors cursor-pointer group"
-          >
-            <Logo size={15} variant="badge" className="shrink-0 transition-transform group-hover:scale-110" />
-            <span>Components</span>
-          </button>
-          <ChevronRight className="size-3 text-muted-foreground/40 shrink-0" />
-          <span className="text-muted-foreground">
-            {component.category}
-          </span>
-          <ChevronRight className="size-3 text-muted-foreground/40 shrink-0" />
-          <span className="text-foreground font-semibold truncate">
-            {component.name}
-          </span>
-        </nav>
+      {/* Component Hero & Title Section (Matching Reference Image 2) */}
+      <div className="space-y-2.5 sm:space-y-3.5 border-b border-border/70 pb-5 sm:pb-6">
+        {/* Category & Version Metadata Tag (Matching Reference Image 2: "Gesture · 09.3") */}
+        <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+          <span className="font-semibold text-foreground/80">{component.category}</span>
+          <span className="text-muted-foreground/40 select-none">·</span>
+          <span className="text-primary font-medium">v1.0</span>
+          <span className="text-muted-foreground/40 select-none">·</span>
+          <span className="text-muted-foreground/70">React 19</span>
+        </div>
 
         {/* Remade Title & Badges */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
               {component.name}
             </h1>
-            <Badge variant="primary" size="sm" className="shadow-2xs">
-              {component.category}
-            </Badge>
             <Badge variant="outline" size="sm" className="font-mono text-[10px]">
               {component.themeTokens.length} Tokens
             </Badge>
             <Badge variant="secondary" size="sm" className="font-mono text-[10px] hidden sm:inline-flex">
               {component.props.length} Props
-            </Badge>
-            <Badge variant="secondary" size="sm" className="hidden lg:inline-flex">
-              React 19
             </Badge>
           </div>
         </div>

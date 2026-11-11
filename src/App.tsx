@@ -306,14 +306,48 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200">
-      <AppNavbar
-        onOpenMobileMenu={() => setMobileMenuOpen(true)}
-        onOpenCommand={() => setCommandOpen(true)}
-        onSelectComponent={handleSelectComponent}
-        onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
+    <div className="min-h-screen w-full bg-background text-foreground flex flex-row font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-200">
+      {/* 1. Permanent Left Sidebar (Flush Left, Full Height, Matching Reference Image 2) */}
+      <AppSidebar
+        treeNodes={treeNodes}
+        selectedId={selectedId}
+        onSelect={handleTreeSelect}
+        expandedCategories={expandedCategories}
+        onExpandedChange={handleExpandedChange}
         totalComponents={COMPONENTS_DATA.length}
       />
+
+      {/* 2. Main Content Column on the Right */}
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen bg-background">
+        <AppNavbar
+          onOpenMobileMenu={() => setMobileMenuOpen(true)}
+          onOpenCommand={() => setCommandOpen(true)}
+          onSelectComponent={handleSelectComponent}
+          onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
+          totalComponents={COMPONENTS_DATA.length}
+          activeComponent={activeComponent}
+        />
+
+        <main className="flex-1 w-full max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-8 lg:px-10 py-6 sm:py-8">
+          {activeComponent ? (
+            <ComponentDocView
+              component={activeComponent}
+              onSelectOverview={() => handleSelectComponent(null)}
+            />
+          ) : (
+            <AppHero
+              components={COMPONENTS_DATA}
+              onSelectComponent={handleSelectComponent}
+              onOpenCommand={() => setCommandOpen(true)}
+            />
+          )}
+        </main>
+
+        <AppFooter
+          onSelectComponent={handleSelectComponent}
+          onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
+        />
+      </div>
 
       <CommandPalette
         open={commandOpen}
@@ -377,39 +411,6 @@ export const App: React.FC = () => {
           </div>
         </div>
       </Modal>
-
-      <div className="flex-1 flex w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 gap-8">
-        <AppSidebar
-          treeNodes={treeNodes}
-          selectedId={selectedId}
-          onSelect={handleTreeSelect}
-          expandedCategories={expandedCategories}
-          onExpandedChange={handleExpandedChange}
-          totalComponents={COMPONENTS_DATA.length}
-        />
-
-        <div className="flex-1 min-w-0 flex flex-col min-h-[calc(100vh-3.5rem)]">
-          <main className="flex-1 pt-6 pb-12">
-            {activeComponent ? (
-              <ComponentDocView
-                component={activeComponent}
-                onSelectOverview={() => handleSelectComponent(null)}
-              />
-            ) : (
-              <AppHero
-                components={COMPONENTS_DATA}
-                onSelectComponent={handleSelectComponent}
-                onOpenCommand={() => setCommandOpen(true)}
-              />
-            )}
-          </main>
-
-          <AppFooter
-            onSelectComponent={handleSelectComponent}
-            onOpenThemeCustomizer={() => setThemeCustomizerOpen(true)}
-          />
-        </div>
-      </div>
 
       <ThemeCustomizer
         open={themeCustomizerOpen}
