@@ -182,6 +182,9 @@ export interface ThemeContextType {
   isDark: boolean;
   toggleDark: () => void;
   resetTheme: () => void;
+  tactileShadows: boolean;
+  setTactileShadows: (active: boolean) => void;
+  toggleTactileShadows: () => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -228,6 +231,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     const saved = localStorage.getItem('es-theme-dark');
     return saved !== null ? saved === 'true' : true;
+  });
+
+  const [tactileShadows, setTactileShadows] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('es-tactile-shadows');
+      if (saved !== null) return saved === 'true';
+    }
+    return true; // enabled by default
   });
 
   const applyColorsToDOM = (c: ThemeColors, dark: boolean) => {
@@ -300,9 +311,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     applyColorsToDOM(colors, isDark);
+    document.documentElement.setAttribute('data-tactile-shadows', tactileShadows ? 'true' : 'false');
     localStorage.setItem('es-theme-preset', preset);
     localStorage.setItem('es-theme-colors', JSON.stringify(colors));
     localStorage.setItem('es-theme-dark', String(isDark));
+    localStorage.setItem('es-tactile-shadows', String(tactileShadows));
 
     // Keep URL parameter in sync if present
     if (typeof window !== 'undefined') {
@@ -310,7 +323,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       url.searchParams.set('theme', preset);
       window.history.replaceState({}, '', url.toString());
     }
-  }, [preset, colors, isDark]);
+  }, [preset, colors, isDark, tactileShadows]);
+
+  const toggleTactileShadows = () => {
+    setTactileShadows((prev) => !prev);
+  };
 
   const setPreset = (newPreset: ThemePresetKey) => {
     setPresetState(newPreset);
@@ -353,6 +370,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         isDark,
         toggleDark,
         resetTheme,
+        tactileShadows,
+        setTactileShadows,
+        toggleTactileShadows,
       }}
     >
       {children}

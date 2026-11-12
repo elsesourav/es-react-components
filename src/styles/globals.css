@@ -57,6 +57,13 @@
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-2xl: 1.5rem;
+
+    /* Light Tactile Specular Shadows */
+    --shadow-float: 0 24px 48px -18px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --shadow-lift: 0 1px 3px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 0 1px rgba(0, 0, 0, 0.06);
+    --shadow-well: inset 0 1px 3px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --shadow-cap: 0 1.5px 0 rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    --shadow-row: inset 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .dark,
@@ -107,6 +114,23 @@
 
     --input: 240 14% 16%;
     --ring: 238.7 83.5% 66.7%;
+
+    /* Dark Tactile Specular Shadows (Breakout Ball & Midnight Precision) */
+    --shadow-float: 0 28px 56px -22px #000000b3, 0 0 0 1px #ffffff0d;
+    --shadow-lift: 0 1px 2px #01010166, inset 0 1px 0 #ffffff0d, 0 0 0 1px #ffffff0d;
+    --shadow-well: inset 0 1px 3px #0006, inset 0 0 0 1px #ffffff08;
+    --shadow-cap: 0 1.5px 0 #00000080, inset 0 0 0 1px #ffffff1a;
+    --shadow-row: inset 0 0 0 1px #ffffff0f, 0 1px 2px #00000040;
+  }
+
+  [data-tactile-shadows="false"],
+  [data-tactile-shadows="false"] .dark,
+  [data-tactile-shadows="false"] * {
+    --shadow-float: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+    --shadow-lift: none !important;
+    --shadow-well: none !important;
+    --shadow-cap: none !important;
+    --shadow-row: none !important;
   }
 
   html,

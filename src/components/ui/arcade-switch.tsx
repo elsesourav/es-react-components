@@ -287,7 +287,10 @@ export const ArcadeSwitch: React.FC<ArcadeSwitchProps> = ({
         }}
         style={{
           position: "absolute",
-          top: `${borderPadding}px`,
+          top: 0,
+          bottom: 0,
+          marginTop: "auto",
+          marginBottom: "auto",
           left: `${borderPadding}px`,
           width: `${thumbWidth}px`,
           height: `${thumbHeight}px`,

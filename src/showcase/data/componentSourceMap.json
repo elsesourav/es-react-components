@@ -220,15 +220,15 @@
     "name": "Tactile Bezel Switch (Arcade)",
     "filename": "arcade-switch.tsx",
     "filepath": "src/components/ui/arcade-switch.tsx",
-    "lines": 336,
-    "bytes": 9083
+    "lines": 339,
+    "bytes": 9146
   },
   "arcade-slider": {
     "name": "Wide Paddle Slider (Arcade)",
     "filename": "arcade-slider.tsx",
     "filepath": "src/components/ui/arcade-slider.tsx",
-    "lines": 267,
-    "bytes": 8783
+    "lines": 366,
+    "bytes": 11772
   },
   "input": {
     "name": "Input (All Variants)",

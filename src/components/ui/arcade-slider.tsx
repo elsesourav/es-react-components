@@ -2,16 +2,84 @@
 
 import React, { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  ArcadeSwitchVariant,
-  ArcadeSwitchSize,
-  VARIANT_COLORS,
-  ARCADE_SIZES,
-  getConcentricRadii,
-} from "./arcade-switch-shared";
 
-export type ArcadeSliderVariant = ArcadeSwitchVariant;
-export type ArcadeSliderSize = ArcadeSwitchSize;
+export type ArcadeSliderVariant =
+  | "neon-green"
+  | "candy-pink"
+  | "neon-cyan"
+  | "amber-gold"
+  | "cyber-purple";
+
+export type ArcadeSliderSize = "sm" | "md" | "lg";
+export type ArcadeSliderFillMode = "full" | "progress";
+
+export const ARCADE_SLIDER_COLORS: Record<
+  ArcadeSliderVariant,
+  { activeBg: string; activeText: string; glow: string }
+> = {
+  "neon-green": {
+    activeBg: "#00e16d",
+    activeText: "#00994a",
+    glow: "rgba(0, 225, 109, 0.45)",
+  },
+  "candy-pink": {
+    activeBg: "#fb2175",
+    activeText: "#d00958",
+    glow: "rgba(251, 33, 117, 0.45)",
+  },
+  "neon-cyan": {
+    activeBg: "#00d4ff",
+    activeText: "#0088aa",
+    glow: "rgba(0, 212, 255, 0.45)",
+  },
+  "amber-gold": {
+    activeBg: "#ffaa00",
+    activeText: "#cc7700",
+    glow: "rgba(255, 170, 0, 0.45)",
+  },
+  "cyber-purple": {
+    activeBg: "#9933ff",
+    activeText: "#6611cc",
+    glow: "rgba(153, 51, 255, 0.45)",
+  },
+};
+
+export const ARCADE_SLIDER_SIZES: Record<
+  ArcadeSliderSize,
+  {
+    height: number;
+    thumbWidth: number;
+    border: number;
+    padding: number;
+    fontSize: string;
+    sliderWidth: number;
+  }
+> = {
+  sm: {
+    height: 32,
+    thumbWidth: 26,
+    border: 2.5,
+    padding: 2,
+    fontSize: "text-[10px]",
+    sliderWidth: 220,
+  },
+  md: {
+    height: 42,
+    thumbWidth: 34,
+    border: 3,
+    padding: 2.5,
+    fontSize: "text-xs",
+    sliderWidth: 280,
+  },
+  lg: {
+    height: 52,
+    thumbWidth: 44,
+    border: 3.5,
+    padding: 3,
+    fontSize: "text-sm",
+    sliderWidth: 360,
+  },
+};
 
 export interface ArcadeSliderProps {
   value?: number;
@@ -20,8 +88,9 @@ export interface ArcadeSliderProps {
   min?: number;
   max?: number;
   step?: number;
-  size?: ArcadeSwitchSize;
-  variant?: ArcadeSwitchVariant;
+  size?: ArcadeSliderSize;
+  variant?: ArcadeSliderVariant;
+  fillMode?: ArcadeSliderFillMode;
   width?: number | string;
   borderRadius?: number;
   borderPadding?: number;
@@ -38,13 +107,14 @@ export interface ArcadeSliderProps {
 
 export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
   value: controlledValue,
-  defaultValue = 75,
+  defaultValue = 82,
   onChange,
   min = 0,
   max = 100,
   step = 1,
   size = "md",
   variant = "neon-green",
+  fillMode = "progress",
   width,
   borderRadius,
   borderPadding: customPadding,
@@ -56,23 +126,34 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
   disabled = false,
   className,
   id,
-  ariaLabel = "Arcade Paddle Slider",
+  ariaLabel = "Wide Paddle Slider Track",
 }) => {
   const isControlled = controlledValue !== undefined;
   const [internalValue, setInternalValue] = useState(defaultValue);
   const value = isControlled ? controlledValue : internalValue;
 
-  const dims = ARCADE_SIZES[size] || ARCADE_SIZES.md;
-  const color = VARIANT_COLORS[variant] || VARIANT_COLORS["neon-green"];
+  const dims = ARCADE_SLIDER_SIZES[size] || ARCADE_SLIDER_SIZES.md;
+  const color = ARCADE_SLIDER_COLORS[variant] || ARCADE_SLIDER_COLORS["neon-green"];
   const borderPadding = customPadding ?? dims.padding;
   const borderWidth = showBezel ? dims.border : 1;
 
-  const { outerRadius, trackRadius, thumbRadius } = getConcentricRadii({
-    height: dims.height,
-    borderWidth,
-    borderPadding,
-    customRadius: borderRadius,
-  });
+  // Exact mathematical centering on Y-axis for ANY borderPadding (even high 5px)
+  const innerHeight = dims.height - borderWidth * 2;
+  const thumbHeight = Math.max(12, innerHeight - borderPadding * 2);
+  const baseInner = dims.height - dims.border * 2 - dims.padding * 2;
+  const thumbWidth = Math.round(
+    thumbHeight * (dims.thumbWidth / (baseInner > 0 ? baseInner : 32))
+  );
+
+  // Concentric radii calculation: R_track = R_outer - B, R_thumb = R_track - P
+  const isPill = borderRadius === undefined || borderRadius >= dims.height / 2;
+  const outerRadius = isPill ? dims.height / 2 : Math.max(0, borderRadius);
+  const trackRadius = isPill
+    ? Math.max(0, (dims.height - borderWidth * 2) / 2)
+    : Math.max(0, outerRadius - borderWidth);
+  const thumbRadius = isPill
+    ? Math.max(0, thumbHeight / 2)
+    : Math.max(2, trackRadius - borderPadding);
 
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -91,17 +172,17 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
     (clientX: number) => {
       if (!trackRef.current || disabled) return;
       const rect = trackRef.current.getBoundingClientRect();
-      const travelDistance = rect.width - dims.thumbWidth;
-      if (travelDistance <= 0) return;
+      const availableDistance = rect.width - thumbWidth - borderPadding * 2;
+      if (availableDistance <= 0) return;
 
-      const relativeX = clientX - rect.left - dims.thumbWidth / 2;
-      const ratio = Math.min(1, Math.max(0, relativeX / travelDistance));
+      const relativeX = clientX - rect.left - borderPadding - thumbWidth / 2;
+      const ratio = Math.min(1, Math.max(0, relativeX / availableDistance));
       const nextValue = clampAndStep(min + ratio * (max - min));
 
       if (!isControlled) setInternalValue(nextValue);
       onChange?.(nextValue);
     },
-    [disabled, dims.thumbWidth, min, max, clampAndStep, isControlled, onChange]
+    [disabled, thumbWidth, borderPadding, min, max, clampAndStep, isControlled, onChange]
   );
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -150,43 +231,52 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
     }
   };
 
-  const percent = max > min ? (value - min) / (max - min) : 0;
-  const displayVal = formatValue ? formatValue(value) : value.toString();
+  const percent = max > min ? Math.min(1, Math.max(0, (value - min) / (max - min))) : 0;
+  const isEngaged = percent > 0;
+  const isMaxLock = percent >= 0.99;
+  const displayVal = formatValue ? formatValue(value) : `${Math.round(percent * 100)}%`;
+
+  // Sunken background track:
+  // In default "progress" mode: background is dark sunken track, not full green.
+  // Active glowing fill travels from left to thumb. Only when thumb is at maximum (100%)
+  // does the active green fill expand across 100% of the back part ("slide max lock").
+  const isFullFill = fillMode === "full";
+  const trackBgColor = isFullFill
+    ? isEngaged
+      ? color.activeBg
+      : "hsl(var(--surface-sunken, 240 20% 5%))"
+    : "hsl(var(--surface-sunken, 240 20% 5%))";
 
   return (
     <div
       ref={trackRef}
       id={id}
       role="slider"
-      tabIndex={disabled ? -1 : 0}
       aria-label={ariaLabel}
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={value}
+      aria-valuetext={displayVal}
       aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
       style={{
-        width: width ?? `${dims.sliderWidth}px`,
+        width: width ?? "100%",
+        maxWidth: typeof width === "number" ? `${width}px` : "100%",
         height: `${dims.height}px`,
         borderRadius: `${outerRadius}px`,
-        padding: `${borderPadding}px`,
-        borderWidth: `${borderWidth}px`,
-        borderColor: showBezel ? "#c2c2c2" : "transparent",
-        backgroundColor: "#1e1e24",
+        border: showBezel ? `${borderWidth}px solid #d4d4d8` : "1px solid rgba(255,255,255,0.2)",
+        backgroundColor: trackBgColor,
         boxShadow: showShadow
-          ? [
-              showBezel ? "0 2px 4px rgba(0,0,0,0.3)" : "",
-              "inset 0 3px 6px rgba(0,0,0,0.45)",
-              "inset 0 1px 2px rgba(0,0,0,0.6)",
-              showGlow && percent > 0 ? `0 0 16px ${color.glow}` : "",
-            ]
-              .filter(Boolean)
-              .join(", ")
+          ? showGlow && isEngaged
+            ? `inset 0 3px 6px rgba(0,0,0,0.45), inset 0 1px 2px rgba(0,0,0,0.6), 0 0 16px ${color.glow}`
+            : "inset 0 3px 6px rgba(0,0,0,0.45), inset 0 1px 2px rgba(0,0,0,0.6)"
           : undefined,
+        touchAction: "none",
       }}
       className={cn(
         "relative flex items-center select-none outline-none cursor-pointer overflow-hidden transition-all duration-200",
@@ -209,26 +299,32 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
       )}
 
       {/* Sunken Active Glowing Fill Level Track */}
-      {percent > 0 && (
+      {!isFullFill && isEngaged && (
         <div
-          className="absolute left-0 top-0 bottom-0 pointer-events-none transition-all duration-75 z-0"
+          className="absolute left-0 top-0 bottom-0 pointer-events-none z-0"
           style={{
-            width: `calc(${borderPadding}px + ${percent} * (100% - ${dims.thumbWidth + borderPadding * 2}px) + ${dims.thumbWidth / 2}px)`,
+            width: isMaxLock
+              ? "100%"
+              : `calc(${borderPadding}px + ${percent} * (100% - ${thumbWidth + borderPadding * 2}px) + ${thumbWidth / 2}px)`,
             backgroundColor: color.activeBg,
             borderRadius: `${trackRadius}px`,
             boxShadow: showShadow ? "inset 0 2px 4px rgba(0,0,0,0.25)" : undefined,
+            transition: isDragging ? "none" : "width 75ms ease-out",
           }}
         />
       )}
 
-      {/* 3D Tactile Sliding Thumb Knob */}
+      {/* 3D Tactile Sliding Thumb Knob: 100% Subpixel Centered on Y-Axis and X-Axis */}
       <div
-        className="absolute top-0 bottom-0 pointer-events-none flex items-center justify-center z-10 transition-all duration-75"
+        className="absolute pointer-events-none flex items-center justify-center z-10"
         style={{
-          top: `${borderPadding}px`,
-          left: `calc(${borderPadding}px + ${percent} * (100% - ${dims.thumbWidth + borderPadding * 2}px))`,
-          width: `${dims.thumbWidth}px`,
-          height: `${dims.thumbHeight}px`,
+          top: 0,
+          bottom: 0,
+          marginTop: "auto",
+          marginBottom: "auto",
+          left: `calc(${borderPadding}px + ${percent} * (100% - ${thumbWidth + borderPadding * 2}px))`,
+          width: `${thumbWidth}px`,
+          height: `${thumbHeight}px`,
           borderRadius: `${thumbRadius}px`,
           background: "linear-gradient(180deg, #ffffff 0%, #f0f0f0 45%, #d4d4d8 100%)",
           border: "1px solid rgba(255,255,255,0.9)",
@@ -237,6 +333,7 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
               ? "0 4px 8px rgba(0,0,0,0.4), 0 2px 3px rgba(0,0,0,0.25), inset 0 1px 1px #ffffff, inset 0 -1px 2px rgba(0,0,0,0.2)"
               : "0 2px 5px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.2), inset 0 1px 1px #ffffff, inset 0 -1px 2px rgba(0,0,0,0.15)"
             : undefined,
+          transition: isDragging ? "none" : "left 75ms ease-out, width 75ms ease-out, height 75ms ease-out",
         }}
       >
         {/* Thumb Top Specular Reflection Highlight */}
@@ -264,3 +361,5 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
     </div>
   );
 };
+
+export default ArcadeSlider;
