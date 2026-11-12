@@ -161,26 +161,44 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
     name: 'Slider (Single & Dual Range)',
     category: 'Sliders & Range',
     description:
-      'Accessible multi-thumb slider powered by React Aria, supporting single value and dual-thumb range selection, floating tooltip indicators, bottom labels, and keyboard accessibility.',
+      'Accessible multi-thumb slider powered by React Aria, supporting single (1) and double (2) thumb range selection, floating tooltip indicators, bottom labels, and keyboard accessibility.',
     importCode: `import { Slider } from 'es-react-components';`,
-    usageCode: `<Slider
-  label="Bandwidth Allocation"
-  defaultValue={[20, 80]}
-  minValue={0}
-  maxValue={100}
-  labelPosition="top-floating"
-  labelFormatter={(val) => \`\${val} Mbps\`}
+    usageCode: `{/* 1. Single Thumb Mode */}
+<Slider
+  label="Compute Capacity"
+  thumbs={1}
+  value={capacity}
+  onChange={setCapacity}
+  min={0}
+  max={100}
+  labelPosition="tooltip"
+  labelFormatter={(val) => \`\${val}%\`}
+/>
+
+{/* 2. Double Thumb / Range Mode */}
+<Slider
+  label="Price Filter Range"
+  thumbs={2}
+  value={priceRange}
+  onChange={setPriceRange}
+  min={0}
+  max={100}
+  labelPosition="tooltip"
+  labelFormatter={(val) => \`$\${val}\`}
 />`,
     props: [
-      { name: 'value', type: 'number | number[]', defaultVal: 'undefined', description: 'Controlled slider thumb value or range array.' },
+      { name: 'thumbs', type: '1 | 2', defaultVal: '1 (inferred)', description: 'Explicit number of thumbs: 1 for single thumb, 2 for double/dual thumb range.' },
+      { name: 'mode', type: "'single' | 'range' | 'dual'", defaultVal: "'single'", description: "Mode alias for thumb count ('single' = 1, 'range' = 2)." },
+      { name: 'value', type: 'number | number[]', defaultVal: 'undefined', description: 'Controlled slider thumb value: number for 1 thumb, [min, max] for 2 thumbs.' },
       { name: 'defaultValue', type: 'number | number[]', defaultVal: '50', description: 'Initial slider thumb value or dual-thumb array.' },
-      { name: 'minValue', type: 'number', defaultVal: '0', description: 'Minimum slider limit.' },
-      { name: 'maxValue', type: 'number', defaultVal: '100', description: 'Maximum slider limit.' },
+      { name: 'onChange', type: '(value: number | number[]) => void', defaultVal: 'undefined', description: 'Callback fired when thumb value changes.' },
+      { name: 'min / minValue', type: 'number', defaultVal: '0', description: 'Minimum slider limit.' },
+      { name: 'max / maxValue', type: 'number', defaultVal: '100', description: 'Maximum slider limit.' },
       { name: 'step', type: 'number', defaultVal: '1', description: 'Value granularity step size.' },
       { name: 'label', type: 'ReactNode', defaultVal: 'undefined', description: 'Label rendered above track.' },
-      { name: 'labelPosition', type: "'default' | 'bottom' | 'top-floating'", defaultVal: "'default'", description: 'Value output label display mode.' },
+      { name: 'labelPosition', type: "'tooltip' | 'top-floating' | 'bottom' | 'hidden'", defaultVal: "'hidden'", description: 'Value output label display mode.' },
       { name: 'labelFormatter', type: '(val: number) => string', defaultVal: 'undefined', description: 'Custom string formatter for thumb values.' },
-      { name: 'isDisabled', type: 'boolean', defaultVal: 'false', description: 'Disables slider interaction.' },
+      { name: 'disabled / isDisabled', type: 'boolean', defaultVal: 'false', description: 'Disables slider interaction.' },
     ],
     themeTokens: ['--primary', '--surface-elevated', '--border', '--muted', '--foreground', '--radius'],
   },

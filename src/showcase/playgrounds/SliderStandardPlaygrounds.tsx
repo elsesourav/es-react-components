@@ -7,127 +7,201 @@ import {
 import { SlidersHorizontal } from 'lucide-react';
 
 export const SliderPlayground: React.FC = () => {
+  const [thumbsCount, setThumbsCount] = useState<1 | 2>(1);
   const [singleSliderVal, setSingleSliderVal] = useState(45);
   const [rangeSliderVal, setRangeSliderVal] = useState<number[]>([25, 75]);
   const [sliderLabelPos, setSliderLabelPos] = useState<'default' | 'bottom' | 'top-floating'>('top-floating');
+  const [stepSize, setStepSize] = useState<number>(1);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   return (
     <div className="space-y-6">
+      {/* Top Controls Toolbar */}
       <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="text-sm font-semibold text-foreground flex items-center gap-2">
             <SlidersHorizontal className="size-4 text-primary" />
-            Accessible Slider & Multi-Thumb Range
+            Accessible Slider & Range System
           </div>
           <p className="text-xs text-muted-foreground">
-            Accessible React Aria slider supporting single and dual thumbs, tooltip value bubbles, bottom readouts, and keyboard controls.
+            Unified React Aria slider supporting single and double thumbs, tooltip value bubbles, bottom readouts, and keyboard controls.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-muted-foreground mr-1">Tooltip:</span>
-          {(['top-floating', 'bottom', 'default'] as const).map((pos) => (
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Thumb Mode Option: 1 or 2 */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground mr-1">Thumbs:</span>
             <Button
-              key={pos}
               size="xs"
-              variant={sliderLabelPos === pos ? 'primary' : 'outline'}
-              className="capitalize"
-              onClick={() => setSliderLabelPos(pos)}
+              variant={thumbsCount === 1 ? 'primary' : 'outline'}
+              onClick={() => setThumbsCount(1)}
+              className="font-medium"
             >
-              {pos === 'default' ? 'Hidden' : pos === 'top-floating' ? 'Tooltip' : 'Bottom'}
+              1 (Single)
             </Button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="border-b border-border/50 pb-3 flex items-center justify-between">
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Single Thumb • CPU Utilization
-              </h4>
-              <p className="text-xs text-muted-foreground mt-0.5">Continuous percentage scrubbing</p>
-            </div>
-            <span className="font-mono text-xs font-bold text-primary px-2 py-0.5 rounded bg-surface-subtle border border-border">
-              {singleSliderVal}%
-            </span>
+            <Button
+              size="xs"
+              variant={thumbsCount === 2 ? 'primary' : 'outline'}
+              onClick={() => setThumbsCount(2)}
+              className="font-medium"
+            >
+              2 (Double)
+            </Button>
           </div>
 
-          <div className="py-6 px-2">
-            <Slider
-              label="Maximum Compute Threshold"
-              value={singleSliderVal}
-              onChange={(val) => setSingleSliderVal(val as number)}
-              labelPosition={sliderLabelPos}
-              labelFormatter={(v) => `${v}%`}
-            />
-          </div>
+          <div className="h-4 w-px bg-border/60 hidden sm:block" />
 
-          <div className="flex gap-2">
-            {[10, 25, 50, 75, 90].map((preset) => (
+          {/* Tooltip Position Option */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground mr-1">Tooltip:</span>
+            {(['top-floating', 'bottom', 'default'] as const).map((pos) => (
               <Button
-                key={preset}
+                key={pos}
                 size="xs"
-                variant={singleSliderVal === preset ? 'primary' : 'outline'}
-                className="flex-1"
-                onClick={() => setSingleSliderVal(preset)}
+                variant={sliderLabelPos === pos ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setSliderLabelPos(pos)}
               >
-                {preset}%
+                {pos === 'default' ? 'Hidden' : pos === 'top-floating' ? 'Tooltip' : 'Bottom'}
               </Button>
             ))}
           </div>
         </div>
+      </div>
 
-        <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-          <div className="border-b border-border/50 pb-3 flex items-center justify-between">
-            <div>
+      {/* Main Unified Component Card */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-surface border border-border space-y-6 shadow-sm">
+        {/* Header with active mode indicator and live value badge */}
+        <div className="border-b border-border/50 pb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-primary animate-pulse" />
               <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Dual Thumb • Price Filter Range
+                {thumbsCount === 1
+                  ? 'Single Thumb Mode • Compute Capacity Threshold'
+                  : 'Double Thumb Mode • Budget Filter Range'}
               </h4>
-              <p className="text-xs text-muted-foreground mt-0.5">Two-handle bounded selection</p>
             </div>
-            <span className="font-mono text-xs font-bold text-primary px-2 py-0.5 rounded bg-surface-subtle border border-border">
-              ${rangeSliderVal[0]} — ${rangeSliderVal[1]}
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {thumbsCount === 1
+                ? 'Continuous percentage scrubbing with high-precision drag and keyboard controls'
+                : 'Two-handle bounded range selection for dual-ended numeric windowing'}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs sm:text-sm font-bold text-primary px-3 py-1 rounded-lg bg-surface-subtle border border-border">
+              {thumbsCount === 1
+                ? `${singleSliderVal}%`
+                : `$${rangeSliderVal[0]} — $${rangeSliderVal[1]}`}
             </span>
           </div>
+        </div>
 
-          <div className="py-6 px-2">
-            <Slider
-              label="Budget Window ($USD)"
-              value={rangeSliderVal}
-              onChange={(val) => setRangeSliderVal(val as number[])}
-              minValue={0}
-              maxValue={100}
-              labelPosition={sliderLabelPos}
-              labelFormatter={(v) => `$${v}`}
-            />
+        {/* Central Slider Display */}
+        <div className="py-8 px-4 sm:px-6 bg-surface-subtle/30 rounded-xl border border-border/30">
+          <Slider
+            label={thumbsCount === 1 ? 'Maximum Compute Threshold' : 'Budget Window ($USD)'}
+            thumbs={thumbsCount}
+            value={thumbsCount === 1 ? singleSliderVal : rangeSliderVal}
+            onChange={(val) => {
+              if (thumbsCount === 1) {
+                setSingleSliderVal(val as number);
+              } else {
+                setRangeSliderVal(val as number[]);
+              }
+            }}
+            minValue={0}
+            maxValue={100}
+            step={stepSize}
+            disabled={isDisabled}
+            labelPosition={sliderLabelPos}
+            labelFormatter={(v) => (thumbsCount === 1 ? `${v}%` : `$${v}`)}
+          />
+        </div>
+
+        {/* Dynamic Presets Bar */}
+        <div className="space-y-2">
+          <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            Quick Presets
+          </div>
+          {thumbsCount === 1 ? (
+            <div className="flex flex-wrap gap-2">
+              {[10, 25, 50, 75, 90].map((preset) => (
+                <Button
+                  key={preset}
+                  size="xs"
+                  variant={singleSliderVal === preset ? 'primary' : 'outline'}
+                  className="flex-1 min-w-[60px]"
+                  onClick={() => setSingleSliderVal(preset)}
+                >
+                  {preset}%
+                </Button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: 'Economy ($10-$40)', val: [10, 40] },
+                { label: 'Standard ($25-$75)', val: [25, 75] },
+                { label: 'Premium ($50-$90)', val: [50, 90] },
+                { label: 'Full Spectrum ($0-$100)', val: [0, 100] },
+              ].map((preset) => {
+                const isActive =
+                  rangeSliderVal[0] === preset.val[0] &&
+                  rangeSliderVal[1] === preset.val[1];
+                return (
+                  <Button
+                    key={preset.label}
+                    size="xs"
+                    variant={isActive ? 'primary' : 'outline'}
+                    className="flex-1 min-w-[130px]"
+                    onClick={() => setRangeSliderVal(preset.val)}
+                  >
+                    {preset.label}
+                  </Button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Interactive Controls Toolbar */}
+        <div className="pt-4 border-t border-border/50 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span>Granularity Step:</span>
+            {[1, 5, 10].map((s) => (
+              <Button
+                key={s}
+                size="xs"
+                variant={stepSize === s ? 'secondary' : 'outline'}
+                onClick={() => setStepSize(s)}
+              >
+                {s}
+              </Button>
+            ))}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Button
               size="xs"
-              variant="outline"
-              className="flex-1"
-              onClick={() => setRangeSliderVal([10, 40])}
+              variant={isDisabled ? 'danger' : 'outline'}
+              onClick={() => setIsDisabled(!isDisabled)}
             >
-              Economy ($10-$40)
+              {isDisabled ? 'Disabled' : 'Interactive'}
             </Button>
             <Button
               size="xs"
               variant="outline"
-              className="flex-1"
-              onClick={() => setRangeSliderVal([25, 75])}
+              onClick={() => {
+                setSingleSliderVal(45);
+                setRangeSliderVal([25, 75]);
+                setStepSize(1);
+                setIsDisabled(false);
+              }}
             >
-              Standard ($25-$75)
-            </Button>
-            <Button
-              size="xs"
-              variant="outline"
-              className="flex-1"
-              onClick={() => setRangeSliderVal([50, 100])}
-            >
-              Premium ($50-$100)
+              Reset
             </Button>
           </div>
         </div>

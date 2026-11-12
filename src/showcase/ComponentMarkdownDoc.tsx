@@ -13,7 +13,13 @@ export const ComponentMarkdownDoc: React.FC<ComponentMarkdownDocProps> = ({ comp
 
   const markdownContent = useMemo(() => {
     const propsRows = component.props && component.props.length > 0
-      ? component.props.map((p) => `| \`${p.name}\` | \`${p.type}\` | \`${p.defaultVal || '-'}\` | ${p.description} |`).join('\n')
+      ? component.props.map((p) => {
+          const propName = p.name ? `\`${p.name}\`` : '`-`';
+          const propType = p.type ? `\`${p.type}\`` : '`-`';
+          const propDefault = p.defaultVal ? `\`${p.defaultVal}\`` : '`-`';
+          const propDesc = (p.description || '-').replace(/\|/g, '\\|');
+          return `| ${propName} | ${propType} | ${propDefault} | ${propDesc} |`;
+        }).join('\n')
       : '| `className` | `string` | `-` | Optional CSS class styling |';
 
     const sourceCode = sourceInfo?.code || component.usageCode;

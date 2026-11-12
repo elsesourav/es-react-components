@@ -82,13 +82,6 @@ const config: Config = {
         xl: 'var(--radius-xl, 1rem)',
         '2xl': 'var(--radius-2xl, 1.5rem)',
       },
-      boxShadow: {
-        float: 'var(--shadow-float)',
-        lift: 'var(--shadow-lift)',
-        well: 'var(--shadow-well)',
-        cap: 'var(--shadow-cap)',
-        row: 'var(--shadow-row)',
-      },
       fontFamily: {
         sans: [
           'Inter',

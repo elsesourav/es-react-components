@@ -35,8 +35,9 @@ import {
   MarkdownCodeBlock,
   renderInlineMarkdown,
 } from "./markdown-inline";
+import { splitMarkdownTableRow, isMarkdownTableSeparator, MarkdownTable } from "./markdown-table-parser";
 
-export { isSafeUrl, MathFormula, MarkdownCodeBlock, renderInlineMarkdown };
+export { isSafeUrl, MathFormula, MarkdownCodeBlock, renderInlineMarkdown, splitMarkdownTableRow, MarkdownTable };
 
 export function MarkdownRenderer({
   content,
@@ -281,7 +282,7 @@ export function MarkdownRenderer({
       }
 
       // 7. Markdown Tables: | col | col |
-      if (line.includes("|") && lines[i + 1]?.includes("|") && lines[i + 1]?.includes("-")) {
+      if (line.includes("|") && isMarkdownTableSeparator(lines[i + 1])) {
         const tableLines: string[] = [];
         while (i < lines.length && lines[i]?.includes("|")) {
           tableLines.push(lines[i]!.trim());
@@ -289,79 +290,11 @@ export function MarkdownRenderer({
         }
 
         if (tableLines.length >= 2) {
-          const headerCells = tableLines[0]!
-            .split("|")
-            .filter((_, idx, arr) => idx > 0 && idx < arr.length - 1)
-            .map((c) => c.trim());
-
-          const alignDefs = tableLines[1]!
-            .split("|")
-            .filter((_, idx, arr) => idx > 0 && idx < arr.length - 1)
-            .map((c) => {
-              const trimmed = c.trim();
-              if (trimmed.startsWith(":") && trimmed.endsWith(":")) return "center";
-              if (trimmed.endsWith(":")) return "right";
-              return "left";
-            });
-
-          const bodyRows = tableLines.slice(2).map((rowLine) =>
-            rowLine
-              .split("|")
-              .filter((_, idx, arr) => idx > 0 && idx < arr.length - 1)
-              .map((c) => c.trim())
-          );
-
           result.push(
-            <div
+            <MarkdownTable
               key={`table-${blockIndex++}`}
-              className="my-6 w-full overflow-x-auto rounded-2xl border border-border shadow-sm"
-            >
-              <table className="w-full border-collapse text-xs sm:text-sm text-left">
-                <thead>
-                  <tr className="bg-surface-subtle border-b border-border">
-                    {headerCells.map((header, idx) => (
-                      <th
-                        key={idx}
-                        className={cn(
-                          "px-4 py-3 font-semibold text-foreground uppercase tracking-wider text-xs",
-                          alignDefs[idx] === "center"
-                            ? "text-center"
-                            : alignDefs[idx] === "right"
-                            ? "text-right"
-                            : "text-left"
-                        )}
-                      >
-                        {renderInlineMarkdown(header)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/60 bg-surface">
-                  {bodyRows.map((row, rIdx) => (
-                    <tr
-                      key={rIdx}
-                      className="hover:bg-surface-subtle/50 transition-colors"
-                    >
-                      {row.map((cell, cIdx) => (
-                        <td
-                          key={cIdx}
-                          className={cn(
-                            "px-4 py-2.5 text-foreground leading-relaxed",
-                            alignDefs[cIdx] === "center"
-                              ? "text-center"
-                              : alignDefs[cIdx] === "right"
-                              ? "text-right"
-                              : "text-left"
-                          )}
-                        >
-                          {renderInlineMarkdown(cell)}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+              tableLines={tableLines}
+            />
           );
           continue;
         }
@@ -465,7 +398,7 @@ export function MarkdownRenderer({
         !lines[i]?.match(/^[-*+]\s+/) &&
         !lines[i]?.match(/^\d+\.\s+/) &&
         !lines[i]?.match(/^(---|---|\*\*\*|___)$/) &&
-        !lines[i]?.includes("|")
+        !(lines[i]?.includes("|") && isMarkdownTableSeparator(lines[i + 1]))
       ) {
         paragraphLines.push(lines[i]!);
         i++;
@@ -480,6 +413,8 @@ export function MarkdownRenderer({
             {renderInlineMarkdown(paragraphLines.join(" "))}
           </p>
         );
+      } else {
+        i++;
       }
     }
 

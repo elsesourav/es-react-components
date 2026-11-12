@@ -213,8 +213,8 @@
     "name": "Slider (Single & Dual Range)",
     "filename": "slider.tsx",
     "filepath": "src/components/ui/slider.tsx",
-    "lines": 126,
-    "bytes": 4853
+    "lines": 250,
+    "bytes": 9306
   },
   "arcade-switch": {
     "name": "Tactile Bezel Switch (Arcade)",
@@ -318,8 +318,8 @@
     "name": "Markdown & LaTeX Renderer",
     "filename": "markdown-renderer.tsx",
     "filepath": "src/components/ui/markdown-renderer.tsx",
-    "lines": 499,
-    "bytes": 16415
+    "lines": 434,
+    "bytes": 13832
   },
   "button": {
     "name": "Button",
