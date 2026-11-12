@@ -42,6 +42,7 @@
   ],
   "author": "Sourav (@elsesourav)",
   "license": "MIT",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "vite",
     "sync:sources": "node scripts/sync_component_sources.cjs",
