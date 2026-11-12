@@ -60,7 +60,7 @@ export const Dialog: React.FC<DialogProps> = ({
         role="dialog"
         aria-modal="true"
         className={cn(
-          'relative w-full rounded-2xl bg-surface-elevated border border-border shadow-2xl z-10 overflow-hidden animate-zoom-in',
+          'relative w-full rounded-2xl bg-surface-elevated border border-border shadow-float z-10 overflow-hidden animate-zoom-in',
           maxWidths[maxWidth]
         )}
       >

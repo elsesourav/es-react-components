@@ -18,30 +18,7 @@ export const WizardStepsPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <Rocket className="size-4 text-primary" />
-          Pipeline Wizard Controller & Parameters
-        </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSlider
-            label="Container Max Width"
-            value={wizardMaxWidth}
-            onChange={setWizardMaxWidth}
-            min={360}
-            max={680}
-            step={20}
-            unit="px"
-          />
-          <ParameterSwitch
-            label="Simulate Complete State"
-            checked={wizardComplete}
-            onChange={setWizardComplete}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full" style={{ maxWidth: `${wizardMaxWidth}px` }}>
           <WizardSteps
@@ -146,6 +123,32 @@ export const WizardStepsPlayground: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <Rocket className="size-4 text-primary" />
+          Pipeline Wizard Controller & Parameters
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Container Max Width"
+            value={wizardMaxWidth}
+            onChange={setWizardMaxWidth}
+            min={360}
+            max={680}
+            step={20}
+            unit="px"
+          />
+          <ParameterSwitch
+            label="Simulate Complete State"
+            checked={wizardComplete}
+            onChange={setWizardComplete}
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -158,6 +161,28 @@ export const PaginationPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[260px] space-y-6">
+        <Pagination
+          count={pagCount}
+          page={pagPage}
+          onPageChange={setPagPage}
+          siblings={pagSiblings}
+          boundaries={pagBoundaries}
+        />
+
+        <div className="p-3 rounded-xl bg-surface border border-border text-xs text-center max-w-xs w-full space-y-1">
+          <div className="text-muted-foreground">
+            Current Page: <strong className="text-foreground font-semibold">{pagPage}</strong> of{' '}
+            <strong className="text-foreground font-semibold">{pagCount}</strong>
+          </div>
+          <p className="text-[11px] text-muted-foreground/80">
+            Features spring-animated sliding indicator thumb, rolling number transitions, and live screen-reader announcements.
+          </p>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
           <Compass className="size-4 text-primary" />
@@ -203,25 +228,6 @@ export const PaginationPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[260px] space-y-6">
-        <Pagination
-          count={pagCount}
-          page={pagPage}
-          onPageChange={setPagPage}
-          siblings={pagSiblings}
-          boundaries={pagBoundaries}
-        />
-
-        <div className="p-3 rounded-xl bg-surface border border-border text-xs text-center max-w-xs w-full space-y-1">
-          <div className="text-muted-foreground">
-            Current Page: <strong className="text-foreground font-semibold">{pagPage}</strong> of{' '}
-            <strong className="text-foreground font-semibold">{pagCount}</strong>
-          </div>
-          <p className="text-[11px] text-muted-foreground/80">
-            Features spring-animated sliding indicator thumb, rolling number transitions, and live screen-reader announcements.
-          </p>
-        </div>
-      </div>
     </div>
   );
 };
@@ -233,35 +239,7 @@ export const TreeViewPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <ListTree className="size-4 text-primary" />
-          Tree View File Explorer Controls
-        </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSwitch
-            label="Show File Size Metadata"
-            checked={showMeta}
-            onChange={setShowMeta}
-          />
-          <div className="flex items-center gap-2 pt-2">
-            <button
-              onClick={() => setTreeExpanded(['src', 'components', 'ui', 'showcase'])}
-              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-surface text-foreground hover:bg-surface-elevated transition-colors cursor-pointer"
-            >
-              Expand All
-            </button>
-            <button
-              onClick={() => setTreeExpanded([])}
-              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-surface text-foreground hover:bg-surface-elevated transition-colors cursor-pointer"
-            >
-              Collapse All
-            </button>
-          </div>
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-sm">
           <TreeView
@@ -318,6 +296,37 @@ export const TreeViewPlayground: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <ListTree className="size-4 text-primary" />
+          Tree View File Explorer Controls
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSwitch
+            label="Show File Size Metadata"
+            checked={showMeta}
+            onChange={setShowMeta}
+          />
+          <div className="flex items-center gap-2 pt-2">
+            <button
+              onClick={() => setTreeExpanded(['src', 'components', 'ui', 'showcase'])}
+              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-surface text-foreground hover:bg-surface-elevated transition-colors cursor-pointer"
+            >
+              Expand All
+            </button>
+            <button
+              onClick={() => setTreeExpanded([])}
+              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-surface text-foreground hover:bg-surface-elevated transition-colors cursor-pointer"
+            >
+              Collapse All
+            </button>
+          </div>
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };

@@ -16,61 +16,7 @@ export const SliderPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Controls Toolbar */}
-      <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <SlidersHorizontal className="size-4 text-primary" />
-            Accessible Slider & Range System
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Unified React Aria slider supporting single and double thumbs, tooltip value bubbles, bottom readouts, and keyboard controls.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Thumb Mode Option: 1 or 2 */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground mr-1">Thumbs:</span>
-            <Button
-              size="xs"
-              variant={thumbsCount === 1 ? 'primary' : 'outline'}
-              onClick={() => setThumbsCount(1)}
-              className="font-medium"
-            >
-              1 (Single)
-            </Button>
-            <Button
-              size="xs"
-              variant={thumbsCount === 2 ? 'primary' : 'outline'}
-              onClick={() => setThumbsCount(2)}
-              className="font-medium"
-            >
-              2 (Double)
-            </Button>
-          </div>
-
-          <div className="h-4 w-px bg-border/60 hidden sm:block" />
-
-          {/* Tooltip Position Option */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground mr-1">Tooltip:</span>
-            {(['top-floating', 'bottom', 'default'] as const).map((pos) => (
-              <Button
-                key={pos}
-                size="xs"
-                variant={sliderLabelPos === pos ? 'primary' : 'outline'}
-                className="capitalize"
-                onClick={() => setSliderLabelPos(pos)}
-              >
-                {pos === 'default' ? 'Hidden' : pos === 'top-floating' ? 'Tooltip' : 'Bottom'}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Unified Component Card */}
+      {/* 1. Main Unified Component Card (Preview First) */}
       <div className="p-6 sm:p-8 rounded-2xl bg-surface border border-border space-y-6 shadow-sm">
         {/* Header with active mode indicator and live value badge */}
         <div className="border-b border-border/50 pb-4 flex flex-wrap items-center justify-between gap-3">
@@ -206,6 +152,60 @@ export const SliderPlayground: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* 2. Interactive Controls Toolbar (Controls Second) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <SlidersHorizontal className="size-4 text-primary" />
+            Accessible Slider & Range System
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Unified React Aria slider supporting single and double thumbs, tooltip value bubbles, bottom readouts, and keyboard controls.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Thumb Mode Option: 1 or 2 */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground mr-1">Thumbs:</span>
+            <Button
+              size="xs"
+              variant={thumbsCount === 1 ? 'primary' : 'outline'}
+              onClick={() => setThumbsCount(1)}
+              className="font-medium"
+            >
+              1 (Single)
+            </Button>
+            <Button
+              size="xs"
+              variant={thumbsCount === 2 ? 'primary' : 'outline'}
+              onClick={() => setThumbsCount(2)}
+              className="font-medium"
+            >
+              2 (Double)
+            </Button>
+          </div>
+
+          <div className="h-4 w-px bg-border/60 hidden sm:block" />
+
+          {/* Tooltip Position Option */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-muted-foreground mr-1">Tooltip:</span>
+            {(['top-floating', 'bottom', 'default'] as const).map((pos) => (
+              <Button
+                key={pos}
+                size="xs"
+                variant={sliderLabelPos === pos ? 'primary' : 'outline'}
+                className="capitalize"
+                onClick={() => setSliderLabelPos(pos)}
+              >
+                {pos === 'default' ? 'Hidden' : pos === 'top-floating' ? 'Tooltip' : 'Bottom'}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 };
@@ -223,28 +223,6 @@ export const SliderDetentsPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="size-4 text-primary" />
-          <span className="text-xs font-medium text-foreground">
-            Allocated vCPU: <span className="font-mono font-bold text-primary">{sliderDetentsVal} Cores</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          {[1, 2, 4, 8, 16].map((v) => (
-            <Button
-              key={v}
-              size="xs"
-              variant={sliderDetentsVal === v ? 'primary' : 'outline'}
-              onClick={() => setSliderDetentsVal(v)}
-            >
-              {v}x
-            </Button>
-          ))}
-        </div>
-      </div>
-
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
         <div className="w-full max-w-lg p-6 rounded-2xl bg-surface border border-border shadow-sm space-y-6">
           <div>
@@ -274,6 +252,28 @@ export const SliderDetentsPlayground: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="size-4 text-primary" />
+          <span className="text-xs font-medium text-foreground">
+            Allocated vCPU: <span className="font-mono font-bold text-primary">{sliderDetentsVal} Cores</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          {[1, 2, 4, 8, 16].map((v) => (
+            <Button
+              key={v}
+              size="xs"
+              variant={sliderDetentsVal === v ? 'primary' : 'outline'}
+              onClick={() => setSliderDetentsVal(v)}
+            >
+              {v}x
+            </Button>
+          ))}
+        </div>
+      </div>
+
+          </div>
   );
 };

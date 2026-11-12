@@ -44,6 +44,63 @@ export const BranchedMenuPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      {/* Live Tree Preview */}
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[340px] space-y-4">
+        <div className="w-full flex justify-center py-2 overflow-x-auto">
+          <BranchedMenu
+            items={[
+              {
+                label: 'Getting started',
+                children: [
+                  { value: 'install', label: 'Installation', icon: Download04Icon },
+                  { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
+                  { value: 'config', label: 'Configuration', icon: Settings02Icon },
+                  { value: 'theming', label: 'Theming', icon: PaintBoardIcon },
+                ],
+              },
+              {
+                label: 'Components',
+                children: [
+                  { value: 'buttons', label: 'Buttons' },
+                  { value: 'overlays', label: 'Overlays' },
+                  { value: 'forms', label: 'Forms & Inputs' },
+                ],
+              },
+            ]}
+            defaultOpen={[0]}
+            defaultActive={menuActive}
+            onSelect={(val, it) => {
+              setMenuActive(val);
+              addToast({
+                title: 'Item Selected',
+                description: `Navigated to ${it.label} (${val})`,
+                type: 'info',
+              });
+            }}
+            color={menuTextColor}
+            accentColor={menuAccentColor}
+            lineColor={menuLineColor}
+            width={menuWidth}
+            rowHeight={menuRowHeight}
+            indent={menuIndent}
+            trunk={menuTrunk}
+            radius={menuRadius}
+            lineWidth={menuLineWidth}
+            fontSize={14}
+            drawDuration={menuDrawDuration}
+            foldDuration={menuFoldDuration}
+          />
+        </div>
+        <div className="text-xs text-muted-foreground font-mono flex items-center gap-2">
+          <span>Active Target:</span>
+          <span className="px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-primary font-semibold">
+            "{menuActive}"
+          </span>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
           <div className="min-w-0 flex-1">
@@ -159,60 +216,6 @@ export const BranchedMenuPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Tree Preview */}
-      <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[340px] space-y-4">
-        <div className="w-full flex justify-center py-2 overflow-x-auto">
-          <BranchedMenu
-            items={[
-              {
-                label: 'Getting started',
-                children: [
-                  { value: 'install', label: 'Installation', icon: Download04Icon },
-                  { value: 'quick', label: 'Quick start', icon: Rocket01Icon },
-                  { value: 'config', label: 'Configuration', icon: Settings02Icon },
-                  { value: 'theming', label: 'Theming', icon: PaintBoardIcon },
-                ],
-              },
-              {
-                label: 'Components',
-                children: [
-                  { value: 'buttons', label: 'Buttons' },
-                  { value: 'overlays', label: 'Overlays' },
-                  { value: 'forms', label: 'Forms & Inputs' },
-                ],
-              },
-            ]}
-            defaultOpen={[0]}
-            defaultActive={menuActive}
-            onSelect={(val, it) => {
-              setMenuActive(val);
-              addToast({
-                title: 'Item Selected',
-                description: `Navigated to ${it.label} (${val})`,
-                type: 'info',
-              });
-            }}
-            color={menuTextColor}
-            accentColor={menuAccentColor}
-            lineColor={menuLineColor}
-            width={menuWidth}
-            rowHeight={menuRowHeight}
-            indent={menuIndent}
-            trunk={menuTrunk}
-            radius={menuRadius}
-            lineWidth={menuLineWidth}
-            fontSize={14}
-            drawDuration={menuDrawDuration}
-            foldDuration={menuFoldDuration}
-          />
-        </div>
-        <div className="text-xs text-muted-foreground font-mono flex items-center gap-2">
-          <span>Active Target:</span>
-          <span className="px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-primary font-semibold">
-            "{menuActive}"
-          </span>
-        </div>
-      </div>
     </div>
   );
 };
@@ -227,6 +230,57 @@ export const TabsPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center space-y-4">
+        <div
+          className="max-w-xl mx-auto transition-transform"
+          style={{ transform: `scale(${tabScale / 100})`, transformOrigin: 'top center' }}
+        >
+          <Tabs
+            variant={tabVariant}
+            value={activeTab}
+            onValueChange={setActiveTab}
+            items={[
+              { value: 'tab1', label: 'Overview', badge: showBadges ? 'v2' : undefined },
+              { value: 'tab2', label: 'Security' },
+              { value: 'tab3', label: 'Integrations' },
+              { value: 'tab4', label: 'Billing (Disabled)', disabled: disabledTab },
+            ]}
+            renderPanel={(value) => (
+              <div className="space-y-2" style={{ padding: `${panelPadding}px` }}>
+                {value === 'tab1' && (
+                  <>
+                    <h4 className="font-semibold text-foreground text-sm">Cluster Overview & Health</h4>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                      Cluster metrics aggregated every 5 seconds across 48 edge nodes with 99.99% uptime.
+                      Sliding plateau tabs measure tab widths via ResizeObserver with spring physics.
+                    </p>
+                  </>
+                )}
+                {value === 'tab2' && (
+                  <>
+                    <h4 className="font-semibold text-foreground text-sm">Security & Access Policies</h4>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                      Mutual TLS (mTLS) ingress encryption and zero-trust policies active.
+                      Rotate certificate authorities automatically every 90 days.
+                    </p>
+                  </>
+                )}
+                {value === 'tab3' && (
+                  <>
+                    <h4 className="font-semibold text-foreground text-sm">Connected Integrations</h4>
+                    <p className="text-muted-foreground text-xs leading-relaxed">
+                      Connected to GitHub Actions, Datadog Real User Monitoring, and Slack notification webhooks.
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="border-b border-border/50 pb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -290,52 +344,6 @@ export const TabsPlayground: React.FC = () => {
           </span>
         </div>
 
-        <div
-          className="max-w-xl mx-auto transition-transform"
-          style={{ transform: `scale(${tabScale / 100})`, transformOrigin: 'top center' }}
-        >
-          <Tabs
-            variant={tabVariant}
-            value={activeTab}
-            onValueChange={setActiveTab}
-            items={[
-              { value: 'tab1', label: 'Overview', badge: showBadges ? 'v2' : undefined },
-              { value: 'tab2', label: 'Security' },
-              { value: 'tab3', label: 'Integrations' },
-              { value: 'tab4', label: 'Billing (Disabled)', disabled: disabledTab },
-            ]}
-            renderPanel={(value) => (
-              <div className="space-y-2" style={{ padding: `${panelPadding}px` }}>
-                {value === 'tab1' && (
-                  <>
-                    <h4 className="font-semibold text-foreground text-sm">Cluster Overview & Health</h4>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
-                      Cluster metrics aggregated every 5 seconds across 48 edge nodes with 99.99% uptime.
-                      Sliding plateau tabs measure tab widths via ResizeObserver with spring physics.
-                    </p>
-                  </>
-                )}
-                {value === 'tab2' && (
-                  <>
-                    <h4 className="font-semibold text-foreground text-sm">Security & Access Policies</h4>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
-                      Mutual TLS (mTLS) ingress encryption and zero-trust policies active.
-                      Rotate certificate authorities automatically every 90 days.
-                    </p>
-                  </>
-                )}
-                {value === 'tab3' && (
-                  <>
-                    <h4 className="font-semibold text-foreground text-sm">Connected Integrations</h4>
-                    <p className="text-muted-foreground text-xs leading-relaxed">
-                      Connected to GitHub Actions, Datadog Real User Monitoring, and Slack notification webhooks.
-                    </p>
-                  </>
-                )}
-              </div>
-            )}
-          />
-        </div>
       </div>
     </div>
   );
@@ -349,6 +357,35 @@ export const SegmentedControlPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[300px] space-y-6">
+        <div style={{ transform: `scale(${controlScale / 100})`, transformOrigin: 'center' }}>
+          <SegmentedControl
+            label="Billing Interval"
+            variant={segmentedVariant}
+            value={segmentedVal}
+            onValueChange={setSegmentedVal}
+            options={[
+              { value: 'daily', label: '1 Day' },
+              { value: 'weekly', label: '1 Week' },
+              { value: 'monthly', label: '1 Month' },
+              { value: 'annual', label: '1 Year' },
+              { value: 'lifetime', label: 'Enterprise', disabled: disabledOption },
+            ]}
+          />
+        </div>
+
+        <div className="flex flex-col items-center gap-2 text-center">
+          <div className="text-xs text-muted-foreground">
+            Selected Interval: <strong className="text-foreground uppercase">{segmentedVal}</strong>
+          </div>
+          <p className="text-[11px] text-muted-foreground/80 max-w-sm">
+            Features spring thumb sliding with dual text-inversion mask. Navigate with <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">←</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">→</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">Home</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">End</kbd>.
+          </p>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
           <Layers className="size-4 text-primary" />
@@ -390,32 +427,6 @@ export const SegmentedControlPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-8 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[300px] space-y-6">
-        <div style={{ transform: `scale(${controlScale / 100})`, transformOrigin: 'center' }}>
-          <SegmentedControl
-            label="Billing Interval"
-            variant={segmentedVariant}
-            value={segmentedVal}
-            onValueChange={setSegmentedVal}
-            options={[
-              { value: 'daily', label: '1 Day' },
-              { value: 'weekly', label: '1 Week' },
-              { value: 'monthly', label: '1 Month' },
-              { value: 'annual', label: '1 Year' },
-              { value: 'lifetime', label: 'Enterprise', disabled: disabledOption },
-            ]}
-          />
-        </div>
-
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="text-xs text-muted-foreground">
-            Selected Interval: <strong className="text-foreground uppercase">{segmentedVal}</strong>
-          </div>
-          <p className="text-[11px] text-muted-foreground/80 max-w-sm">
-            Features spring thumb sliding with dual text-inversion mask. Navigate with <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">←</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">→</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">Home</kbd> <kbd className="px-1 py-0.5 rounded bg-surface border text-[10px]">End</kbd>.
-          </p>
-        </div>
-      </div>
     </div>
   );
 };

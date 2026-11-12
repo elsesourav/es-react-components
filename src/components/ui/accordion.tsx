@@ -272,7 +272,7 @@ export function Accordion({
   return (
     <div
       className={cn(
-        "divide-y divide-border overflow-hidden rounded-[var(--radius)] border border-border bg-surface-elevated shadow-sm transition-colors",
+        "divide-y divide-border overflow-hidden rounded-[var(--radius)] border border-border bg-surface-elevated shadow-lift transition-colors",
         className
       )}
     >

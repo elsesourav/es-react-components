@@ -321,10 +321,10 @@ export function Dropdown({
       )}
       <button
         {...triggerProps}
-        className={`flex h-10 w-full select-none items-center justify-between gap-2.5 whitespace-nowrap rounded-[var(--radius)] border border-border bg-surface px-3.5 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color,background-color] duration-150 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 hover:bg-surface-subtle focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 ${
+        className={`flex h-10 w-full select-none items-center justify-between gap-2.5 whitespace-nowrap rounded-[var(--radius)] border border-border bg-surface px-3.5 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color,background-color] duration-150 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 hover:bg-surface-subtle focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 shadow-lift ${
           open
-            ? "border-primary ring-2 ring-primary/20 shadow-sm"
-            : "shadow-sm"
+            ? "border-primary ring-2 ring-primary/20 shadow-float"
+            : ""
         }`}
       >
         <span className="flex items-center gap-2 truncate">
@@ -385,7 +385,7 @@ export function Dropdown({
                   ...floatingStyle,
                   transformOrigin: placement === "top" ? "bottom" : "top",
                 }}
-                className="fixed z-[9999] rounded-[var(--radius)] border border-border bg-surface-elevated/95 p-1.5 shadow-2xl backdrop-blur-xl flex flex-col"
+                className="fixed z-[9999] rounded-[var(--radius)] border border-border bg-surface-elevated/95 p-1.5 shadow-float backdrop-blur-xl flex flex-col"
               >
                 <ul
                   {...listProps}

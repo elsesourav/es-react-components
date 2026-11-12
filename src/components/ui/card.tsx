@@ -2,20 +2,24 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'subtle' | 'glass' | 'interactive';
+  variant?: 'default' | 'elevated' | 'subtle' | 'glass' | 'interactive' | 'tactile' | 'sunken';
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'default', ...props }, ref) => {
     const variants = {
-      default: 'bg-card text-card-foreground border border-border shadow-sm',
+      default: 'bg-card text-card-foreground border border-border/80 shadow-lift',
       elevated:
-        'bg-surface-elevated text-card-foreground border border-border shadow-md',
-      subtle: 'bg-surface-subtle text-card-foreground border border-border-subtle',
+        'bg-surface-elevated text-card-foreground border border-border/80 shadow-float',
+      subtle: 'bg-surface-subtle text-card-foreground border border-border-subtle shadow-lift',
       glass:
-        'bg-surface/70 backdrop-blur-md text-card-foreground border border-border/80 shadow-lg',
+        'bg-surface/75 backdrop-blur-md text-card-foreground border border-border/80 shadow-float',
       interactive:
-        'bg-card text-card-foreground border border-border shadow-sm hover:border-primary/40 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 cursor-pointer',
+        'bg-card text-card-foreground border border-border/80 shadow-lift hover:border-primary/50 hover:shadow-float active:translate-y-px transition-all duration-200 cursor-pointer',
+      tactile:
+        'bg-card text-card-foreground border border-border/80 shadow-lift hover:shadow-float transition-all duration-200',
+      sunken:
+        'bg-surface-sunken text-card-foreground border border-border/60 shadow-well',
     };
 
     return (

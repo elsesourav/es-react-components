@@ -24,7 +24,26 @@ export const PresenceAvatarsPlayground: React.FC = () => {
 
   return (
     <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+      <div className="max-w-md mx-auto p-8 rounded-2xl border border-border bg-surface-subtle/50 flex flex-col items-center justify-center space-y-4">
+        <div className="text-xs text-muted-foreground">Active Collaborators in Document:</div>
+        <PresenceAvatars
+          people={presencePeople}
+          max={presenceSlots}
+          size={36}
+          overlap={11}
+          onOverflowSelect={(hidden) => {
+            addToast({
+              title: 'Hidden Collaborators',
+              description: `${hidden.map((p) => p.name).join(', ')}`,
+              type: 'info',
+            });
+          }}
+        />
+        <div className="text-xs text-muted-foreground text-center font-mono pt-2">
+          Click the +N badge to reveal the overflow roster callback!
+        </div>
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Max Visible Slots: {presenceSlots}
         </span>
@@ -45,26 +64,7 @@ export const PresenceAvatarsPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-md mx-auto p-8 rounded-2xl border border-border bg-surface-subtle/50 flex flex-col items-center justify-center space-y-4">
-        <div className="text-xs text-muted-foreground">Active Collaborators in Document:</div>
-        <PresenceAvatars
-          people={presencePeople}
-          max={presenceSlots}
-          size={36}
-          overlap={11}
-          onOverflowSelect={(hidden) => {
-            addToast({
-              title: 'Hidden Collaborators',
-              description: `${hidden.map((p) => p.name).join(', ')}`,
-              type: 'info',
-            });
-          }}
-        />
-        <div className="text-xs text-muted-foreground text-center font-mono pt-2">
-          Click the +N badge to reveal the overflow roster callback!
-        </div>
-      </div>
-    </div>
+          </div>
   );
 };
 
@@ -74,38 +74,6 @@ export const AccordionPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <ListTree className="size-4 text-primary" />
-          Accordion Settings
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">Mode:</span>
-          <Button
-            size="xs"
-            variant={accordionType === 'single' ? 'primary' : 'outline'}
-            onClick={() => setAccordionType('single')}
-          >
-            Single
-          </Button>
-          <Button
-            size="xs"
-            variant={accordionType === 'multiple' ? 'primary' : 'outline'}
-            onClick={() => setAccordionType('multiple')}
-          >
-            Multiple
-          </Button>
-          <span className="text-xs text-muted-foreground ml-2">Collapsible:</span>
-          <Button
-            size="xs"
-            variant={accordionCollapsible ? 'primary' : 'outline'}
-            onClick={() => setAccordionCollapsible(!accordionCollapsible)}
-          >
-            {accordionCollapsible ? 'Enabled' : 'Disabled'}
-          </Button>
-        </div>
-      </div>
-
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-xl">
           <Accordion
@@ -145,7 +113,39 @@ export const AccordionPlayground: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+<div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <ListTree className="size-4 text-primary" />
+          Accordion Settings
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">Mode:</span>
+          <Button
+            size="xs"
+            variant={accordionType === 'single' ? 'primary' : 'outline'}
+            onClick={() => setAccordionType('single')}
+          >
+            Single
+          </Button>
+          <Button
+            size="xs"
+            variant={accordionType === 'multiple' ? 'primary' : 'outline'}
+            onClick={() => setAccordionType('multiple')}
+          >
+            Multiple
+          </Button>
+          <span className="text-xs text-muted-foreground ml-2">Collapsible:</span>
+          <Button
+            size="xs"
+            variant={accordionCollapsible ? 'primary' : 'outline'}
+            onClick={() => setAccordionCollapsible(!accordionCollapsible)}
+          >
+            {accordionCollapsible ? 'Enabled' : 'Disabled'}
+          </Button>
+        </div>
+      </div>
+
+          </div>
   );
 };
 
@@ -176,33 +176,6 @@ export const FilterGridPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-foreground">Columns:</span>
-          {[1, 2, 3, 4].map((cols) => (
-            <Button
-              key={cols}
-              size="xs"
-              variant={filterGridCols === cols ? 'primary' : 'outline'}
-              onClick={() => setFilterGridCols(cols)}
-            >
-              {cols} {cols === 1 ? 'Col' : 'Cols'}
-            </Button>
-          ))}
-        </div>
-
-        <Button
-          size="xs"
-          variant="ghost"
-          onClick={() => {
-            setFilterGridCat('all');
-            addToast({ title: 'Filters Reset', description: 'Showing all service cards', type: 'info' });
-          }}
-        >
-          Reset Filter
-        </Button>
-      </div>
-
       <div className="p-6 sm:p-8 rounded-2xl bg-surface-subtle/50 border border-border">
         <FilterGrid
           items={services}
@@ -235,7 +208,34 @@ export const FilterGridPlayground: React.FC = () => {
           )}
         />
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium text-foreground">Columns:</span>
+          {[1, 2, 3, 4].map((cols) => (
+            <Button
+              key={cols}
+              size="xs"
+              variant={filterGridCols === cols ? 'primary' : 'outline'}
+              onClick={() => setFilterGridCols(cols)}
+            >
+              {cols} {cols === 1 ? 'Col' : 'Cols'}
+            </Button>
+          ))}
+        </div>
+
+        <Button
+          size="xs"
+          variant="ghost"
+          onClick={() => {
+            setFilterGridCat('all');
+            addToast({ title: 'Filters Reset', description: 'Showing all service cards', type: 'info' });
+          }}
+        >
+          Reset Filter
+        </Button>
+      </div>
+
+          </div>
   );
 };
 
@@ -252,23 +252,6 @@ export const PollResultsPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
-        <div className="text-xs text-muted-foreground">
-          Current Status: <strong className="text-foreground">{pollVotedId ? 'Vote Recorded' : 'Awaiting Vote'}</strong>
-        </div>
-
-        <Button
-          size="xs"
-          variant="outline"
-          onClick={() => {
-            setPollVotedId(null);
-            addToast({ title: 'Poll Reset', description: 'You can now cast your vote again.', type: 'info' });
-          }}
-        >
-          Reset Vote
-        </Button>
-      </div>
-
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
         <div className="w-full max-w-md p-6 rounded-2xl bg-surface border border-border shadow-sm space-y-4">
           <div>
@@ -300,6 +283,23 @@ export const PollResultsPlayground: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+        <div className="text-xs text-muted-foreground">
+          Current Status: <strong className="text-foreground">{pollVotedId ? 'Vote Recorded' : 'Awaiting Vote'}</strong>
+        </div>
+
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => {
+            setPollVotedId(null);
+            addToast({ title: 'Poll Reset', description: 'You can now cast your vote again.', type: 'info' });
+          }}
+        >
+          Reset Vote
+        </Button>
+      </div>
+
+          </div>
   );
 };

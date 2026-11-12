@@ -46,7 +46,7 @@
     "filename": "dialog.tsx",
     "filepath": "src/components/ui/dialog.tsx",
     "lines": 97,
-    "bytes": 2618
+    "bytes": 2620
   },
   "alert": {
     "name": "Alert",
@@ -81,7 +81,7 @@
     "filename": "ai-approval-card.tsx",
     "filepath": "src/components/ui/ai-approval-card.tsx",
     "lines": 493,
-    "bytes": 20780
+    "bytes": 20752
   },
   "task-steps": {
     "name": "Task Steps",
@@ -102,7 +102,7 @@
     "filename": "modal.tsx",
     "filepath": "src/components/ui/modal.tsx",
     "lines": 429,
-    "bytes": 12145
+    "bytes": 12147
   },
   "tooltip": {
     "name": "Tooltip",
@@ -123,7 +123,7 @@
     "filename": "poll-results.tsx",
     "filepath": "src/components/ui/poll-results.tsx",
     "lines": 282,
-    "bytes": 7932
+    "bytes": 7928
   },
   "ai-prompt-bar": {
     "name": "AI Prompt Bar",
@@ -137,14 +137,14 @@
     "filename": "ai-fine-tune-card.tsx",
     "filepath": "src/components/ui/ai-fine-tune-card.tsx",
     "lines": 407,
-    "bytes": 14701
+    "bytes": 14671
   },
   "select": {
     "name": "Select",
     "filename": "select.tsx",
     "filepath": "src/components/ui/select.tsx",
     "lines": 117,
-    "bytes": 3487
+    "bytes": 3514
   },
   "switch": {
     "name": "Switch",
@@ -235,7 +235,7 @@
     "filename": "input.tsx",
     "filepath": "src/components/ui/input.tsx",
     "lines": 172,
-    "bytes": 5276
+    "bytes": 5306
   },
   "floating-input": {
     "name": "Floating Label Input",
@@ -284,7 +284,7 @@
     "filename": "textarea.tsx",
     "filepath": "src/components/ui/textarea.tsx",
     "lines": 86,
-    "bytes": 2452
+    "bytes": 2479
   },
   "split-flap-text": {
     "name": "Split Flap Text (Mechanical Departure Board)",
@@ -368,7 +368,7 @@
     "filename": "tabs.tsx",
     "filepath": "src/components/ui/tabs.tsx",
     "lines": 348,
-    "bytes": 12520
+    "bytes": 12524
   },
   "branched-menu": {
     "name": "Branched Menu (Tree Navigation)",
@@ -487,21 +487,21 @@
     "filename": "leaderboard-table.tsx",
     "filepath": "src/components/ui/leaderboard-table.tsx",
     "lines": 282,
-    "bytes": 11469
+    "bytes": 11690
   },
   "card": {
     "name": "Card",
     "filename": "card.tsx",
     "filepath": "src/components/ui/card.tsx",
-    "lines": 90,
-    "bytes": 2616
+    "lines": 94,
+    "bytes": 2910
   },
   "stat": {
     "name": "Stat",
     "filename": "stat.tsx",
     "filepath": "src/components/ui/stat.tsx",
     "lines": 89,
-    "bytes": 2498
+    "bytes": 2545
   },
   "liquid-glass-sheet": {
     "name": "Liquid Glass Sheet",
@@ -550,6 +550,6 @@
     "filename": "accordion.tsx",
     "filepath": "src/components/ui/accordion.tsx",
     "lines": 410,
-    "bytes": 10388
+    "bytes": 10390
   }
 }

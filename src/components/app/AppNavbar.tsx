@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge, Tooltip, Logo, NativeSelect, SearchButton } from '../ui';
+import { cn } from '@/lib/utils';
 import {
   Sun,
   Moon,
@@ -7,6 +8,7 @@ import {
   Menu,
   ChevronRight,
   Layers,
+  Sparkles,
 } from 'lucide-react';
 import { useTheme, ThemePresetKey } from '../../theme/ThemeContext';
 import type { ComponentDoc } from '../../showcase/componentsData';
@@ -28,7 +30,14 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   totalComponents,
   activeComponent,
 }) => {
-  const { isDark, toggleDark, preset, setPreset } = useTheme();
+  const {
+    isDark,
+    toggleDark,
+    preset,
+    setPreset,
+    tactileShadows,
+    toggleTactileShadows,
+  } = useTheme();
 
   return (
     <header className="sticky top-0 z-20 h-14 shrink-0 w-full border-b border-border/80 bg-background/95 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 lg:px-8 transition-colors select-none">
@@ -122,6 +131,24 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
             ]}
           />
         </div>
+
+        {/* Tactile Specular Shadows Toggle */}
+        <Tooltip label={tactileShadows ? "Tactile Shadows: ON (Specular Depth)" : "Tactile Shadows: OFF (Flat Depth)"}>
+          <button
+            type="button"
+            onClick={toggleTactileShadows}
+            className={cn(
+              "size-8 sm:h-8 sm:w-auto sm:px-2.5 text-xs font-medium rounded-lg border transition-all flex items-center justify-center gap-1.5 cursor-pointer",
+              tactileShadows
+                ? "border-primary/50 bg-primary/10 text-primary shadow-lift"
+                : "border-border/80 bg-surface text-muted-foreground hover:text-foreground hover:bg-surface-subtle"
+            )}
+            aria-label={tactileShadows ? "Disable tactile shadows" : "Enable tactile shadows"}
+          >
+            <Sparkles className={cn("size-3.5", tactileShadows ? "text-primary fill-primary/30" : "text-muted-foreground")} />
+            <span className="hidden md:inline">Tactile</span>
+          </button>
+        </Tooltip>
 
         {/* Theme Tokens Customizer Button */}
         <Tooltip label="Design Tokens Customizer">

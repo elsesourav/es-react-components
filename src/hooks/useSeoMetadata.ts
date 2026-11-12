@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { ComponentDoc } from '../showcase/componentsData';
 
-const BASE_URL = 'https://es-react-components.dev';
+const BASE_URL = 'https://components.elsesourav.com';
 const DEFAULT_TITLE = 'es-react-components — Modern React 19 UI Component Library & Design System';
 const DEFAULT_DESCRIPTION =
   'Production-grade React 19 UI component library featuring 93+ kinetic, accessible, theme-driven components with fluid physics, WAI-ARIA compliance, and real-time HSL theming.';

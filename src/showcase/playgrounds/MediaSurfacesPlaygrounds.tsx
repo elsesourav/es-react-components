@@ -22,11 +22,58 @@ import {
 import { Sparkles, CheckCircle } from 'lucide-react';
 
 export const CardPlayground: React.FC = () => {
-  const [cardVariant, setCardVariant] = useState<any>('default');
+  const [cardVariant, setCardVariant] = useState<any>('tactile');
   const [cardRadius, setCardRadius] = useState(16);
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto">
+          <div style={{ borderRadius: `${cardRadius}px` }} className="overflow-hidden">
+            <Card variant={cardVariant}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <Badge variant="primary" dot size="sm">
+                    Live Cluster
+                  </Badge>
+                  <span className="text-xs font-mono text-muted-foreground">
+                    us-east-1a
+                  </span>
+                </div>
+                <CardTitle>Distributed Compute Engine</CardTitle>
+                <CardDescription>
+                  High-throughput, event-driven reactive microservice pool.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between text-xs py-1 border-b border-border/40">
+                  <span className="text-muted-foreground">Health Status</span>
+                  <span className="text-success font-semibold flex items-center gap-1">
+                    <CheckCircle className="size-3" /> Operational
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs py-1">
+                  <span className="text-muted-foreground">Average Latency</span>
+                  <span className="font-mono font-semibold text-foreground">
+                    14.2 ms
+                  </span>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button variant="ghost" size="sm">
+                  View Logs
+                </Button>
+                <Button variant="primary" size="sm">
+                  Scale Cluster
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
           Card Interactive Controls
@@ -43,11 +90,11 @@ export const CardPlayground: React.FC = () => {
           />
         </ParameterGrid>
 
-        <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mr-2">
             Card Style:
           </span>
-          {['default', 'elevated', 'glass', 'outline', 'subtle'].map((v) => (
+          {['default', 'tactile', 'elevated', 'glass', 'subtle', 'sunken', 'interactive'].map((v) => (
             <button
               key={v}
               onClick={() => setCardVariant(v)}
@@ -60,49 +107,6 @@ export const CardPlayground: React.FC = () => {
               {v}
             </button>
           ))}
-        </div>
-      </div>
-
-      <div className="max-w-md mx-auto">
-        <div style={{ borderRadius: `${cardRadius}px` }} className="overflow-hidden">
-          <Card variant={cardVariant}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <Badge variant="primary" dot size="sm">
-                  Live Cluster
-                </Badge>
-                <span className="text-xs font-mono text-muted-foreground">
-                  us-east-1a
-                </span>
-              </div>
-              <CardTitle>Distributed Compute Engine</CardTitle>
-              <CardDescription>
-                High-throughput, event-driven reactive microservice pool.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between text-xs py-1 border-b border-border/40">
-                <span className="text-muted-foreground">Health Status</span>
-                <span className="text-success font-semibold flex items-center gap-1">
-                  <CheckCircle className="size-3" /> Operational
-                </span>
-              </div>
-              <div className="flex justify-between text-xs py-1">
-                <span className="text-muted-foreground">Average Latency</span>
-                <span className="font-mono font-semibold text-foreground">
-                  14.2 ms
-                </span>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="ghost" size="sm">
-                View Logs
-              </Button>
-              <Button variant="primary" size="sm">
-                Scale Cluster
-              </Button>
-            </CardFooter>
-          </Card>
         </div>
       </div>
     </div>
@@ -176,10 +180,36 @@ export const LiquidGlassSheetPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-4 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center min-h-[440px] relative overflow-hidden">
+        <LiquidGlassSheet
+          title={glassTitle}
+          subtitle={glassSubtitle}
+          backgroundImage={glassImage}
+          theme={glassTheme}
+          defaultOpen={true}
+          onShare={() => {
+            addToast({
+              title: 'Share Triggered',
+              description: 'Share sheet dialog invoked successfully.',
+              type: 'info',
+            });
+          }}
+          onSaveChange={(saved) => {
+            addToast({
+              title: saved ? 'Bookmark Saved' : 'Bookmark Removed',
+              description: saved ? 'Sheet added to favorites.' : 'Sheet removed from favorites.',
+              type: saved ? 'success' : 'info',
+            });
+          }}
+        />
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
-          <span className="font-semibold text-foreground">Liquid Glass Sheet</span>
+          <span className="font-semibold text-foreground">Liquid Glass Sheet Controls</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -226,30 +256,6 @@ export const LiquidGlassSheetPlayground: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <div className="p-4 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center min-h-[440px] relative overflow-hidden">
-        <LiquidGlassSheet
-          title={glassTitle}
-          subtitle={glassSubtitle}
-          backgroundImage={glassImage}
-          theme={glassTheme}
-          defaultOpen={true}
-          onShare={() => {
-            addToast({
-              title: 'Share Triggered',
-              description: 'Share sheet dialog invoked successfully.',
-              type: 'info',
-            });
-          }}
-          onSaveChange={(saved) => {
-            addToast({
-              title: saved ? 'Bookmark Saved' : 'Bookmark Removed',
-              description: saved ? 'Sheet added to favorites.' : 'Sheet removed from favorites.',
-              type: saved ? 'success' : 'info',
-            });
-          }}
-        />
-      </div>
     </div>
   );
 };
@@ -259,8 +265,20 @@ export const CardCoverflowPlayground: React.FC = () => {
   const [coverflowIndex, setCoverflowIndex] = useState(2);
 
   return (
-    <div className="space-y-8">
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+    <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-8 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[300px]">
+        <div className="w-full max-w-xl">
+          <CardCoverFlow
+            isMonochrome={coverflowMonochrome}
+            initialIndex={coverflowIndex}
+            onIndexChange={(idx) => setCoverflowIndex(idx)}
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-3">
         <div className="text-sm font-semibold text-foreground flex items-center justify-between">
           <span className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
@@ -279,16 +297,6 @@ export const CardCoverflowPlayground: React.FC = () => {
           />
         </div>
       </div>
-
-      <div className="p-8 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[300px]">
-        <div className="w-full max-w-xl">
-          <CardCoverFlow
-            isMonochrome={coverflowMonochrome}
-            initialIndex={coverflowIndex}
-            onIndexChange={(idx) => setCoverflowIndex(idx)}
-          />
-        </div>
-      </div>
     </div>
   );
 };
@@ -298,8 +306,20 @@ export const CardCarouselPlayground: React.FC = () => {
   const [carouselIndex, setCarouselIndex] = useState(2);
 
   return (
-    <div className="space-y-8">
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+    <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-8 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[320px]">
+        <div className="w-full max-w-xl">
+          <CardCarousel
+            isMonochrome={carouselMonochrome}
+            initialIndex={carouselIndex}
+            onIndexChange={(idx) => setCarouselIndex(idx)}
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-3">
         <div className="text-sm font-semibold text-foreground flex items-center justify-between">
           <span className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary" />
@@ -315,16 +335,6 @@ export const CardCarouselPlayground: React.FC = () => {
             checked={carouselMonochrome}
             onChange={(e) => setCarouselMonochrome(e.target.checked)}
             label="Monochrome Slate Style"
-          />
-        </div>
-      </div>
-
-      <div className="p-8 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[320px]">
-        <div className="w-full max-w-xl">
-          <CardCarousel
-            isMonochrome={carouselMonochrome}
-            initialIndex={carouselIndex}
-            onIndexChange={(idx) => setCarouselIndex(idx)}
           />
         </div>
       </div>

@@ -22,7 +22,29 @@ export const StreamingTextPlayground: React.FC = () => {
 
   return (
     <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+      <div className="max-w-lg mx-auto p-5 rounded-2xl border border-border bg-surface-subtle/50 space-y-4">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">Assistant Response:</span>
+          <span className="text-[11px] font-mono">Click text to skip</span>
+        </div>
+
+        <div className="p-4 rounded-xl border border-border bg-surface">
+          <StreamingText
+            key={streamKey}
+            text={sampleStreamingReply}
+            tokensPerSecond={streamPacing}
+            label="AI Assistant"
+            onDone={() => {
+              addToast({
+                title: 'Streaming Complete',
+                description: 'Full assistant token output received.',
+                type: 'success',
+              });
+            }}
+          />
+        </div>
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Streaming Pacing: {streamPacing} tokens/s
         </span>
@@ -52,29 +74,7 @@ export const StreamingTextPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto p-5 rounded-2xl border border-border bg-surface-subtle/50 space-y-4">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span className="font-semibold text-foreground">Assistant Response:</span>
-          <span className="text-[11px] font-mono">Click text to skip</span>
-        </div>
-
-        <div className="p-4 rounded-xl border border-border bg-surface">
-          <StreamingText
-            key={streamKey}
-            text={sampleStreamingReply}
-            tokensPerSecond={streamPacing}
-            label="AI Assistant"
-            onDone={() => {
-              addToast({
-                title: 'Streaming Complete',
-                description: 'Full assistant token output received.',
-                type: 'success',
-              });
-            }}
-          />
-        </div>
-      </div>
-    </div>
+          </div>
   );
 };
 
@@ -119,7 +119,18 @@ $$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border min-h-[520px]">
+        <MarkdownEditor
+          label="Technical Document Editor"
+          value={markdownVal}
+          onChange={(val) => setMarkdownVal(val)}
+          mode={markdownMode}
+          onModeChange={(m) => setMarkdownMode(m)}
+          minHeight="480px"
+          helperText="Full GitHub-flavored Markdown with KaTeX math rendering ($inline$ & $$block$$)."
+        />
+      </div>
+<div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <span className="font-semibold text-foreground">Markdown & KaTeX Math Editor</span>
@@ -155,18 +166,7 @@ $$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
         </div>
       </div>
 
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border min-h-[520px]">
-        <MarkdownEditor
-          label="Technical Document Editor"
-          value={markdownVal}
-          onChange={(val) => setMarkdownVal(val)}
-          mode={markdownMode}
-          onModeChange={(m) => setMarkdownMode(m)}
-          minHeight="480px"
-          helperText="Full GitHub-flavored Markdown with KaTeX math rendering ($inline$ & $$block$$)."
-        />
-      </div>
-    </div>
+          </div>
   );
 };
 
@@ -232,7 +232,23 @@ Optical cues reinforce critical security requirements:
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+      <div
+        style={{ fontSize: `${fontSize}px` }}
+        className="p-6 sm:p-10 rounded-2xl bg-surface border border-border min-h-[380px]"
+      >
+        <MarkdownRenderer
+          content={sampleDocs[docType]}
+          interactiveChecklists={interactiveChecklists}
+          onChecklistToggle={(idx, checked) => {
+            addToast({
+              title: 'Checklist Item Toggled',
+              description: `Item #${idx + 1} marked as ${checked ? 'completed' : 'pending'}.`,
+              type: 'info',
+            });
+          }}
+        />
+      </div>
+<div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Markdown & Math Renderer Inspector
@@ -270,22 +286,6 @@ Optical cues reinforce critical security requirements:
         </ParameterGrid>
       </div>
 
-      <div
-        style={{ fontSize: `${fontSize}px` }}
-        className="p-6 sm:p-10 rounded-2xl bg-surface border border-border min-h-[380px]"
-      >
-        <MarkdownRenderer
-          content={sampleDocs[docType]}
-          interactiveChecklists={interactiveChecklists}
-          onChecklistToggle={(idx, checked) => {
-            addToast({
-              title: 'Checklist Item Toggled',
-              description: `Item #${idx + 1} marked as ${checked ? 'completed' : 'pending'}.`,
-              type: 'info',
-            });
-          }}
-        />
-      </div>
-    </div>
+          </div>
   );
 };

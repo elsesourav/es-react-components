@@ -150,7 +150,7 @@ export function FineTuneCard({
   const done = seg !== 0 || changed || typeValue !== text.placeholder;
 
   return (
-    <div className="relative w-full max-w-60 rounded-lg border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-surface,#fff)] text-[color:var(--mova-ai-ink,#202020)] shadow-[var(--mova-ai-shadow-raised,none)]">
+    <div className="relative w-full max-w-60 rounded-lg border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-surface,#fff)] text-[color:var(--mova-ai-ink,#202020)] shadow-float">
       {/* header */}
       <div className="primitive-card-bar flex items-center justify-between border-b border-[var(--mova-ai-border,#dedede)]">
         <span className="text-[13px] font-medium text-[var(--mova-ai-ink,#202020)]">

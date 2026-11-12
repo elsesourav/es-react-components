@@ -20,43 +20,7 @@ export const StickyHeaderPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <ScrollText className="size-4 text-primary" />
-          Sticky Header Range Slider & Height Controls
-        </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSlider
-            label="Expanded Height"
-            value={stickyExpandedH}
-            onChange={setStickyExpandedH}
-            min={56}
-            max={96}
-            step={4}
-            unit="px"
-          />
-          <ParameterSlider
-            label="Compact Height"
-            value={stickyCompactH}
-            onChange={setStickyCompactH}
-            min={36}
-            max={60}
-            step={4}
-            unit="px"
-          />
-          <ParameterSlider
-            label="Max Container Height"
-            value={stickyMaxH}
-            onChange={setStickyMaxH}
-            min={220}
-            max={450}
-            step={20}
-            unit="px"
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-lg">
           <StickyHeader
@@ -109,6 +73,45 @@ export const StickyHeaderPlayground: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <ScrollText className="size-4 text-primary" />
+          Sticky Header Range Slider & Height Controls
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Expanded Height"
+            value={stickyExpandedH}
+            onChange={setStickyExpandedH}
+            min={56}
+            max={96}
+            step={4}
+            unit="px"
+          />
+          <ParameterSlider
+            label="Compact Height"
+            value={stickyCompactH}
+            onChange={setStickyCompactH}
+            min={36}
+            max={60}
+            step={4}
+            unit="px"
+          />
+          <ParameterSlider
+            label="Max Container Height"
+            value={stickyMaxH}
+            onChange={setStickyMaxH}
+            min={220}
+            max={450}
+            step={20}
+            unit="px"
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -121,43 +124,7 @@ export const ReadingProgressPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <BookmarkCheck className="size-4 text-primary" />
-          Reading Progress Benchmark & Parameters
-        </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSlider
-            label="Word Count"
-            value={readingWords}
-            onChange={setReadingWords}
-            min={600}
-            max={3600}
-            step={200}
-            unit=" words"
-          />
-          <ParameterSlider
-            label="Reading WPM"
-            value={readingWpm}
-            onChange={setReadingWpm}
-            min={160}
-            max={320}
-            step={20}
-            unit=" wpm"
-          />
-          <ParameterSlider
-            label="Container Height"
-            value={containerHeight}
-            onChange={setContainerHeight}
-            min={180}
-            max={380}
-            step={20}
-            unit="px"
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-xl rounded-[var(--radius)] border border-border bg-surface-elevated p-5 shadow-sm space-y-4">
           <ReadingProgress
@@ -201,6 +168,45 @@ export const ReadingProgressPlayground: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <BookmarkCheck className="size-4 text-primary" />
+          Reading Progress Benchmark & Parameters
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Word Count"
+            value={readingWords}
+            onChange={setReadingWords}
+            min={600}
+            max={3600}
+            step={200}
+            unit=" words"
+          />
+          <ParameterSlider
+            label="Reading WPM"
+            value={readingWpm}
+            onChange={setReadingWpm}
+            min={160}
+            max={320}
+            step={20}
+            unit=" wpm"
+          />
+          <ParameterSlider
+            label="Container Height"
+            value={containerHeight}
+            onChange={setContainerHeight}
+            min={180}
+            max={380}
+            step={20}
+            unit="px"
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -213,34 +219,7 @@ export const ScrollSpyPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <Navigation2 className="size-4 text-primary" />
-          Scroll Spy Parameters
-        </div>
-
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Scroll Spy Offset"
-            value={spyOffset}
-            onChange={setSpyOffset}
-            min={20}
-            max={80}
-            step={5}
-            unit="px"
-          />
-          <ParameterSlider
-            label="Viewport Height"
-            value={spyHeight}
-            onChange={setSpyHeight}
-            min={200}
-            max={400}
-            step={20}
-            unit="px"
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-xl space-y-4">
           <ScrollSpy
@@ -306,6 +285,36 @@ export const ScrollSpyPlayground: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <Navigation2 className="size-4 text-primary" />
+          Scroll Spy Parameters
+        </div>
+
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Scroll Spy Offset"
+            value={spyOffset}
+            onChange={setSpyOffset}
+            min={20}
+            max={80}
+            step={5}
+            unit="px"
+          />
+          <ParameterSlider
+            label="Viewport Height"
+            value={spyHeight}
+            onChange={setSpyHeight}
+            min={200}
+            max={400}
+            step={20}
+            unit="px"
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -319,39 +328,7 @@ export const HideOnScrollPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
-          <EyeOff className="size-4 text-primary" />
-          Hide On Scroll Range Slider & Controls
-        </div>
-
-        <ParameterGrid columns={3}>
-          <ParameterSlider
-            label="Top Bar Height"
-            value={hideBarHeight}
-            onChange={setHideBarHeight}
-            min={36}
-            max={64}
-            step={4}
-            unit="px"
-          />
-          <ParameterSlider
-            label="Feed Max Height"
-            value={hideMaxHeight}
-            onChange={setHideMaxHeight}
-            min={220}
-            max={450}
-            step={20}
-            unit="px"
-          />
-          <ParameterSwitch
-            label="Pinned (Always Visible)"
-            checked={hidePinned}
-            onChange={setHidePinned}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
         <div className="w-full max-w-lg">
           <HideOnScroll
@@ -404,6 +381,41 @@ export const HideOnScrollPlayground: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border/50 pb-3">
+          <EyeOff className="size-4 text-primary" />
+          Hide On Scroll Range Slider & Controls
+        </div>
+
+        <ParameterGrid columns={3}>
+          <ParameterSlider
+            label="Top Bar Height"
+            value={hideBarHeight}
+            onChange={setHideBarHeight}
+            min={36}
+            max={64}
+            step={4}
+            unit="px"
+          />
+          <ParameterSlider
+            label="Feed Max Height"
+            value={hideMaxHeight}
+            onChange={setHideMaxHeight}
+            min={220}
+            max={450}
+            step={20}
+            unit="px"
+          />
+          <ParameterSwitch
+            label="Pinned (Always Visible)"
+            checked={hidePinned}
+            onChange={setHidePinned}
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };

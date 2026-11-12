@@ -21,7 +21,32 @@ export const MotionLoadersPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            SquareSnake (3x3 Staggered Matrix)
+          </div>
+          <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center">
+            <SquareSnake size={loaderSize} colorClassName={loaderColor} />
+          </div>
+          <div className="text-xs text-muted-foreground text-center max-w-xs">
+            Fluid opacity wave propagation across a 3x3 matrix based on diagonal coordinate delay.
+          </div>
+        </div>
+
+        <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            BobbingDots (Harmonic Wave)
+          </div>
+          <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center h-24">
+            <BobbingDots size={loaderSize} colorClassName={loaderColor} />
+          </div>
+          <div className="text-xs text-muted-foreground text-center max-w-xs">
+            Continuous harmonic sine-bounce wave with staggering and smooth easing.
+          </div>
+        </div>
+      </div>
+<div className="p-4 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-primary" />
           <span className="font-semibold text-foreground">Motion Loaders</span>
@@ -74,32 +99,7 @@ export const MotionLoadersPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            SquareSnake (3x3 Staggered Matrix)
           </div>
-          <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center">
-            <SquareSnake size={loaderSize} colorClassName={loaderColor} />
-          </div>
-          <div className="text-xs text-muted-foreground text-center max-w-xs">
-            Fluid opacity wave propagation across a 3x3 matrix based on diagonal coordinate delay.
-          </div>
-        </div>
-
-        <div className="p-8 sm:p-10 rounded-3xl bg-surface border border-border flex flex-col items-center justify-center space-y-4 min-h-[220px]">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            BobbingDots (Harmonic Wave)
-          </div>
-          <div className="p-6 rounded-2xl bg-surface-subtle/50 border border-border flex items-center justify-center h-24">
-            <BobbingDots size={loaderSize} colorClassName={loaderColor} />
-          </div>
-          <div className="text-xs text-muted-foreground text-center max-w-xs">
-            Continuous harmonic sine-bounce wave with staggering and smooth easing.
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -113,25 +113,6 @@ export const LoadMorePlayground: React.FC = () => {
 
   return (
     <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Infinite Scroll Order Feed
-        </span>
-        <button
-          onClick={() => {
-            loadMorePage.current = 1;
-            setLoadMoreItems([
-              { id: '1', customer: 'Acme Corp', total: '$1,240.00', status: 'Settled' },
-              { id: '2', customer: 'Stripe Payments', total: '$890.50', status: 'Settled' },
-              { id: '3', customer: 'Linear App', total: '$420.00', status: 'Pending' },
-            ]);
-          }}
-          className="px-2.5 py-1 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground"
-        >
-          Reset Feed
-        </button>
-      </div>
-
       <div className="max-w-md mx-auto">
         <div className="h-72 overflow-y-auto overscroll-contain rounded-xl border border-border bg-surface-subtle/50 p-2 space-y-2">
           {loadMoreItems.map((item) => (
@@ -172,6 +153,25 @@ export const LoadMorePlayground: React.FC = () => {
           Scroll inside the box above to trigger the next page of transactions automatically.
         </p>
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Infinite Scroll Order Feed
+        </span>
+        <button
+          onClick={() => {
+            loadMorePage.current = 1;
+            setLoadMoreItems([
+              { id: '1', customer: 'Acme Corp', total: '$1,240.00', status: 'Settled' },
+              { id: '2', customer: 'Stripe Payments', total: '$890.50', status: 'Settled' },
+              { id: '3', customer: 'Linear App', total: '$420.00', status: 'Pending' },
+            ]);
+          }}
+          className="px-2.5 py-1 text-xs rounded-lg border border-border text-muted-foreground hover:text-foreground"
+        >
+          Reset Feed
+        </button>
+      </div>
+
+          </div>
   );
 };

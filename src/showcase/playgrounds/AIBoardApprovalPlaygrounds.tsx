@@ -18,7 +18,46 @@ export const AiApprovalCardPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+      <div
+        className={cn(
+          'transition-all duration-300 mx-auto',
+          approvalDevice === 'desktop' && 'w-full',
+          approvalDevice === 'tablet' && 'max-w-[768px]',
+          approvalDevice === 'mobile' && 'max-w-[390px]'
+        )}
+      >
+        {approvalDevice !== 'desktop' && (
+          <div className="flex items-center justify-between pb-2 mb-2 px-2 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+            <span>{approvalDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+            <span className="capitalize">Theme: {approvalTheme}</span>
+          </div>
+        )}
+
+        <div className="rounded-2xl border border-border overflow-hidden shadow-lg bg-surface-elevated flex items-center justify-center p-6 sm:p-10">
+          <AIApprovalCard
+            key={approvalKey}
+            theme={approvalTheme === 'auto' ? (isDark ? 'dark' : 'light') : approvalTheme}
+            onSubmitted={(answers) => {
+              setApprovalSubmissions('Approved');
+              addToast({
+                title: 'Review Submitted',
+                description: `Recorded feedback across ${Object.keys(answers).length} gates.`,
+                type: 'success',
+              });
+            }}
+          />
+        </div>
+
+        {approvalSubmissions && (
+          <div className="mt-4 p-3 rounded-xl bg-surface border border-border text-xs text-center">
+            Decision recorded:{' '}
+            <strong className="text-success font-semibold">
+              {approvalSubmissions}
+            </strong>
+          </div>
+        )}
+      </div>
+<div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Sparkles className="size-4 text-primary" />
           Approval Card Configuration
@@ -95,45 +134,6 @@ export const AiApprovalCardPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div
-        className={cn(
-          'transition-all duration-300 mx-auto',
-          approvalDevice === 'desktop' && 'w-full',
-          approvalDevice === 'tablet' && 'max-w-[768px]',
-          approvalDevice === 'mobile' && 'max-w-[390px]'
-        )}
-      >
-        {approvalDevice !== 'desktop' && (
-          <div className="flex items-center justify-between pb-2 mb-2 px-2 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
-            <span>{approvalDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
-            <span className="capitalize">Theme: {approvalTheme}</span>
           </div>
-        )}
-
-        <div className="rounded-2xl border border-border overflow-hidden shadow-lg bg-surface-elevated flex items-center justify-center p-6 sm:p-10">
-          <AIApprovalCard
-            key={approvalKey}
-            theme={approvalTheme === 'auto' ? (isDark ? 'dark' : 'light') : approvalTheme}
-            onSubmitted={(answers) => {
-              setApprovalSubmissions('Approved');
-              addToast({
-                title: 'Review Submitted',
-                description: `Recorded feedback across ${Object.keys(answers).length} gates.`,
-                type: 'success',
-              });
-            }}
-          />
-        </div>
-
-        {approvalSubmissions && (
-          <div className="mt-4 p-3 rounded-xl bg-surface border border-border text-xs text-center">
-            Decision recorded:{' '}
-            <strong className="text-success font-semibold">
-              {approvalSubmissions}
-            </strong>
-          </div>
-        )}
-      </div>
-    </div>
   );
 };

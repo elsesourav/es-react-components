@@ -136,8 +136,8 @@ function Row({ label, share, winner, mine, revealed, reduced, onPick }: RowProps
         "group relative h-10 w-full overflow-hidden rounded-[var(--radius)] border text-left outline-none transition-all duration-200 cursor-pointer select-none",
         "focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1",
         revealed
-          ? "cursor-default border-border bg-surface-subtle/70 shadow-inner"
-          : "border-border bg-surface-elevated shadow-sm hover:bg-surface-subtle active:translate-y-px"
+          ? "cursor-default border-border bg-surface-subtle/70 shadow-well"
+          : "border-border bg-surface-elevated shadow-lift hover:shadow-float active:translate-y-px"
       )}
     >
       <motion.span

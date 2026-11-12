@@ -41,7 +41,7 @@ export const Stat = React.forwardRef<HTMLDivElement, StatProps>(
       <div
         ref={ref}
         className={cn(
-          'p-5 rounded-xl bg-card border border-border shadow-sm flex flex-col justify-between space-y-4',
+          'p-5 rounded-xl bg-card border border-border shadow-lift hover:shadow-float transition-all flex flex-col justify-between space-y-4',
           className
         )}
         {...props}
@@ -51,7 +51,7 @@ export const Stat = React.forwardRef<HTMLDivElement, StatProps>(
             {label}
           </span>
           {icon && (
-            <div className="p-2 rounded-lg bg-surface border border-border/60 text-primary">
+            <div className="p-2 rounded-lg bg-surface border border-border/60 text-primary shadow-cap">
               {icon}
             </div>
           )}

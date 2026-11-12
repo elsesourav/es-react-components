@@ -19,7 +19,46 @@ export const AiFineTuneCardPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+      <div
+        className={cn(
+          'transition-all duration-300 mx-auto',
+          fineTuneDevice === 'mobile' &&
+            'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
+          fineTuneDevice === 'tablet' &&
+            'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
+          fineTuneDevice === 'desktop' && 'w-full'
+        )}
+      >
+        {fineTuneDevice !== 'desktop' && (
+          <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
+            <span>{fineTuneDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
+            <span className="capitalize">Theme: {fineTuneTheme}</span>
+          </div>
+        )}
+
+        <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
+          <AIFineTuneCard
+            key={fineTuneKey}
+            theme={fineTuneTheme === 'auto' ? (isDark ? 'dark' : 'light') : fineTuneTheme}
+            onChange={(state) => {
+              setFineTuneLastState(state);
+            }}
+          />
+          {fineTuneLastState && (
+            <div className="mt-6 p-3.5 rounded-xl bg-surface border border-border text-xs text-muted-foreground max-w-sm w-full">
+              <div className="font-semibold text-foreground mb-1.5">Live Parameter State:</div>
+              <div className="grid grid-cols-2 gap-1 font-mono text-[11px]">
+                <div>Layout Seg: <span className="text-primary font-bold">{fineTuneLastState.segment}</span></div>
+                <div>Type: <span className="text-primary font-bold">{fineTuneLastState.type}</span></div>
+                {Object.entries(fineTuneLastState.values).map(([k, v]) => (
+                  <div key={k}>{k}: <span className="text-foreground font-semibold">{String(v)}</span></div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+<div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Sparkles className="size-4 text-primary" />
           Fine-Tune Inspector Playground
@@ -101,46 +140,7 @@ export const AiFineTuneCardPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div
-        className={cn(
-          'transition-all duration-300 mx-auto',
-          fineTuneDevice === 'mobile' &&
-            'max-w-[390px] border-[6px] border-neutral-700/80 rounded-[40px] p-4 shadow-2xl bg-surface/40',
-          fineTuneDevice === 'tablet' &&
-            'max-w-[768px] border-2 border-neutral-600/60 rounded-[32px] p-6 shadow-xl bg-surface/40',
-          fineTuneDevice === 'desktop' && 'w-full'
-        )}
-      >
-        {fineTuneDevice !== 'desktop' && (
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-border/50 text-[11px] font-mono text-muted-foreground">
-            <span>{fineTuneDevice === 'mobile' ? 'Mobile Viewport (390px)' : 'Tablet Viewport (768px)'}</span>
-            <span className="capitalize">Theme: {fineTuneTheme}</span>
           </div>
-        )}
-
-        <div className="p-6 sm:p-12 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center min-h-[380px]">
-          <AIFineTuneCard
-            key={fineTuneKey}
-            theme={fineTuneTheme === 'auto' ? (isDark ? 'dark' : 'light') : fineTuneTheme}
-            onChange={(state) => {
-              setFineTuneLastState(state);
-            }}
-          />
-          {fineTuneLastState && (
-            <div className="mt-6 p-3.5 rounded-xl bg-surface border border-border text-xs text-muted-foreground max-w-sm w-full">
-              <div className="font-semibold text-foreground mb-1.5">Live Parameter State:</div>
-              <div className="grid grid-cols-2 gap-1 font-mono text-[11px]">
-                <div>Layout Seg: <span className="text-primary font-bold">{fineTuneLastState.segment}</span></div>
-                <div>Type: <span className="text-primary font-bold">{fineTuneLastState.type}</span></div>
-                {Object.entries(fineTuneLastState.values).map(([k, v]) => (
-                  <div key={k}>{k}: <span className="text-foreground font-semibold">{String(v)}</span></div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -157,7 +157,20 @@ export const TaskStepsPlayground: React.FC = () => {
 
   return (
     <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+      <div className="max-w-xl mx-auto p-6 rounded-2xl border border-border bg-surface-subtle/50 space-y-6">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-semibold text-foreground">Deploy run #89410</span>
+          <span className="font-mono text-muted-foreground">Stage {taskStepIdx + 1} of {deploySteps.length}</span>
+        </div>
+
+        <TaskSteps
+          steps={deploySteps}
+          current={taskStepIdx}
+          failed={taskFailed}
+          label="Deploy progress"
+        />
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/50 pt-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Pipeline Stage Controls
         </span>
@@ -189,19 +202,6 @@ export const TaskStepsPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-xl mx-auto p-6 rounded-2xl border border-border bg-surface-subtle/50 space-y-6">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-foreground">Deploy run #89410</span>
-          <span className="font-mono text-muted-foreground">Stage {taskStepIdx + 1} of {deploySteps.length}</span>
-        </div>
-
-        <TaskSteps
-          steps={deploySteps}
-          current={taskStepIdx}
-          failed={taskFailed}
-          label="Deploy progress"
-        />
-      </div>
-    </div>
+          </div>
   );
 };

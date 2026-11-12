@@ -373,7 +373,7 @@ export function Modal({
             aria-describedby={description ? descriptionId : undefined}
             variants={variants.panel}
             style={{ maxWidth, maxHeight }}
-            className={`relative flex w-full flex-col overflow-hidden rounded-[var(--radius)] border border-border bg-surface text-foreground shadow-2xl outline-none ${className}`}
+            className={`relative flex w-full flex-col overflow-hidden rounded-[var(--radius)] border border-border bg-surface text-foreground shadow-float outline-none ${className}`}
           >
             <div className="flex shrink-0 items-start gap-3 px-5 pb-3 pt-5 border-b border-border/40">
               <div className="min-w-0 flex-1">

@@ -41,7 +41,34 @@ export const TextLoopPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+            {/* Live Canvas Box */}
+      <div className="p-4 sm:p-8 rounded-2xl bg-surface-sunken/40 border border-border flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[380px]">
+        <TextLoop
+          text={loopText}
+          shape={loopShape}
+          speed={loopSpeed}
+          direction={loopDirection}
+          separator="✦"
+          curviness={loopCurviness}
+          tilt={loopTilt}
+          fontSize={loopFontSize}
+          fontWeight={800}
+          letterSpacing={2}
+          uppercase
+          ribbon={loopRibbon}
+          ribbonColor={loopRibbonColor}
+          ribbonWidth={loopRibbonWidth}
+          edgeFade={0}
+          cross={loopCross}
+          crossAngle={loopCrossAngle}
+          draggable={loopDraggable}
+          scrollBoost={0}
+          outline={loopOutline}
+          pauseOnHover={loopPauseOnHover}
+          outlineWidth={1.5}
+        />
+      </div>
+<div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
           <div className="min-w-0 flex-1">
             <h4 className="text-sm font-bold text-foreground">Interactive Text Loop Controls</h4>
@@ -254,33 +281,6 @@ export const TextLoopPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Canvas Box */}
-      <div className="p-4 sm:p-8 rounded-2xl bg-surface-sunken/40 border border-border flex items-center justify-center overflow-hidden min-h-[300px] sm:min-h-[380px]">
-        <TextLoop
-          text={loopText}
-          shape={loopShape}
-          speed={loopSpeed}
-          direction={loopDirection}
-          separator="✦"
-          curviness={loopCurviness}
-          tilt={loopTilt}
-          fontSize={loopFontSize}
-          fontWeight={800}
-          letterSpacing={2}
-          uppercase
-          ribbon={loopRibbon}
-          ribbonColor={loopRibbonColor}
-          ribbonWidth={loopRibbonWidth}
-          edgeFade={0}
-          cross={loopCross}
-          crossAngle={loopCrossAngle}
-          draggable={loopDraggable}
-          scrollBoost={0}
-          outline={loopOutline}
-          pauseOnHover={loopPauseOnHover}
-          outlineWidth={1.5}
-        />
-      </div>
     </div>
   );
 };

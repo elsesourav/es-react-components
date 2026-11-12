@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://es-react-components.dev/sitemap.xml
+Sitemap: https://components.elsesourav.com/sitemap.xml

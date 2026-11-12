@@ -1,15 +1,61 @@
 {
-  "name": "es-react-components",
-  "private": true,
+  "name": "@elsesourav/react-ui",
   "version": "1.0.0",
+  "description": "Production-grade React 19 UI component library with tactile specular depth, spring physics, and dynamic theme tokens.",
   "type": "module",
+  "main": "./dist-lib/index.cjs",
+  "module": "./dist-lib/index.js",
+  "types": "./dist-lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist-lib/index.d.ts",
+      "import": "./dist-lib/index.js",
+      "require": "./dist-lib/index.cjs"
+    },
+    "./style.css": "./dist-lib/style.css"
+  },
+  "files": [
+    "dist-lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://components.elsesourav.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elsesourav/es-react-components.git"
+  },
+  "keywords": [
+    "react",
+    "react19",
+    "ui",
+    "component-library",
+    "tailwind",
+    "motion",
+    "tactile-shadows",
+    "design-tokens"
+  ],
+  "author": "Sourav (@elsesourav)",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "sync:sources": "node scripts/sync_component_sources.cjs",
     "prebuild": "node scripts/sync_component_sources.cjs",
     "build": "tsc -b && vite build",
+    "build:site": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.config.lib.ts",
+    "build:all": "pnpm run build && pnpm run build:lib",
     "preview": "vite preview",
     "deploy": "bash scripts/deploy.sh"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.4.0",
@@ -37,6 +83,7 @@
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "^4.5.3"
   }
 }

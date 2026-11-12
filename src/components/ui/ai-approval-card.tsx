@@ -252,7 +252,7 @@ export function ApprovalCard({
   return (
     <div className="w-full max-w-80">
       <div
-        className="relative overflow-hidden rounded-lg border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-surface,#fff)] text-[color:var(--mova-ai-ink,#202020)] shadow-[var(--mova-ai-shadow-card,none)]"
+        className="relative overflow-hidden rounded-lg border border-[var(--mova-ai-border,#dedede)] bg-[var(--mova-ai-surface,#fff)] text-[color:var(--mova-ai-ink,#202020)] shadow-float"
         style={{
           animation: "mova-ai-approval-card-fade-up 380ms cubic-bezier(0.23,1,0.32,1) both",
         }}

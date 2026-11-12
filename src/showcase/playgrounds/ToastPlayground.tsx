@@ -32,7 +32,148 @@ export const ToastPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Parameter Controls */}
+      {/* 1. Interactive Inline Showcase Card (Preview First) */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-surface border border-border space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Interactive Inline Toast Preview</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Drag down with your mouse or finger to feel gesture inertia, or hover to pause the burning fuse.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={resetInlineToast}>
+            Reset / Spawn Inline Toast
+          </Button>
+        </div>
+
+        <div className="relative min-h-[140px] rounded-xl border border-dashed border-border/70 bg-surface-subtle/50 flex flex-col items-center justify-center p-6 overflow-hidden">
+          {inlineToastOpen ? (
+            <div className="w-full flex justify-center">
+              <SwipeToast
+                key={inlineKey}
+                inline
+                open={inlineToastOpen}
+                title="Workspace backup archived"
+                description="Encrypted bundle synced to edge storage"
+                actionLabel={showAction ? 'Undo' : undefined}
+                onAction={() => {
+                  addToast({
+                    title: 'Action Triggered',
+                    description: 'Reverted archive operation successfully.',
+                    type: 'info',
+                  });
+                }}
+                closeButton={closeButton}
+                pauseOnHover={pauseOnHover}
+                duration={toastDuration}
+                fuse={fusePosition}
+                settleBounce={settleBounce}
+                swipeDistance={swipeDistance}
+                width={toastWidth}
+                radius={toastRadius}
+                onClose={(reason) => {
+                  setInlineToastOpen(false);
+                  setLastDismissReason(reason);
+                }}
+              />
+            </div>
+          ) : (
+            <div className="text-center py-6 space-y-2 animate-fade-in">
+              <p className="text-xs text-muted-foreground">
+                Inline toast dismissed via{' '}
+                <span className="font-semibold text-primary font-mono bg-primary/10 px-2 py-0.5 rounded">
+                  {lastDismissReason ?? 'action'}
+                </span>
+              </p>
+              <Button variant="primary" size="sm" onClick={resetInlineToast}>
+                Spawn New Inline Toast
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 2. Imperative Floating Toasts (useToast Hook) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Floating Notifications Queue (useToast)</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Click to dispatch real-time kinetic toasts to the viewport bottom-right corner.
+            </p>
+          </div>
+          <Button variant="ghost" size="sm" onClick={clearToasts} className="text-muted-foreground hover:text-foreground">
+            Clear Queue
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="primary"
+            onClick={() =>
+              addToast({
+                title: 'Changes Synchronized',
+                description: 'Profile configurations pushed to distributed cluster.',
+                type: 'success',
+                duration: toastDuration,
+                fuse: fusePosition,
+                actionLabel: 'Details',
+                onAction: () => console.log('Details clicked'),
+              })
+            }
+          >
+            Success Toast
+          </Button>
+
+          <Button
+            variant="danger"
+            onClick={() =>
+              addToast({
+                title: 'Connection Dropped',
+                description: 'Socket peer unreachable. Retrying handshake...',
+                type: 'error',
+                duration: toastDuration,
+                fuse: fusePosition,
+                actionLabel: 'Retry Now',
+                onAction: () => console.log('Retry clicked'),
+              })
+            }
+          >
+            Danger Toast
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() =>
+              addToast({
+                title: 'Memory Threshold Warning',
+                description: 'V8 heap allocation crossed 85% safety boundary.',
+                type: 'warning',
+                duration: toastDuration,
+                fuse: fusePosition,
+              })
+            }
+          >
+            Warning Toast
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={() =>
+              addToast({
+                title: 'Edge Cluster Advisory',
+                description: 'Scheduled maintenance tonight at 02:00 UTC.',
+                type: 'info',
+                duration: toastDuration,
+                fuse: fusePosition,
+              })
+            }
+          >
+            Info Toast
+          </Button>
+        </div>
+      </div>
+      {/* 3. Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-5">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
@@ -132,147 +273,6 @@ export const ToastPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Inline Showcase Card */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-surface border border-border space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div>
-            <h4 className="text-sm font-semibold text-foreground">Interactive Inline Toast Preview</h4>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Drag down with your mouse or finger to feel gesture inertia, or hover to pause the burning fuse.
-            </p>
-          </div>
-          <Button variant="outline" size="sm" onClick={resetInlineToast}>
-            Reset / Spawn Inline Toast
-          </Button>
-        </div>
-
-        <div className="relative min-h-[140px] rounded-xl border border-dashed border-border/70 bg-surface-subtle/50 flex flex-col items-center justify-center p-6 overflow-hidden">
-          {inlineToastOpen ? (
-            <div className="w-full flex justify-center">
-              <SwipeToast
-                key={inlineKey}
-                inline
-                open={inlineToastOpen}
-                title="Workspace backup archived"
-                description="Encrypted bundle synced to edge storage"
-                actionLabel={showAction ? 'Undo' : undefined}
-                onAction={() => {
-                  addToast({
-                    title: 'Action Triggered',
-                    description: 'Reverted archive operation successfully.',
-                    type: 'info',
-                  });
-                }}
-                closeButton={closeButton}
-                pauseOnHover={pauseOnHover}
-                duration={toastDuration}
-                fuse={fusePosition}
-                settleBounce={settleBounce}
-                swipeDistance={swipeDistance}
-                width={toastWidth}
-                radius={toastRadius}
-                onClose={(reason) => {
-                  setInlineToastOpen(false);
-                  setLastDismissReason(reason);
-                }}
-              />
-            </div>
-          ) : (
-            <div className="text-center py-6 space-y-2 animate-fade-in">
-              <p className="text-xs text-muted-foreground">
-                Inline toast dismissed via{' '}
-                <span className="font-semibold text-primary font-mono bg-primary/10 px-2 py-0.5 rounded">
-                  {lastDismissReason ?? 'action'}
-                </span>
-              </p>
-              <Button variant="primary" size="sm" onClick={resetInlineToast}>
-                Spawn New Inline Toast
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Imperative Floating Toasts (useToast Hook) */}
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div>
-            <h4 className="text-sm font-semibold text-foreground">Floating Notifications Queue (useToast)</h4>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Click to dispatch real-time kinetic toasts to the viewport bottom-right corner.
-            </p>
-          </div>
-          <Button variant="ghost" size="sm" onClick={clearToasts} className="text-muted-foreground hover:text-foreground">
-            Clear Queue
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant="primary"
-            onClick={() =>
-              addToast({
-                title: 'Changes Synchronized',
-                description: 'Profile configurations pushed to distributed cluster.',
-                type: 'success',
-                duration: toastDuration,
-                fuse: fusePosition,
-                actionLabel: 'Details',
-                onAction: () => console.log('Details clicked'),
-              })
-            }
-          >
-            Success Toast
-          </Button>
-
-          <Button
-            variant="danger"
-            onClick={() =>
-              addToast({
-                title: 'Connection Dropped',
-                description: 'Socket peer unreachable. Retrying handshake...',
-                type: 'error',
-                duration: toastDuration,
-                fuse: fusePosition,
-                actionLabel: 'Retry Now',
-                onAction: () => console.log('Retry clicked'),
-              })
-            }
-          >
-            Danger Toast
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() =>
-              addToast({
-                title: 'Memory Threshold Warning',
-                description: 'V8 heap allocation crossed 85% safety boundary.',
-                type: 'warning',
-                duration: toastDuration,
-                fuse: fusePosition,
-              })
-            }
-          >
-            Warning Toast
-          </Button>
-
-          <Button
-            variant="secondary"
-            onClick={() =>
-              addToast({
-                title: 'Edge Cluster Advisory',
-                description: 'Scheduled maintenance tonight at 02:00 UTC.',
-                type: 'info',
-                duration: toastDuration,
-                fuse: fusePosition,
-              })
-            }
-          >
-            Info Toast
-          </Button>
-        </div>
-      </div>
     </div>
   );
 };

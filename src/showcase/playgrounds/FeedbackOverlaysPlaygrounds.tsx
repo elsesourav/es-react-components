@@ -21,28 +21,7 @@ export const ModalPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-          Modal Parameter Controls
-        </span>
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Max Width"
-            value={modalMaxWidth}
-            onChange={setModalMaxWidth}
-            min={360}
-            max={720}
-            step={20}
-            unit="px"
-          />
-          <ParameterSwitch
-            label="Show Action Footer"
-            checked={showFooter}
-            onChange={setShowFooter}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[220px] gap-4">
         <Button variant="primary" onClick={() => setModalOpen(true)}>
           Launch Modal Dialog
@@ -92,6 +71,29 @@ export const ModalPlayground: React.FC = () => {
           </div>
         </Modal>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
+          Modal Parameter Controls
+        </span>
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Max Width"
+            value={modalMaxWidth}
+            onChange={setModalMaxWidth}
+            min={360}
+            max={720}
+            step={20}
+            unit="px"
+          />
+          <ParameterSwitch
+            label="Show Action Footer"
+            checked={showFooter}
+            onChange={setShowFooter}
+          />
+        </ParameterGrid>
+      </div>
     </div>
   );
 };
@@ -102,32 +104,7 @@ export const TooltipPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-          Tooltip Group Dynamics
-        </span>
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Open Delay"
-            value={openDelay}
-            onChange={setOpenDelay}
-            min={50}
-            max={600}
-            step={50}
-            unit="ms"
-          />
-          <ParameterSlider
-            label="Skip Delay (Warm Glide)"
-            value={skipDelay}
-            onChange={setSkipDelay}
-            min={100}
-            max={800}
-            step={50}
-            unit="ms"
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="max-w-md mx-auto p-10 rounded-2xl border border-border bg-surface-subtle/50 flex flex-col items-center justify-center space-y-6">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -178,6 +155,33 @@ export const TooltipPlayground: React.FC = () => {
             Hover over any button, then slide across to neighbors to witness the smooth warm-travel glide transition.
           </p>
         </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
+          Tooltip Group Dynamics
+        </span>
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Open Delay"
+            value={openDelay}
+            onChange={setOpenDelay}
+            min={50}
+            max={600}
+            step={50}
+            unit="ms"
+          />
+          <ParameterSlider
+            label="Skip Delay (Warm Glide)"
+            value={skipDelay}
+            onChange={setSkipDelay}
+            min={100}
+            max={800}
+            step={50}
+            unit="ms"
+          />
+        </ParameterGrid>
       </div>
     </div>
   );
@@ -242,23 +246,7 @@ export const LightboxPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-          Lightbox Zoom Parameters
-        </span>
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Maximum Zoom Scale"
-            value={maxScale}
-            onChange={setMaxScale}
-            min={2}
-            max={8}
-            step={1}
-            unit="x"
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-2">
           <Maximize2 className="size-4 text-primary" />
@@ -316,6 +304,24 @@ export const LightboxPlayground: React.FC = () => {
           originRef={lightboxThumbRef}
           maxScale={maxScale}
         />
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
+          Lightbox Zoom Parameters
+        </span>
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Maximum Zoom Scale"
+            value={maxScale}
+            onChange={setMaxScale}
+            min={2}
+            max={8}
+            step={1}
+            unit="x"
+          />
+        </ParameterGrid>
       </div>
     </div>
   );

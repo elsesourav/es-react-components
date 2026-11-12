@@ -21,6 +21,31 @@ export const ElasticSliderPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[320px] gap-8">
+        <div className="flex flex-col items-center justify-center w-full max-w-sm">
+          <ElasticSlider
+            value={elasticVal}
+            onChange={setElasticVal}
+            orientation={elasticOrientation}
+            valuePosition={elasticPosition}
+            iconPlacement={elasticPlacement}
+            thumb={elasticThumb}
+            ticks={elasticTicks}
+            bounce={elasticBounce}
+            maxStretch={elasticMaxStretch}
+            thickness={6}
+            activeThickness={14}
+            wheel
+            className="text-primary"
+          />
+        </div>
+
+        <div className="text-xs font-mono text-muted-foreground bg-surface-subtle px-3 py-1.5 rounded-lg border border-border/80">
+          Current Position: <span className="text-foreground font-semibold">{Math.round(elasticVal)}%</span>
+          {elasticVal === 0 ? ' (Muted)' : elasticVal > 80 ? ' (High Output)' : ''}
+        </div>
+      </div>
+
       <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -92,31 +117,6 @@ export const ElasticSliderPlayground: React.FC = () => {
             onChange={setElasticThumb}
           />
         </ParameterGrid>
-      </div>
-
-      <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[320px] gap-8">
-        <div className="flex flex-col items-center justify-center w-full max-w-sm">
-          <ElasticSlider
-            value={elasticVal}
-            onChange={setElasticVal}
-            orientation={elasticOrientation}
-            valuePosition={elasticPosition}
-            iconPlacement={elasticPlacement}
-            thumb={elasticThumb}
-            ticks={elasticTicks}
-            bounce={elasticBounce}
-            maxStretch={elasticMaxStretch}
-            thickness={6}
-            activeThickness={14}
-            wheel
-            className="text-primary"
-          />
-        </div>
-
-        <div className="text-xs font-mono text-muted-foreground bg-surface-subtle px-3 py-1.5 rounded-lg border border-border/80">
-          Current Position: <span className="text-foreground font-semibold">{Math.round(elasticVal)}%</span>
-          {elasticVal === 0 ? ' (Muted)' : elasticVal > 80 ? ' (High Output)' : ''}
-        </div>
       </div>
 
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
@@ -213,7 +213,34 @@ export const WakeSliderPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
+      <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[280px] gap-6">
+        <div className="w-full max-w-lg">
+          <WakeSlider
+            value={wakeVal}
+            onChange={setWakeVal}
+            bars={wakeBars}
+            height={wakeHeight}
+            reach={wakeReach}
+            skew={wakeSkew}
+            glide={wakeGlide}
+            showValue={wakeShowValue}
+            fillColor="hsl(var(--primary))"
+            trackColor="hsl(var(--muted) / 0.35)"
+            crestColor="hsl(var(--primary))"
+          />
+        </div>
+
+        <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground bg-surface-subtle px-4 py-2 rounded-xl border border-border/80">
+          <span>Level: <span className="text-foreground font-semibold">{wakeVal}%</span></span>
+          <span>•</span>
+          <span>Bars: <span className="text-foreground font-semibold">{wakeBars}</span></span>
+          <span>•</span>
+          <span>Glide: <span className="text-foreground font-semibold">{wakeGlide}s</span></span>
+          <span>•</span>
+          <span>Reach: <span className="text-foreground font-semibold">{wakeReach}</span></span>
+        </div>
+      </div>
+<div className="p-6 rounded-2xl bg-surface border border-border flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="text-sm font-semibold text-foreground flex items-center gap-2">
             <SlidersHorizontal className="size-4 text-primary" />
@@ -271,33 +298,6 @@ export const WakeSliderPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-8 sm:p-12 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[280px] gap-6">
-        <div className="w-full max-w-lg">
-          <WakeSlider
-            value={wakeVal}
-            onChange={setWakeVal}
-            bars={wakeBars}
-            height={wakeHeight}
-            reach={wakeReach}
-            skew={wakeSkew}
-            glide={wakeGlide}
-            showValue={wakeShowValue}
-            fillColor="hsl(var(--primary))"
-            trackColor="hsl(var(--muted) / 0.35)"
-            crestColor="hsl(var(--primary))"
-          />
-        </div>
-
-        <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground bg-surface-subtle px-4 py-2 rounded-xl border border-border/80">
-          <span>Level: <span className="text-foreground font-semibold">{wakeVal}%</span></span>
-          <span>•</span>
-          <span>Bars: <span className="text-foreground font-semibold">{wakeBars}</span></span>
-          <span>•</span>
-          <span>Glide: <span className="text-foreground font-semibold">{wakeGlide}s</span></span>
-          <span>•</span>
-          <span>Reach: <span className="text-foreground font-semibold">{wakeReach}</span></span>
-        </div>
-      </div>
-    </div>
+          </div>
   );
 };

@@ -94,7 +94,7 @@ export const StandardInput = React.forwardRef<HTMLInputElement, StandardInputPro
             ref={ref}
             disabled={disabled}
             className={cn(
-              'w-full bg-surface border border-border text-foreground placeholder:text-muted-foreground/60 transition-[border-color,box-shadow] duration-150',
+              'w-full bg-surface border border-border text-foreground placeholder:text-muted-foreground/60 transition-[border-color,box-shadow] duration-150 shadow-well focus:shadow-lift',
               sizes[sizeVariant],
               'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
               'disabled:cursor-not-allowed disabled:opacity-50 hover:border-border-strong',

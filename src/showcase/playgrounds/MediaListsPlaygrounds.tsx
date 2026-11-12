@@ -36,28 +36,6 @@ export const ReorderListPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
-        <div className="text-xs text-muted-foreground">
-          Sort Priority: <span className="text-foreground font-semibold">Top item has highest execution precedence</span>
-        </div>
-
-        <Button
-          size="xs"
-          variant="outline"
-          onClick={() => {
-            setReorderItems([
-              { id: 'r1', title: 'Edge Routing Ingress Gateway', badge: 'Critical', latency: '8ms' },
-              { id: 'r2', title: 'Zero-Trust Identity Verifier', badge: 'High', latency: '14ms' },
-              { id: 'r3', title: 'Distributed Cache Invalidation', badge: 'Normal', latency: '28ms' },
-              { id: 'r4', title: 'Prometheus Telemetry Collector', badge: 'Low', latency: '42ms' },
-            ]);
-            addToast({ title: 'List Reset', description: 'Restored default routing order.', type: 'info' });
-          }}
-        >
-          Reset Order
-        </Button>
-      </div>
-
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
         <div className="w-full max-w-lg space-y-3">
           <ReorderList
@@ -95,7 +73,29 @@ export const ReorderListPlayground: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+        <div className="text-xs text-muted-foreground">
+          Sort Priority: <span className="text-foreground font-semibold">Top item has highest execution precedence</span>
+        </div>
+
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => {
+            setReorderItems([
+              { id: 'r1', title: 'Edge Routing Ingress Gateway', badge: 'Critical', latency: '8ms' },
+              { id: 'r2', title: 'Zero-Trust Identity Verifier', badge: 'High', latency: '14ms' },
+              { id: 'r3', title: 'Distributed Cache Invalidation', badge: 'Normal', latency: '28ms' },
+              { id: 'r4', title: 'Prometheus Telemetry Collector', badge: 'Low', latency: '42ms' },
+            ]);
+            addToast({ title: 'List Reset', description: 'Restored default routing order.', type: 'info' });
+          }}
+        >
+          Reset Order
+        </Button>
+      </div>
+
+          </div>
   );
 };
 
@@ -118,7 +118,26 @@ export const LogoMarqueePlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border space-y-6">
+        <div className="text-center max-w-md mx-auto space-y-1">
+          <h3 className="text-sm font-semibold text-foreground">Supported Enterprise Platforms</h3>
+          <p className="text-xs text-muted-foreground">
+            Hover to halt scrolling. Click any pill to trigger callback. Focus with Tab to automatically center item.
+          </p>
+        </div>
+
+        <LogoMarquee
+          items={brands}
+          speed={marqueeSpeed}
+          direction={marqueeDirection}
+          paused={marqueePaused}
+          gap={24}
+          onSelect={(b) => {
+            addToast({ title: 'Brand Selected', description: `Interacted with: ${b.label}`, type: 'info' });
+          }}
+        />
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-3">
           <span className="text-xs font-medium text-foreground">Speed:</span>
           {[24, 44, 72].map((s) => (
@@ -152,26 +171,7 @@ export const LogoMarqueePlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border space-y-6">
-        <div className="text-center max-w-md mx-auto space-y-1">
-          <h3 className="text-sm font-semibold text-foreground">Supported Enterprise Platforms</h3>
-          <p className="text-xs text-muted-foreground">
-            Hover to halt scrolling. Click any pill to trigger callback. Focus with Tab to automatically center item.
-          </p>
-        </div>
-
-        <LogoMarquee
-          items={brands}
-          speed={marqueeSpeed}
-          direction={marqueeDirection}
-          paused={marqueePaused}
-          gap={24}
-          onSelect={(b) => {
-            addToast({ title: 'Brand Selected', description: `Interacted with: ${b.label}`, type: 'info' });
-          }}
-        />
-      </div>
-    </div>
+          </div>
   );
 };
 
@@ -187,7 +187,31 @@ export const BlurUpImagePlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
+        <div className="w-full max-w-lg space-y-3">
+          <div className="overflow-hidden rounded-2xl border border-border shadow-md">
+            <BlurUpImage
+              key={`${blurUpKey}-${blurUpError}`}
+              src={sampleSrc}
+              placeholder={placeholder}
+              alt="Colorful abstract gradient mesh"
+              width={16}
+              height={9}
+              blur={16}
+              onReady={() => {
+                addToast({ title: 'Image Decoded', description: 'Progressive spring unblur completed.', type: 'success' });
+              }}
+              onError={() => {
+                addToast({ title: 'Decode Failed', description: 'Gracefully rendered fallback state.', type: 'error' });
+              }}
+            />
+          </div>
+          <p className="text-center text-xs text-muted-foreground">
+            Loads low-resolution micro-thumbnail first, waits for browser async image decoding, then gracefully unblurs and saturates into focus.
+          </p>
+        </div>
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-2">
           <ImageIcon className="size-4 text-primary" />
           <span className="text-xs font-medium text-foreground">
@@ -220,31 +244,7 @@ export const BlurUpImagePlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center">
-        <div className="w-full max-w-lg space-y-3">
-          <div className="overflow-hidden rounded-2xl border border-border shadow-md">
-            <BlurUpImage
-              key={`${blurUpKey}-${blurUpError}`}
-              src={sampleSrc}
-              placeholder={placeholder}
-              alt="Colorful abstract gradient mesh"
-              width={16}
-              height={9}
-              blur={16}
-              onReady={() => {
-                addToast({ title: 'Image Decoded', description: 'Progressive spring unblur completed.', type: 'success' });
-              }}
-              onError={() => {
-                addToast({ title: 'Decode Failed', description: 'Gracefully rendered fallback state.', type: 'error' });
-              }}
-            />
           </div>
-          <p className="text-center text-xs text-muted-foreground">
-            Loads low-resolution micro-thumbnail first, waits for browser async image decoding, then gracefully unblurs and saturates into focus.
-          </p>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -255,26 +255,6 @@ export const ShowMorePlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-foreground">Collapsed Lines:</span>
-          {[2, 3, 5].map((l) => (
-            <Button
-              key={l}
-              size="xs"
-              variant={showMoreLines === l ? 'primary' : 'outline'}
-              onClick={() => setShowMoreLines(l)}
-            >
-              {l} Lines
-            </Button>
-          ))}
-        </div>
-
-        <div className="text-xs text-muted-foreground">
-          Status: <span className="font-semibold text-foreground">{showMoreExpanded ? 'Expanded' : 'Clamped'}</span>
-        </div>
-      </div>
-
       <div className="p-6 sm:p-10 rounded-2xl bg-surface-subtle/50 border border-border flex justify-center">
         <div className="w-full max-w-xl p-6 rounded-2xl bg-surface border border-border shadow-sm">
           <div className="flex items-center gap-2 mb-3">
@@ -321,6 +301,26 @@ export const ShowMorePlayground: React.FC = () => {
           </ShowMore>
         </div>
       </div>
-    </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-foreground">Collapsed Lines:</span>
+          {[2, 3, 5].map((l) => (
+            <Button
+              key={l}
+              size="xs"
+              variant={showMoreLines === l ? 'primary' : 'outline'}
+              onClick={() => setShowMoreLines(l)}
+            >
+              {l} Lines
+            </Button>
+          ))}
+        </div>
+
+        <div className="text-xs text-muted-foreground">
+          Status: <span className="font-semibold text-foreground">{showMoreExpanded ? 'Expanded' : 'Clamped'}</span>
+        </div>
+      </div>
+
+          </div>
   );
 };

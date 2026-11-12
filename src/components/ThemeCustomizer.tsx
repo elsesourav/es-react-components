@@ -22,6 +22,7 @@ import {
   Tooltip,
   ParameterSlider,
   ParameterColor,
+  ParameterSwitch,
 } from '@/components/ui';
 
 export interface ThemeCustomizerProps {
@@ -52,6 +53,8 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
     isDark,
     toggleDark,
     resetTheme,
+    tactileShadows,
+    toggleTactileShadows,
   } = useTheme();
   const { addToast } = useToast();
 
@@ -165,6 +168,35 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
+          {/* Global Tactile Specular Shadows Master Switch */}
+          <div className="p-4 rounded-xl border border-border bg-surface-subtle/50 flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 text-primary" />
+                <span className="text-xs font-bold text-foreground">
+                  Tactile Specular Shadows
+                </span>
+                <Badge variant={tactileShadows ? 'primary' : 'outline'} size="sm">
+                  {tactileShadows ? 'Active' : 'Off'}
+                </Badge>
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Specular highlights & ambient drop shadows (<code className="font-mono text-[10px]">--shadow-float</code>, <code className="font-mono text-[10px]">--shadow-well</code>, <code className="font-mono text-[10px]">--shadow-lift</code>).
+              </p>
+            </div>
+            <ParameterSwitch
+              label=""
+              checked={tactileShadows}
+              onChange={() => {
+                toggleTactileShadows();
+                addToast({
+                  title: tactileShadows ? 'Tactile Shadows Disabled' : 'Tactile Shadows Enabled',
+                  description: tactileShadows ? 'Reverted to flat elevation.' : 'Tactile specular depth active.',
+                  type: 'info',
+                });
+              }}
+            />
+          </div>
           {activeTab === 'presets' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">

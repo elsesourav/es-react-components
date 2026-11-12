@@ -64,7 +64,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           onChange={handleChange}
           className={cn(
-            'w-full bg-surface border border-border text-foreground placeholder:text-muted-foreground/60 transition-colors p-3 text-sm rounded-lg resize-y',
+            'w-full bg-surface border border-border text-foreground placeholder:text-muted-foreground/60 transition-all p-3 text-sm rounded-lg resize-y shadow-well focus:shadow-lift',
             'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
             error && 'border-destructive focus:border-destructive focus:ring-destructive/20',

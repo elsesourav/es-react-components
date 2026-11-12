@@ -125,34 +125,34 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   return (
     <div
       className={cn(
-        "relative rounded-3xl overflow-hidden border border-border/80 bg-zinc-950/90 text-zinc-100 shadow-2xl backdrop-blur-md",
+        "relative rounded-3xl overflow-hidden border border-border/80 bg-surface/90 text-foreground shadow-float backdrop-blur-md",
         className
       )}
     >
       {/* Breakout Header with Trophy & Flame Gradient */}
-      <div className="relative p-5 sm:p-6 border-b border-border/60 bg-gradient-to-b from-zinc-900/90 to-zinc-950/70">
+      <div className="relative p-5 sm:p-6 border-b border-border/60 bg-gradient-to-b from-surface-elevated/90 to-surface-subtle/70">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="size-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-0.5 shadow-lg flex items-center justify-center">
+            <div className="size-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-0.5 shadow-cap flex items-center justify-center">
               <Trophy className="size-5 text-zinc-950 fill-zinc-950" />
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-black uppercase tracking-wider bg-gradient-to-r from-amber-300 via-orange-400 to-rose-400 bg-clip-text text-transparent drop-shadow-sm">
+              <h3 className="text-xl sm:text-2xl font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 bg-clip-text text-transparent drop-shadow-sm">
                 {title}
               </h3>
-              <p className="text-xs text-zinc-400">{subtitle}</p>
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
             </div>
           </div>
 
           {searchable && (
             <div className="relative max-w-xs w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search player or tag..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-amber-400 transition-colors"
+                className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-surface border border-border text-xs text-foreground placeholder:text-muted-foreground shadow-well focus:outline-none focus:border-amber-400 focus:shadow-lift transition-all"
               />
             </div>
           )}
@@ -163,9 +163,9 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead>
-            <tr className="border-b border-zinc-800/80 bg-zinc-900/40 text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+            <tr className="border-b border-border/80 bg-surface-subtle/60 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
               <th
-                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-300 transition-colors"
+                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-500 transition-colors"
                 onClick={() => handleSortToggle("rank")}
               >
                 <div className="flex items-center gap-1.5">
@@ -175,7 +175,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               </th>
               <th className="py-3 px-4 sm:px-6">Player</th>
               <th
-                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-300 transition-colors text-right"
+                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-500 transition-colors text-right"
                 onClick={() => handleSortToggle("score")}
               >
                 <div className="flex items-center justify-end gap-1.5">
@@ -184,7 +184,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 </div>
               </th>
               <th
-                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-300 transition-colors text-right"
+                className="py-3 px-4 sm:px-6 cursor-pointer hover:text-amber-500 transition-colors text-right"
                 onClick={() => handleSortToggle("time")}
               >
                 <div className="flex items-center justify-end gap-1.5">
@@ -194,7 +194,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800/50">
+          <tbody className="divide-y divide-border/50">
             <AnimatePresence>
               {filteredItems.map((player) => {
                 const isCurrent = player.isCurrentUser || player.id === currentUserId;
@@ -208,10 +208,10 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                     exit={{ opacity: 0, y: -8 }}
                     onClick={() => onSelectPlayer?.(player)}
                     className={cn(
-                      "group transition-colors duration-150 cursor-pointer",
+                      "group transition-colors duration-150 cursor-pointer shadow-row",
                       isCurrent
-                        ? "bg-amber-500/10 hover:bg-amber-500/15 border-l-4 border-l-amber-400"
-                        : "hover:bg-zinc-900/50"
+                        ? "bg-amber-500/10 hover:bg-amber-500/15 border-l-4 border-l-amber-500"
+                        : "hover:bg-surface-subtle/70"
                     )}
                   >
                     {/* Rank */}
@@ -224,27 +224,27 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                       <div className="flex items-center gap-2.5">
                         <div
                           className={cn(
-                            "size-7 rounded-full flex items-center justify-center font-bold text-xs ring-1 ring-white/10 shrink-0",
+                            "size-7 rounded-full flex items-center justify-center font-bold text-xs ring-1 ring-border/50 shrink-0 shadow-cap",
                             isCurrent
                               ? "bg-amber-400 text-zinc-950 font-black ring-amber-400/50"
-                              : "bg-zinc-800 text-zinc-300"
+                              : "bg-surface-elevated text-foreground"
                           )}
                         >
                           {player.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-semibold text-zinc-100 group-hover:text-amber-300 transition-colors">
+                            <span className="font-semibold text-foreground group-hover:text-amber-500 transition-colors">
                               {player.name}
                             </span>
                             {isCurrent && (
-                              <span className="px-1.5 py-0.2 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[9px] font-mono font-bold uppercase tracking-wider">
+                              <span className="px-1.5 py-0.2 rounded-md bg-amber-400/20 text-amber-500 border border-amber-400/30 text-[9px] font-mono font-bold uppercase tracking-wider">
                                 YOU
                               </span>
                             )}
                           </div>
                           {player.tag && (
-                            <span className="text-[10px] font-mono text-zinc-400">
+                            <span className="text-[10px] font-mono text-muted-foreground">
                               @{player.tag.toLowerCase()}
                             </span>
                           )}
@@ -254,16 +254,16 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
                     {/* Score */}
                     <td className="py-3 px-4 sm:px-6 text-right font-mono font-bold whitespace-nowrap">
-                      <span className="text-zinc-100 tracking-tight text-sm">
+                      <span className="text-foreground tracking-tight text-sm font-semibold">
                         {player.score.toLocaleString()}
                       </span>
-                      <span className="text-[10px] text-zinc-500 ml-1">pts</span>
+                      <span className="text-[10px] text-muted-foreground ml-1">pts</span>
                     </td>
 
                     {/* Time */}
                     <td className="py-3 px-4 sm:px-6 text-right font-mono whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1 text-cyan-400 font-semibold bg-cyan-950/40 px-2 py-0.5 rounded-md border border-cyan-800/40 text-[11px]">
-                        <Timer className="size-3 text-cyan-400" />
+                      <span className="inline-flex items-center gap-1 text-cyan-500 dark:text-cyan-400 font-semibold bg-cyan-500/10 dark:bg-cyan-950/40 px-2 py-0.5 rounded-md border border-cyan-500/20 text-[11px] shadow-well">
+                        <Timer className="size-3 text-cyan-500 dark:text-cyan-400" />
                         <span>{player.time || "--"}</span>
                       </span>
                     </td>

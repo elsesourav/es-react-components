@@ -23,28 +23,7 @@ export const DialogPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-          Dialog Parameter Controls
-        </span>
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Corner Radius"
-            value={dialogRadius}
-            onChange={setDialogRadius}
-            min={0}
-            max={28}
-            step={2}
-            unit="px"
-          />
-          <ParameterSwitch
-            label="Show Verification Checklist"
-            checked={showChecklist}
-            onChange={setShowChecklist}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border flex flex-col items-center justify-center min-h-[200px] gap-4">
         <Button variant="primary" onClick={() => setDialogOpen(true)}>
           Open Modal Dialog
@@ -93,6 +72,29 @@ export const DialogPlayground: React.FC = () => {
           </div>
         </Dialog>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
+          Dialog Parameter Controls
+        </span>
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Corner Radius"
+            value={dialogRadius}
+            onChange={setDialogRadius}
+            min={0}
+            max={28}
+            step={2}
+            unit="px"
+          />
+          <ParameterSwitch
+            label="Show Verification Checklist"
+            checked={showChecklist}
+            onChange={setShowChecklist}
+          />
+        </ParameterGrid>
+      </div>
     </div>
   );
 };
@@ -104,6 +106,28 @@ export const AlertPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="max-w-md mx-auto space-y-3">
+        {showAlert ? (
+          <div style={{ borderRadius: `${alertRadius}px` }} className="overflow-hidden">
+            <Alert
+              variant={alertVariant}
+              title={`${alertVariant.toUpperCase()} Alert Box`}
+              onDismiss={() => setShowAlert(false)}
+            >
+              Reactive notifications styled with HSL status tokens. Supports inline dismiss controls.
+            </Alert>
+          </div>
+        ) : (
+          <div className="text-center py-4">
+            <Button variant="outline" size="sm" onClick={() => setShowAlert(true)}>
+              Restore Dismissed Alert
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
           Alert Parameter Controls
@@ -145,26 +169,6 @@ export const AlertPlayground: React.FC = () => {
           ))}
         </div>
       </div>
-
-      <div className="max-w-md mx-auto space-y-3">
-        {showAlert ? (
-          <div style={{ borderRadius: `${alertRadius}px` }} className="overflow-hidden">
-            <Alert
-              variant={alertVariant}
-              title={`${alertVariant.toUpperCase()} Alert Box`}
-              onDismiss={() => setShowAlert(false)}
-            >
-              Reactive notifications styled with HSL status tokens. Supports inline dismiss controls.
-            </Alert>
-          </div>
-        ) : (
-          <div className="text-center py-4">
-            <Button variant="outline" size="sm" onClick={() => setShowAlert(true)}>
-              Restore Dismissed Alert
-            </Button>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
@@ -175,28 +179,7 @@ export const SpinnerPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-          Spinner & Shimmer Controls
-        </span>
-        <ParameterGrid columns={2}>
-          <ParameterSlider
-            label="Scale / Zoom"
-            value={spinnerScale}
-            onChange={setSpinnerScale}
-            min={60}
-            max={180}
-            step={10}
-            unit="%"
-          />
-          <ParameterSwitch
-            label="Show Skeletons"
-            checked={showSkeleton}
-            onChange={setShowSkeleton}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-8">
         <div
           style={{ transform: `scale(${spinnerScale / 100})`, transformOrigin: 'center' }}
@@ -219,6 +202,29 @@ export const SpinnerPlayground: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
+          Spinner & Shimmer Controls
+        </span>
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Scale / Zoom"
+            value={spinnerScale}
+            onChange={setSpinnerScale}
+            min={60}
+            max={180}
+            step={10}
+            unit="%"
+          />
+          <ParameterSwitch
+            label="Show Skeletons"
+            checked={showSkeleton}
+            onChange={setShowSkeleton}
+          />
+        </ParameterGrid>
+      </div>
     </div>
   );
 };
@@ -229,73 +235,79 @@ export const CollapsibleBannerPlayground: React.FC = () => {
   const [bannerRadius, setBannerRadius] = useState(12);
 
   return (
-    <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Banner Variant:
-        </span>
-        <div className="flex flex-wrap gap-1.5">
-          {['warning', 'destructive', 'info', 'success', 'default'].map((v) => (
-            <button
-              key={v}
-              onClick={() => setBannerVar(v as any)}
-              className={`px-2.5 py-1 text-xs rounded-lg border capitalize transition-colors cursor-pointer ${
-                bannerVar === v
-                  ? 'border-primary bg-primary/10 text-primary font-bold'
-                  : 'border-border text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {v}
-            </button>
-          ))}
+    <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border">
+        <div style={{ borderRadius: `${bannerRadius}px` }} className="max-w-md mx-auto space-y-3 overflow-hidden">
+          <CollapsibleBanner
+            variant={bannerVar}
+            title={
+              bannerVar === 'destructive'
+                ? 'Your card was declined'
+                : bannerVar === 'warning'
+                  ? 'Payments are degraded'
+                  : bannerVar === 'success'
+                    ? 'Security compliance verified'
+                    : 'Scheduled maintenance notification'
+            }
+            description={
+              bannerVar === 'destructive'
+                ? 'We retry automatically on the 14th. Invoices stay open until it clears.'
+                : 'Charges are queued and settle automatically once the upstream payment provider recovers.'
+            }
+            action={
+              <button
+                type="button"
+                onClick={() =>
+                  addToast({
+                    title: 'Action Triggered',
+                    description: 'Opening settings dialog.',
+                    type: 'info',
+                  })
+                }
+                className="px-2.5 py-1 rounded-[var(--radius)] border border-border bg-surface text-foreground font-medium text-[11px] hover:border-primary/50 transition-colors cursor-pointer"
+              >
+                Update Details
+              </button>
+            }
+          />
         </div>
       </div>
 
-      <ParameterGrid columns={2}>
-        <ParameterSlider
-          label="Border Radius"
-          value={bannerRadius}
-          onChange={setBannerRadius}
-          min={0}
-          max={24}
-          step={2}
-          unit="px"
-        />
-      </ParameterGrid>
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Banner Variant:
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {['warning', 'destructive', 'info', 'success', 'default'].map((v) => (
+              <button
+                key={v}
+                onClick={() => setBannerVar(v as any)}
+                className={`px-2.5 py-1 text-xs rounded-lg border capitalize transition-colors cursor-pointer ${
+                  bannerVar === v
+                    ? 'border-primary bg-primary/10 text-primary font-bold'
+                    : 'border-border text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <div style={{ borderRadius: `${bannerRadius}px` }} className="max-w-md mx-auto space-y-3 overflow-hidden">
-        <CollapsibleBanner
-          variant={bannerVar}
-          title={
-            bannerVar === 'destructive'
-              ? 'Your card was declined'
-              : bannerVar === 'warning'
-                ? 'Payments are degraded'
-                : bannerVar === 'success'
-                  ? 'Security compliance verified'
-                  : 'Scheduled maintenance notification'
-          }
-          description={
-            bannerVar === 'destructive'
-              ? 'We retry automatically on the 14th. Invoices stay open until it clears.'
-              : 'Charges are queued and settle automatically once the upstream payment provider recovers.'
-          }
-          action={
-            <button
-              type="button"
-              onClick={() =>
-                addToast({
-                  title: 'Action Triggered',
-                  description: 'Opening settings dialog.',
-                  type: 'info',
-                })
-              }
-              className="px-2.5 py-1 rounded-[var(--radius)] border border-border bg-surface text-foreground font-medium text-[11px] hover:border-primary/50 transition-colors cursor-pointer"
-            >
-              Update Details
-            </button>
-          }
-        />
+        <ParameterGrid columns={2}>
+          <ParameterSlider
+            label="Border Radius"
+            value={bannerRadius}
+            onChange={setBannerRadius}
+            min={0}
+            max={24}
+            step={2}
+            unit="px"
+          />
+        </ParameterGrid>
       </div>
     </div>
   );

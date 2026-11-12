@@ -46,7 +46,45 @@ export const SplitFlapTextPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+            {/* Live Flap Display */}
+      <div
+        className={cn(
+          "p-6 sm:p-10 rounded-2xl border transition-colors flex flex-col items-center justify-center overflow-x-auto min-h-[220px]",
+          flapBoardBg === 'dark'
+            ? "bg-[#090d16] border-[#1e293b]"
+            : flapBoardBg === 'slate'
+            ? "bg-slate-900 border-slate-800 text-slate-100"
+            : "bg-surface border-border shadow-xs"
+        )}
+      >
+        <div className="w-full flex justify-center overflow-x-auto py-2">
+          <SplitFlapText
+            words={flapWords}
+            flipDuration={flapDuration}
+            stagger={flapStagger}
+            cycleDelay={flapCycleDelay}
+            charset="alphanumeric"
+            flipsPerChar={flapFlipsPerChar}
+            order={flapOrder}
+            align="left"
+            tileStyle={flapTileStyle}
+            tileColor={flapTileColor}
+            textColor={flapTextColor}
+            glare={flapGlare}
+            depth={flapDepth}
+            tileRadius={8}
+            gap={6}
+            fontSize={flapFontSize}
+            loop
+            padTo={12}
+            intro
+          />
+        </div>
+        <span className="text-[11px] text-muted-foreground mt-4 font-mono tracking-wider text-center">
+          AUTOMATIC MECHANICAL SPLIT-FLAP TRANSITION • {flapWords.length} PHRASES
+        </span>
+      </div>
+<div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-4">
           <div className="min-w-0 flex-1">
             <h4 className="text-sm font-bold text-foreground">Split-Flap Board Controls</h4>
@@ -272,44 +310,6 @@ export const SplitFlapTextPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Flap Display */}
-      <div
-        className={cn(
-          "p-6 sm:p-10 rounded-2xl border transition-colors flex flex-col items-center justify-center overflow-x-auto min-h-[220px]",
-          flapBoardBg === 'dark'
-            ? "bg-[#090d16] border-[#1e293b]"
-            : flapBoardBg === 'slate'
-            ? "bg-slate-900 border-slate-800 text-slate-100"
-            : "bg-surface border-border shadow-xs"
-        )}
-      >
-        <div className="w-full flex justify-center overflow-x-auto py-2">
-          <SplitFlapText
-            words={flapWords}
-            flipDuration={flapDuration}
-            stagger={flapStagger}
-            cycleDelay={flapCycleDelay}
-            charset="alphanumeric"
-            flipsPerChar={flapFlipsPerChar}
-            order={flapOrder}
-            align="left"
-            tileStyle={flapTileStyle}
-            tileColor={flapTileColor}
-            textColor={flapTextColor}
-            glare={flapGlare}
-            depth={flapDepth}
-            tileRadius={8}
-            gap={6}
-            fontSize={flapFontSize}
-            loop
-            padTo={12}
-            intro
-          />
-        </div>
-        <span className="text-[11px] text-muted-foreground mt-4 font-mono tracking-wider text-center">
-          AUTOMATIC MECHANICAL SPLIT-FLAP TRANSITION • {flapWords.length} PHRASES
-        </span>
-      </div>
     </div>
   );
 };
@@ -321,7 +321,27 @@ export const TextRevealPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
+      <div className="p-8 sm:p-14 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center text-center">
+        <div className="max-w-xl space-y-4">
+          <Badge variant="primary" size="sm">
+            Motion Physics Text Pipeline
+          </Badge>
+
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-snug">
+            <TextReveal
+              key={textRevealKey}
+              text="Engineered for mission-critical interfaces with fluid kinetic physics and accessible motion fallback."
+              by={textRevealBy}
+              stagger={textRevealBy === 'character' ? 0.025 : 0.065}
+            />
+          </h2>
+
+          <p className="text-sm text-muted-foreground pt-2">
+            Words fade and blur upward into focus using a cubic-bezier ease with automatic viewport detection and reduced-motion fallback.
+          </p>
+        </div>
+      </div>
+<div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-surface border border-border">
         <div className="flex items-center gap-3">
           <span className="text-xs font-medium text-foreground">Split Mode:</span>
           <div className="flex items-center gap-1.5">
@@ -353,26 +373,6 @@ export const TextRevealPlayground: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-8 sm:p-14 rounded-2xl bg-surface-subtle/50 border border-border flex flex-col items-center justify-center text-center">
-        <div className="max-w-xl space-y-4">
-          <Badge variant="primary" size="sm">
-            Motion Physics Text Pipeline
-          </Badge>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-snug">
-            <TextReveal
-              key={textRevealKey}
-              text="Engineered for mission-critical interfaces with fluid kinetic physics and accessible motion fallback."
-              by={textRevealBy}
-              stagger={textRevealBy === 'character' ? 0.025 : 0.065}
-            />
-          </h2>
-
-          <p className="text-sm text-muted-foreground pt-2">
-            Words fade and blur upward into focus using a cubic-bezier ease with automatic viewport detection and reduced-motion fallback.
-          </p>
-        </div>
-      </div>
-    </div>
+          </div>
   );
 };

@@ -22,27 +22,7 @@ export const FloatingInputPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="border-b border-border/50 pb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Floating Input Controls
-          </span>
-        </div>
-
-        <ParameterGrid columns={2}>
-          <ParameterSwitch
-            label="Required Field"
-            checked={isRequired}
-            onChange={setIsRequired}
-          />
-          <ParameterSwitch
-            label="Disabled"
-            checked={isDisabled}
-            onChange={setIsDisabled}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="max-w-md mx-auto space-y-5">
           <FloatingLabelInput
@@ -74,6 +54,29 @@ export const FloatingInputPlayground: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="border-b border-border/50 pb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Floating Input Controls
+          </span>
+        </div>
+
+        <ParameterGrid columns={2}>
+          <ParameterSwitch
+            label="Required Field"
+            checked={isRequired}
+            onChange={setIsRequired}
+          />
+          <ParameterSwitch
+            label="Disabled"
+            checked={isDisabled}
+            onChange={setIsDisabled}
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -87,6 +90,40 @@ export const OtpInputPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="max-w-md mx-auto flex flex-col items-center justify-center p-6 space-y-4">
+          <p className="text-sm font-medium text-foreground text-center">
+            Enter {otpLength}-digit confirmation code
+          </p>
+          <OtpInput
+            key={otpLength}
+            length={otpLength}
+            value={otpVal}
+            disabled={otpDisabled}
+            onChange={(code) => {
+              setOtpVal(code);
+              if (otpStatus === 'error') setOtpStatus('idle');
+            }}
+            status={otpStatus}
+            errorMessage="That authentication code is incorrect. Please verify."
+            hint="Tip: You can paste all digits into any cell."
+            onComplete={(fullCode) => {
+              addToast({
+                title: 'Code Verified!',
+                description: `Received full OTP: ${fullCode}`,
+                type: 'success',
+              });
+            }}
+          />
+
+          <div className="text-xs text-muted-foreground font-mono mt-2">
+            Entered: <span className="text-primary font-bold">{otpVal || '—'}</span> (length: {otpVal.length}/{otpLength})
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -138,37 +175,6 @@ export const OtpInputPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="max-w-md mx-auto flex flex-col items-center justify-center p-6 space-y-4">
-          <p className="text-sm font-medium text-foreground text-center">
-            Enter {otpLength}-digit confirmation code
-          </p>
-          <OtpInput
-            key={otpLength}
-            length={otpLength}
-            value={otpVal}
-            disabled={otpDisabled}
-            onChange={(code) => {
-              setOtpVal(code);
-              if (otpStatus === 'error') setOtpStatus('idle');
-            }}
-            status={otpStatus}
-            errorMessage="That authentication code is incorrect. Please verify."
-            hint="Tip: You can paste all digits into any cell."
-            onComplete={(fullCode) => {
-              addToast({
-                title: 'Code Verified!',
-                description: `Received full OTP: ${fullCode}`,
-                type: 'success',
-              });
-            }}
-          />
-
-          <div className="text-xs text-muted-foreground font-mono mt-2">
-            Entered: <span className="text-primary font-bold">{otpVal || '—'}</span> (length: {otpVal.length}/{otpLength})
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
@@ -180,6 +186,28 @@ export const TagInputPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="max-w-md mx-auto space-y-4">
+          <TagInput
+            label="Repository Topics"
+            value={tagsVal}
+            onChange={setTagsVal}
+            max={maxTags}
+            disabled={tagDisabled}
+            separators={[',', ';']}
+            validate={(tag) => tag.length <= 20}
+            hint="Press Enter or comma (,) to add · Backspace highlights then removes"
+          />
+
+          <div className="p-4 rounded-xl bg-surface-subtle border border-border text-xs space-y-1 font-mono">
+            <span className="text-muted-foreground font-semibold">Active Tag Tokens ({tagsVal.length}/{maxTags}):</span>
+            <div className="text-primary truncate">{JSON.stringify(tagsVal)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="border-b border-border/50 pb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -204,25 +232,6 @@ export const TagInputPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="max-w-md mx-auto space-y-4">
-          <TagInput
-            label="Repository Topics"
-            value={tagsVal}
-            onChange={setTagsVal}
-            max={maxTags}
-            disabled={tagDisabled}
-            separators={[',', ';']}
-            validate={(tag) => tag.length <= 20}
-            hint="Press Enter or comma (,) to add · Backspace highlights then removes"
-          />
-
-          <div className="p-4 rounded-xl bg-surface-subtle border border-border text-xs space-y-1 font-mono">
-            <span className="text-muted-foreground font-semibold">Active Tag Tokens ({tagsVal.length}/{maxTags}):</span>
-            <div className="text-primary truncate">{JSON.stringify(tagsVal)}</div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
@@ -234,6 +243,21 @@ export const PasswordInputPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="max-w-md mx-auto space-y-4">
+          <PasswordInput
+            label="Master Password"
+            value={passVal}
+            onChange={setPassVal}
+            showStrengthMeter={passMeter}
+            showRequirements={passReqs}
+            placeholder="Type your secure password..."
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="border-b border-border/50 pb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -255,18 +279,6 @@ export const PasswordInputPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="max-w-md mx-auto space-y-4">
-          <PasswordInput
-            label="Master Password"
-            value={passVal}
-            onChange={setPassVal}
-            showStrengthMeter={passMeter}
-            showRequirements={passReqs}
-            placeholder="Type your secure password..."
-          />
-        </div>
-      </div>
     </div>
   );
 };
@@ -277,22 +289,7 @@ export const ExpandingSearchPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="border-b border-border/50 pb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Expanding Search Controls
-          </span>
-        </div>
-
-        <ParameterGrid columns={2}>
-          <ParameterSwitch
-            label="Show Results Count Badge"
-            checked={showBadge}
-            onChange={setShowBadge}
-          />
-        </ParameterGrid>
-      </div>
-
+      {/* 1. Live Interactive Preview (Preview First) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="max-w-md mx-auto p-6 rounded-xl bg-surface-subtle/50 border border-border/60 flex flex-col items-center gap-6">
           <div className="w-full flex items-center justify-between">
@@ -317,6 +314,24 @@ export const ExpandingSearchPlayground: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="border-b border-border/50 pb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Expanding Search Controls
+          </span>
+        </div>
+
+        <ParameterGrid columns={2}>
+          <ParameterSwitch
+            label="Show Results Count Badge"
+            checked={showBadge}
+            onChange={setShowBadge}
+          />
+        </ParameterGrid>
+      </div>
+
     </div>
   );
 };
@@ -339,6 +354,27 @@ export const InlineValidationPlayground: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* 1. Live Interactive Preview (Preview First) */}
+      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
+        <div className="max-w-md mx-auto space-y-4">
+          <div className="text-xs text-muted-foreground mb-2">
+            Dynamic live evaluation with instant optical feedback (green checkmark for pass, red alert with animated slide-in message for fail):
+          </div>
+
+          <InlineValidation
+            label="Verified Business Email"
+            type="email"
+            value={val}
+            onChange={setVal}
+            validate={validateEmail}
+            validateOn={validateOn}
+            hint={showHint ? "Instant syntax & domain validation verification" : undefined}
+            disabled={isDisabled}
+          />
+        </div>
+      </div>
+
+      {/* 2. Interactive Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-6">
         <div className="border-b border-border/50 pb-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -370,24 +406,6 @@ export const InlineValidationPlayground: React.FC = () => {
         </ParameterGrid>
       </div>
 
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-6">
-        <div className="max-w-md mx-auto space-y-4">
-          <div className="text-xs text-muted-foreground mb-2">
-            Dynamic live evaluation with instant optical feedback (green checkmark for pass, red alert with animated slide-in message for fail):
-          </div>
-
-          <InlineValidation
-            label="Verified Business Email"
-            type="email"
-            value={val}
-            onChange={setVal}
-            validate={validateEmail}
-            validateOn={validateOn}
-            hint={showHint ? "Instant syntax & domain validation verification" : undefined}
-            disabled={isDisabled}
-          />
-        </div>
-      </div>
     </div>
   );
 };

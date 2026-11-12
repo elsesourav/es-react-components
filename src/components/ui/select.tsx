@@ -61,7 +61,7 @@ export const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProp
             ref={ref}
             disabled={disabled}
             className={cn(
-              'w-full appearance-none bg-surface border border-border text-foreground transition-colors pr-9 rounded-[var(--radius)]',
+              'w-full appearance-none bg-surface border border-border text-foreground transition-all pr-9 rounded-[var(--radius)] shadow-well focus:shadow-lift',
               'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
               'disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
               error && 'border-destructive focus:border-destructive focus:ring-destructive/20',

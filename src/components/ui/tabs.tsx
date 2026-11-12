@@ -107,7 +107,7 @@ export function Tabs({
   if (variant === "segmented") {
     return (
       <div className={cn("w-full overflow-x-auto scrollbar-none py-1", className)}>
-        <div className="inline-flex items-center p-1 rounded-xl bg-surface border border-border min-w-max shadow-sm">
+        <div className="inline-flex items-center p-1 rounded-xl bg-surface border border-border min-w-max shadow-well">
           {normalizedItems.map((tab) => {
             const isActive = tab.value === tabs.value;
             return (
@@ -118,7 +118,7 @@ export function Tabs({
                 className={cn(
                   "flex items-center gap-2 px-3 sm:px-3.5 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 select-none whitespace-nowrap outline-none",
                   isActive
-                    ? "bg-surface-elevated text-foreground shadow-sm font-semibold"
+                    ? "bg-surface-elevated text-foreground shadow-lift font-semibold"
                     : "text-muted-foreground hover:text-foreground hover:bg-surface-subtle/50",
                   tab.disabled && "opacity-50 cursor-not-allowed"
                 )}
