@@ -7,7 +7,7 @@ export const NAVIGATION_COMPONENTS: ComponentDoc[] = [
     category: 'Navigation & Menus',
     description:
       'Spring-indicator sliding plateau tabs with automatic/manual keyboard activation, directional panel transition animations, and backwards-compatible segmented, pills, and underline variants.',
-    importCode: `import { Tabs, useTabs } from 'es-react-components';`,
+    importCode: `import { Tabs, useTabs } from '@elsesourav/react-ui';`,
     usageCode: `<Tabs
   variant="plateau"
   defaultValue="overview"
@@ -69,11 +69,11 @@ export const NAVIGATION_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'branched-menu',
-    name: 'Branched Menu (Tree Navigation)',
+    name: 'Branched Menu',
     category: 'Navigation & Menus',
     description:
       'Tree structure navigation menu with curved SVG vector branches and animated path stroke drawing. Features sliding section indicator pills, accordion folding, and responsive custom dimensions.',
-    importCode: `import { BranchedMenu } from 'es-react-components';
+    importCode: `import { BranchedMenu } from '@elsesourav/react-ui';
 import { Download04Icon, Rocket01Icon, Settings02Icon } from '@hugeicons/core-free-icons';`,
     usageCode: `<BranchedMenu
   items={[
@@ -221,7 +221,7 @@ import { Download04Icon, Rocket01Icon, Settings02Icon } from '@hugeicons/core-fr
     category: 'Typography & Content',
     description:
       'Real-time token typewriter animation for LLM and assistant responses. Features configurable token pacing, pulsing cursor, click-to-skip, and status callbacks.',
-    importCode: `import { StreamingText, useStreamingText } from 'es-react-components';`,
+    importCode: `import { StreamingText, useStreamingText } from '@elsesourav/react-ui';`,
     usageCode: `<StreamingText
   text="Deploying neural weights to 14 distributed edge regions..."
   tokensPerSecond={22}
@@ -245,7 +245,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Navigation & Menus',
     description:
       'Spotlight-style fuzzy search command palette (⌘K) with real-time scoring, keyboard arrow navigation, shortcut badges, and overlay portal.',
-    importCode: `import { CommandPalette, useCommandPalette } from 'es-react-components';`,
+    importCode: `import { CommandPalette, useCommandPalette } from '@elsesourav/react-ui';`,
     usageCode: `<CommandPalette
   open={isOpen}
   onDismiss={() => setIsOpen(false)}
@@ -270,7 +270,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Checkbox & Switch',
     description:
       'Spring-sliding radio group with text inversion mask effect, keyboard navigation (Arrow keys, Home, End), and theme token adaptation.',
-    importCode: `import { SegmentedControl } from 'es-react-components';`,
+    importCode: `import { SegmentedControl } from '@elsesourav/react-ui';`,
     usageCode: `<SegmentedControl
   label="Time Horizon"
   options={[
@@ -298,7 +298,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Navigation & Menus',
     description:
       'Multi-step pipeline wizard featuring connected track progress bar, direction-aware sliding step panels, keyboard navigation, and completion state.',
-    importCode: `import { WizardSteps, useWizard } from 'es-react-components';`,
+    importCode: `import { WizardSteps, useWizard } from '@elsesourav/react-ui';`,
     usageCode: `<WizardSteps
   steps={[
     { id: 'account', label: 'Account Details', content: <AccountForm /> },
@@ -323,7 +323,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Navigation & Menus',
     description:
       'Compact smart pagination with spring-animated sliding pill thumb, rolling page number transitions, automatic boundary/sibling truncation, and screen-reader announcements.',
-    importCode: `import { Pagination, usePagination, paginate } from 'es-react-components';`,
+    importCode: `import { Pagination, usePagination, paginate } from '@elsesourav/react-ui';`,
     usageCode: `<Pagination
   count={25}
   page={currentPage}
@@ -347,7 +347,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Scroll & Viewport',
     description:
       'On-page section tracker with spring-animated sliding pill thumb (layoutId), programmatic smooth scroll with lock suppression, horizontal chip auto-scroll, and ARIA announcements.',
-    importCode: `import { ScrollSpy, useScrollSpy } from 'es-react-components';`,
+    importCode: `import { ScrollSpy, useScrollSpy } from '@elsesourav/react-ui';`,
     usageCode: `<ScrollSpy
   sections={[
     { id: 'overview', label: 'Overview' },
@@ -373,7 +373,7 @@ const { visible, status, skip } = useStreamingText({ text, tokensPerSecond: 24 }
     category: 'Navigation & Menus',
     description:
       'High-contrast pill tabs with smooth spring layout physics, active pill halo ring outline, tactile click transitions, ARIA tablist/tab accessibility, and size variations (sm, md, lg).',
-    importCode: `import { SegmentedABTabs } from 'es-react-components';`,
+    importCode: `import { SegmentedABTabs } from '@elsesourav/react-ui';`,
     usageCode: `<SegmentedABTabs
   options={['A', 'B']}
   defaultValue="A"

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { ComponentDoc } from '../showcase/componentsData';
 
 const BASE_URL = 'https://components.elsesourav.com';
-const DEFAULT_TITLE = 'es-react-components — Modern React 19 UI Component Library & Design System';
+const DEFAULT_TITLE = '@elsesourav/react-ui — Modern React 19 UI Component Library & Design System';
 const DEFAULT_DESCRIPTION =
   'Production-grade React 19 UI component library featuring 93+ kinetic, accessible, theme-driven components with fluid physics, WAI-ARIA compliance, and real-time HSL theming.';
 const DEFAULT_KEYWORDS =
@@ -38,7 +38,7 @@ export function useSeoMetadata(component: ComponentDoc | null) {
     if (typeof document === 'undefined') return;
 
     const title = component
-      ? `${component.name} React Component — es-react-components`
+      ? `${component.name} React Component — @elsesourav/react-ui`
       : DEFAULT_TITLE;
 
     const description = component
@@ -46,7 +46,7 @@ export function useSeoMetadata(component: ComponentDoc | null) {
       : DEFAULT_DESCRIPTION;
 
     const keywords = component
-      ? `${component.name}, React ${component.name}, ${component.category}, React 19 component, Tailwind CSS, TypeScript, es-react-components, UI system`
+      ? `${component.name}, React ${component.name}, ${component.category}, React 19 component, Tailwind CSS, TypeScript, @elsesourav/react-ui, es-react-components, UI system`
       : DEFAULT_KEYWORDS;
 
     const pageUrl = component

@@ -14,7 +14,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
   CardDescription,
   CardContent,
   CardFooter
-} from 'es-react-components';`,
+} from '@elsesourav/react-ui';`,
     usageCode: `<Card variant="default">
   <CardHeader>
     <CardTitle>Distributed Database Cluster</CardTitle>
@@ -49,7 +49,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Dashboard metric indicator showing numeric figures, positive/negative delta trend indicators, and caption notes.',
-    importCode: `import { Stat } from 'es-react-components';`,
+    importCode: `import { Stat } from '@elsesourav/react-ui';`,
     usageCode: `<Stat
   title="Monthly Recurring Revenue"
   value="$148,200"
@@ -90,7 +90,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Ultra-smooth iOS liquid glass bottom drawer with optical normal-map refraction, chromatic dispersion, spring physics, touch drag-to-dismiss, and animated action rows.',
-    importCode: `import { LiquidGlassSheet } from 'es-react-components';`,
+    importCode: `import { LiquidGlassSheet } from '@elsesourav/react-ui';`,
     usageCode: `<LiquidGlassSheet
   title="Autumn Forest"
   subtitle="Liquid Glass Experience"
@@ -176,7 +176,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       '3D perspective coverflow carousel featuring Spring physics, distinct architectural imagery, depth offsets, interactive slide clicks, and pill dot navigation.',
-    importCode: `import { CardCoverFlow, DEFAULT_COVERFLOW_IMAGES } from 'es-react-components';`,
+    importCode: `import { CardCoverFlow, DEFAULT_COVERFLOW_IMAGES } from '@elsesourav/react-ui';`,
     usageCode: `<CardCoverFlow
   images={DEFAULT_COVERFLOW_IMAGES}
   initialIndex={2}
@@ -217,7 +217,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Fan-out stack card carousel featuring angular tilt on hover, depth scaling, track translation, and dot controls with curated landscapes.',
-    importCode: `import { CardCarousel, DEFAULT_CAROUSEL_IMAGES } from 'es-react-components';`,
+    importCode: `import { CardCarousel, DEFAULT_CAROUSEL_IMAGES } from '@elsesourav/react-ui';`,
     usageCode: `<CardCarousel
   images={DEFAULT_CAROUSEL_IMAGES}
   initialIndex={2}
@@ -266,11 +266,11 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'ai-code-block',
-    name: 'AI Code & Diff Block',
+    name: 'AI Code Block',
     category: 'AI & Agentic UX',
     description:
       'Editor panel with live syntax highlighting, line numbers, unified diff comparison with word-level changes, diff stat counters, and copy feedback.',
-    importCode: `import { AICodeBlock, DiffRow } from 'es-react-components';`,
+    importCode: `import { AICodeBlock, DiffRow } from '@elsesourav/react-ui';`,
     usageCode: `<AICodeBlock
   theme="light"
   filename="churn.ts"
@@ -322,7 +322,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'AI & Agentic UX',
     description:
       'IntersectionObserver-powered sentinel for infinite lists and feeds with automatic page triggering, loading spinners, retry controls, and exhaustion labels.',
-    importCode: `import { LoadMore } from 'es-react-components';`,
+    importCode: `import { LoadMore } from '@elsesourav/react-ui';`,
     usageCode: `<LoadMore
   onLoad={async () => {
     const hasNext = await fetchNextPage();
@@ -346,7 +346,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Spring-animated active user rail with image loading states, fallback initials, overflow +N chip button, and live screen-reader announcements.',
-    importCode: `import { PresenceAvatars, usePresence } from 'es-react-components';`,
+    importCode: `import { PresenceAvatars, usePresence } from '@elsesourav/react-ui';`,
     usageCode: `<PresenceAvatars
   people={[
     { id: '1', name: 'Elena Rostova', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' },
@@ -371,7 +371,7 @@ export const SURFACES_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Smooth animated collapsible disclosure rows powered by ResizeObserver auto-height, spring physics, and keyboard navigation (Arrow keys, Home, End). Supports single or multiple open modes.',
-    importCode: `import { Accordion, useAccordion, useAutoHeight } from 'es-react-components';`,
+    importCode: `import { Accordion, useAccordion, useAutoHeight } from '@elsesourav/react-ui';`,
     usageCode: `<Accordion
   type="single"
   defaultOpen={['item-1']}

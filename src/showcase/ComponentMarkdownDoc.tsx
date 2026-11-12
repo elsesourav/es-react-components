@@ -34,7 +34,7 @@ export const ComponentMarkdownDoc: React.FC<ComponentMarkdownDocProps> = ({ comp
 ## 1. Installation & Import
 
 \`\`\`bash
-pnpm add es-react-components motion
+npm i @elsesourav/react-ui
 \`\`\`
 
 \`\`\`tsx

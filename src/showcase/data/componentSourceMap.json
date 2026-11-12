@@ -1,41 +1,41 @@
 {
   "mono-charts": {
-    "name": "Mono Charts Suite (All-in-One)",
+    "name": "Mono Charts",
     "filename": "mono-charts.tsx",
     "filepath": "src/components/ui/mono-charts.tsx",
     "lines": 47,
     "bytes": 1380
   },
   "mono-line-chart": {
-    "name": "Mono Rounded Line Chart",
+    "name": "Mono Line Chart",
     "filename": "mono-line-chart.tsx",
     "filepath": "src/components/ui/mono-line-chart.tsx",
     "lines": 255,
     "bytes": 8091
   },
   "mono-bar-chart": {
-    "name": "Mono Rounded Bar Chart",
+    "name": "Mono Bar Chart",
     "filename": "mono-bar-chart.tsx",
     "filepath": "src/components/ui/mono-bar-chart.tsx",
     "lines": 249,
     "bytes": 8151
   },
   "mono-area-chart": {
-    "name": "Mono Rounded Area Chart",
+    "name": "Mono Area Chart",
     "filename": "mono-area-chart.tsx",
     "filepath": "src/components/ui/mono-area-chart.tsx",
     "lines": 235,
     "bytes": 7423
   },
   "mono-donut-chart": {
-    "name": "Mono Rounded Donut Chart",
+    "name": "Mono Donut Chart",
     "filename": "mono-donut-chart.tsx",
     "filepath": "src/components/ui/mono-donut-chart.tsx",
     "lines": 231,
     "bytes": 7811
   },
   "mono-stream-chart": {
-    "name": "Mono Rounded Stream Chart",
+    "name": "Mono Stream Chart",
     "filename": "mono-stream-chart.tsx",
     "filepath": "src/components/ui/mono-stream-chart.tsx",
     "lines": 210,
@@ -56,7 +56,7 @@
     "bytes": 2191
   },
   "toast": {
-    "name": "Toast (SwipeToast)",
+    "name": "Toast",
     "filename": "toast.tsx",
     "filepath": "src/components/ui/toast.tsx",
     "lines": 192,
@@ -154,7 +154,7 @@
     "bytes": 3739
   },
   "squish-switch": {
-    "name": "Squish Switch (On/Off)",
+    "name": "Squish Switch",
     "filename": "squish-switch.tsx",
     "filepath": "src/components/ui/squish-switch.tsx",
     "lines": 403,
@@ -168,7 +168,7 @@
     "bytes": 2924
   },
   "peek-rating": {
-    "name": "Peek Rating (Interactive Star & Shape Rater)",
+    "name": "Peek Rating",
     "filename": "peek-rating.tsx",
     "filepath": "src/components/ui/peek-rating.tsx",
     "lines": 491,
@@ -189,7 +189,7 @@
     "bytes": 11257
   },
   "parameter-slider": {
-    "name": "Parameter Slider (Multi-Variant Scrubber System)",
+    "name": "Parameter Slider",
     "filename": "parameter-slider.tsx",
     "filepath": "src/components/ui/parameter-slider.tsx",
     "lines": 316,
@@ -210,7 +210,7 @@
     "bytes": 11688
   },
   "slider": {
-    "name": "Slider (Single & Dual Range)",
+    "name": "Slider",
     "filename": "slider.tsx",
     "filepath": "src/components/ui/slider.tsx",
     "lines": 250,
@@ -231,7 +231,7 @@
     "bytes": 11772
   },
   "input": {
-    "name": "Input (All Variants)",
+    "name": "Input",
     "filename": "input.tsx",
     "filepath": "src/components/ui/input.tsx",
     "lines": 172,
@@ -266,7 +266,7 @@
     "bytes": 5842
   },
   "password-input": {
-    "name": "Password Input & Strength",
+    "name": "Password Input",
     "filename": "password-input.tsx",
     "filepath": "src/components/ui/password-input.tsx",
     "lines": 221,
@@ -343,14 +343,14 @@
     "bytes": 2352
   },
   "text-loop": {
-    "name": "Text Loop (Curved Ribbon Marquee)",
+    "name": "Text Loop",
     "filename": "text-loop.tsx",
     "filepath": "src/components/ui/text-loop.tsx",
     "lines": 473,
     "bytes": 14219
   },
   "search-button": {
-    "name": "Top Search & Animated Placeholder",
+    "name": "Search Button",
     "filename": "search-button.tsx",
     "filepath": "src/components/ui/search-button.tsx",
     "lines": 142,
@@ -371,7 +371,7 @@
     "bytes": 12524
   },
   "branched-menu": {
-    "name": "Branched Menu (Tree Navigation)",
+    "name": "Branched Menu",
     "filename": "branched-menu.tsx",
     "filepath": "src/components/ui/branched-menu.tsx",
     "lines": 306,
@@ -525,7 +525,7 @@
     "bytes": 7646
   },
   "ai-code-block": {
-    "name": "AI Code & Diff Block",
+    "name": "AI Code Block",
     "filename": "ai-code-block.tsx",
     "filepath": "src/components/ui/ai-code-block.tsx",
     "lines": 379,

@@ -218,7 +218,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Typography & Content',
     description:
       'Staggered blur and fade text reveal animation by word or character with viewport scroll-triggering, duration pacing, and reduced motion fallbacks.',
-    importCode: `import { TextReveal, useTextReveal } from 'es-react-components';`,
+    importCode: `import { TextReveal, useTextReveal } from '@elsesourav/react-ui';`,
     usageCode: `<TextReveal
   text="Deploy globally distributed edge functions with zero cold starts."
   by="word"
@@ -242,7 +242,7 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Hardware-accelerated continuous ticker carousel with smooth momentum decay, keyboard tab navigation, pause on hover/interaction, and adaptive multi-copy filling.',
-    importCode: `import { LogoMarquee, useLogoMarquee } from 'es-react-components';`,
+    importCode: `import { LogoMarquee, useLogoMarquee } from '@elsesourav/react-ui';`,
     usageCode: `<LogoMarquee
   items={[
     { id: '1', label: 'React' },

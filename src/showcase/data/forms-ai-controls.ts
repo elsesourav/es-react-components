@@ -7,7 +7,7 @@ export const FORMS_AI_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'AI & Agentic UX',
     description:
       'Feature-packed AI input composer with @ mentions, / commands, model picker, voice dictation, file attachments, and local rainbow canvas sweep.',
-    importCode: `import { AIPromptBar } from 'es-react-components';`,
+    importCode: `import { AIPromptBar } from '@elsesourav/react-ui';`,
     usageCode: `<AIPromptBar
   theme="dark"
   variant="Rounded"
@@ -54,7 +54,7 @@ export const FORMS_AI_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'AI & Agentic UX',
     description:
       'Compact interactive parameter inspector with scrubbable number sliders (drag label ↔ or use arrow keys), segmented layout selector, and dropdown menu.',
-    importCode: `import { AIFineTuneCard, FineTuneField } from 'es-react-components';`,
+    importCode: `import { AIFineTuneCard, FineTuneField } from '@elsesourav/react-ui';`,
     usageCode: `<AIFineTuneCard
   theme="light"
   onChange={(state) => console.log('Parameters changed:', state)}

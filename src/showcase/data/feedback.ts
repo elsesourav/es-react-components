@@ -7,7 +7,7 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
     category: 'Feedback & Overlays',
     description:
       'Accessible modal overlay with backdrop blur, keyboard ESC dismissal, and focus trapping.',
-    importCode: `import { Dialog } from 'es-react-components';`,
+    importCode: `import { Dialog } from '@elsesourav/react-ui';`,
     usageCode: `<Dialog
   isOpen={isOpen}
   onClose={() => setIsOpen(false)}
@@ -44,7 +44,7 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
     category: 'Feedback & Overlays',
     description:
       'Banner callout for critical user feedback across 4 semantic states: info, success, warning, danger.',
-    importCode: `import { Alert } from 'es-react-components';`,
+    importCode: `import { Alert } from '@elsesourav/react-ui';`,
     usageCode: `<Alert variant="success" title="Backup Complete">
   32.4 GB archived to distributed object storage.
 </Alert>`,
@@ -78,11 +78,11 @@ export const FEEDBACK_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'toast',
-    name: 'Toast (SwipeToast)',
+    name: 'Toast',
     category: 'Feedback & Overlays',
     description:
       'Kinetic swipe-to-dismiss toast notifications featuring spring physics, rubberband drag resistance, linear burning fuse progress indicator, pause-on-hover, and WAI-ARIA politeness. Supports both declarative inline/floating mounting (<SwipeToast />) and imperative queuing (useToast().addToast()).',
-    importCode: `import { Toast, SwipeToast, ToastProvider, useToast } from 'es-react-components';`,
+    importCode: `import { Toast, SwipeToast, ToastProvider, useToast } from '@elsesourav/react-ui';`,
     usageCode: `// 1. Declarative inline / floating component:
 <SwipeToast
   title="File archived"
@@ -207,7 +207,7 @@ addToast({
     category: 'Feedback & Overlays',
     description:
       'Animated loading indicators including continuous radial CSS spinner and shimmer skeleton pulses.',
-    importCode: `import { Spinner, Skeleton } from 'es-react-components';`,
+    importCode: `import { Spinner, Skeleton } from '@elsesourav/react-ui';`,
     usageCode: `<Spinner size="md" />
 
 <Skeleton className="h-4 w-3/4 rounded" />`,
@@ -227,7 +227,7 @@ addToast({
     category: 'Feedback & Overlays',
     description:
       'Smooth, accessible motion loaders powered by Framer Motion: SquareSnake 3x3 staggered wave matrix and BobbingDots harmonic bounce wave.',
-    importCode: `import { SquareSnake, BobbingDots } from 'es-react-components';`,
+    importCode: `import { SquareSnake, BobbingDots } from '@elsesourav/react-ui';`,
     usageCode: `<div className="flex items-center gap-8">
   <SquareSnake size="md" />
   <BobbingDots size="md" />
@@ -260,7 +260,7 @@ addToast({
     category: 'AI & Agentic UX',
     description:
       'Human-in-the-loop approval workflow card with sliding questions, rolling digit odometer counters, glide hover highlights, and single/multi-choice controls.',
-    importCode: `import { AIApprovalCard, ApprovalQuestion } from 'es-react-components';`,
+    importCode: `import { AIApprovalCard, ApprovalQuestion } from '@elsesourav/react-ui';`,
     usageCode: `<AIApprovalCard
   theme="light"
   questions={[
@@ -309,7 +309,7 @@ addToast({
     category: 'AI & Agentic UX',
     description:
       'Multi-stage pipeline indicator with connected track lines, completed badges, active pulsating rings, and failure state alerts.',
-    importCode: `import { TaskSteps } from 'es-react-components';`,
+    importCode: `import { TaskSteps } from '@elsesourav/react-ui';`,
     usageCode: `<TaskSteps
   steps={[
     { id: 'queue', label: 'Queued' },
@@ -335,7 +335,7 @@ addToast({
     category: 'Feedback & Overlays',
     description:
       'Foldable announcement and incident banner with spring accordion height collapse, inline action triggers, and dismissal controls.',
-    importCode: `import { CollapsibleBanner } from 'es-react-components';`,
+    importCode: `import { CollapsibleBanner } from '@elsesourav/react-ui';`,
     usageCode: `<CollapsibleBanner
   title="Payments are degraded"
   description="Charges are queued and settle automatically once the provider recovers."
@@ -364,7 +364,7 @@ addToast({
     category: 'Feedback & Overlays',
     description:
       'Accessible dialog window with backdrop blur, scroll locking, Escape key stacking, outside-click detection, and spring scale entrance.',
-    importCode: `import { Modal, useModal } from 'es-react-components';`,
+    importCode: `import { Modal, useModal } from '@elsesourav/react-ui';`,
     usageCode: `<Modal
   open={isOpen}
   onClose={() => setIsOpen(false)}
@@ -389,7 +389,7 @@ addToast({
     category: 'Feedback & Overlays',
     description:
       'High-performance warm-start tooltips with spring glide transitions, grouping contexts, keyboard focus detection, and blur reveal.',
-    importCode: `import { Tooltip, TooltipGroup, useTooltip } from 'es-react-components';`,
+    importCode: `import { Tooltip, TooltipGroup, useTooltip } from '@elsesourav/react-ui';`,
     usageCode: `<Tooltip label="Copy API Key" side="top">
   <button className="p-2 border rounded">Copy</button>
 </Tooltip>
@@ -413,7 +413,7 @@ addToast({
     category: 'Scroll & Viewport',
     description:
       'Scroll-tracked reading progress meter with estimated minutes remaining calculation, spring fill animations, and animated completion checkmark.',
-    importCode: `import { ReadingProgress, useReadingProgress } from 'es-react-components';`,
+    importCode: `import { ReadingProgress, useReadingProgress } from '@elsesourav/react-ui';`,
     usageCode: `<ReadingProgress
   words={1200}
   wordsPerMinute={220}
@@ -437,7 +437,7 @@ addToast({
     category: 'Surfaces & Cards',
     description:
       'Interactive voting poll component featuring spring-animated clip-path progress reveals, percentage counters, winner tick pop animation, and one-vote enforcement.',
-    importCode: `import { PollResults, usePollResults } from 'es-react-components';`,
+    importCode: `import { PollResults, usePollResults } from '@elsesourav/react-ui';`,
     usageCode: `<PollResults
   label="Favorite Developer Tooling"
   options={[

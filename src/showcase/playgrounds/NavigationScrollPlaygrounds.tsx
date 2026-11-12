@@ -143,7 +143,7 @@ export const ReadingProgressPlayground: React.FC = () => {
             <h3 className="text-sm font-semibold text-foreground">1. Dynamic Design Token Architecture</h3>
             <p>
               Modern component architectures require fluid theming without coupling to a single global stylesheet.
-              In es-react-components, every visual primitive reads from raw HSL CSS variables, allowing real-time
+              In @elsesourav/react-ui, every visual primitive reads from raw HSL CSS variables, allowing real-time
               color space transformations across dark, light, high-contrast, and custom user palettes.
             </p>
             <h3 className="text-sm font-semibold text-foreground">2. Spring Physics & Performance</h3>

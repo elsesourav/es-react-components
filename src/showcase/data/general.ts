@@ -7,7 +7,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
     category: 'Buttons & Actions',
     description:
       'Interactive button primitive supporting 7 semantic variants, 5 sizes, loading spinners, and icon slots.',
-    importCode: `import { Button } from 'es-react-components';`,
+    importCode: `import { Button } from '@elsesourav/react-ui';`,
     usageCode: `<Button variant="primary" size="md" onClick={() => console.log('Clicked!')}>
   Get Started
 </Button>
@@ -61,7 +61,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
     category: 'Typography & Content',
     description:
       'Compact status indicator pill with optional pulsing presence dot and 8 semantic variants.',
-    importCode: `import { Badge } from 'es-react-components';`,
+    importCode: `import { Badge } from '@elsesourav/react-ui';`,
     usageCode: `<Badge variant="primary" dot size="md">
   Production v2.4
 </Badge>
@@ -97,7 +97,7 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Profile image representation with automatic fallback initials and online/offline status ring indicators.',
-    importCode: `import { Avatar } from 'es-react-components';`,
+    importCode: `import { Avatar } from '@elsesourav/react-ui';`,
     usageCode: `<Avatar
   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb"
   fallback="SC"
@@ -134,11 +134,11 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'text-loop',
-    name: 'Text Loop (Curved Ribbon Marquee)',
+    name: 'Text Loop',
     category: 'Typography & Content',
     description:
       'Continuous SVG text marquee scrolling along customizable wave, circle, infinity, arch, or line paths. Features ribbon bands, intersecting cross-ribbons, inertia drag gestures, scroll velocity boosts, and edge fade gradients.',
-    importCode: `import { TextLoop } from 'es-react-components';`,
+    importCode: `import { TextLoop } from '@elsesourav/react-ui';`,
     usageCode: `<TextLoop
   text="React ✦ Bits"
   shape="wave"
@@ -301,11 +301,11 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'search-button',
-    name: 'Top Search & Animated Placeholder',
+    name: 'Search Button',
     category: 'Buttons & Actions',
     description:
       'Theme-driven top navigation search trigger button with embedded spring-animated vertical text placeholder carousel, contextual breadcrumb scopes, global Cmd+K / Ctrl+K / "/" keyboard shortcut listeners, and pill/rounded styling variants.',
-    importCode: `import { SearchButton, AnimatedSearchPlaceholder } from 'es-react-components';`,
+    importCode: `import { SearchButton, AnimatedSearchPlaceholder } from '@elsesourav/react-ui';`,
     usageCode: `<SearchButton
   onClick={() => setOpen(true)}
   prefix="Search "

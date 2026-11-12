@@ -7,7 +7,7 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'Checkbox & Switch',
     description:
       'Unified Select supporting both Spring-Animated Floating Dropdown (with icons, latency hints, and sliding indicator pill) and clean OS-Native HTML5 Select with helper text and validation states.',
-    importCode: `import { Select } from 'es-react-components';`,
+    importCode: `import { Select } from '@elsesourav/react-ui';`,
     usageCode: `// 1. Spring-Animated Floating Dropdown:
 <Select
   variant="animated"
@@ -100,7 +100,7 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'Checkbox & Switch',
     description:
       'Accessible toggle switch primitive with smooth sliding thumb and keyboard spacebar activation.',
-    importCode: `import { Switch } from 'es-react-components';`,
+    importCode: `import { Switch } from '@elsesourav/react-ui';`,
     usageCode: `<Switch
   label="Realtime Streaming"
   description="Deliver WebSocket events to browser sessions."
@@ -142,11 +142,11 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'squish-switch',
-    name: 'Squish Switch (On/Off)',
+    name: 'Squish Switch',
     category: 'Checkbox & Switch',
     description:
       'Elastic kinetic physics toggle switch with velocity-driven thumb squish stretching, tactile pointer drag tracking, embedded ON/OFF micro badges, and full HSL theme token integration.',
-    importCode: `import { SquishSwitch, OnOffSwitch } from 'es-react-components';`,
+    importCode: `import { SquishSwitch, OnOffSwitch } from '@elsesourav/react-ui';`,
     usageCode: `<SquishSwitch
   checked={enabled}
   onChange={setEnabled}
@@ -246,7 +246,7 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'Checkbox & Switch',
     description:
       'High-contrast accessible checkbox with custom SVG checkmark and title/description layout slots.',
-    importCode: `import { Checkbox } from 'es-react-components';`,
+    importCode: `import { Checkbox } from '@elsesourav/react-ui';`,
     usageCode: `<Checkbox
   label="Automatic Daily Snapshots"
   description="Retains rolling 30-day backups."
@@ -270,11 +270,11 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'peek-rating',
-    name: 'Peek Rating (Interactive Star & Shape Rater)',
+    name: 'Peek Rating',
     category: 'Checkbox & Switch',
     description:
       'Fluid gesture-driven rating selector with spring hover elevation, floating value tooltip, haptic pop animation, and keyboard accessibility. Supports stars, hearts, bolts, and custom icons.',
-    importCode: `import { PeekRating } from 'es-react-components';`,
+    importCode: `import { PeekRating } from '@elsesourav/react-ui';`,
     usageCode: `<PeekRating
   value={rating}
   onChange={setRating}
@@ -416,7 +416,7 @@ export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
     category: 'Checkbox & Switch',
     description:
       'Rounded pill counter with tactile minus/plus button triggers, spring-animated numeric digit flip/pop transitions, boundary min/max clamping, and accessible spinbutton keyboard controls.',
-    importCode: `import { QuantityCounter } from 'es-react-components';`,
+    importCode: `import { QuantityCounter } from '@elsesourav/react-ui';`,
     usageCode: `<QuantityCounter
   defaultValue={4}
   min={1}

@@ -7,7 +7,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
     category: 'Sliders & Range',
     description:
       'Accessible numeric slider with magnetic detent snap points, spring carriage thumb, haptic feedback, and keyboard detent traversal.',
-    importCode: `import { SliderDetents, useSliderDetents } from 'es-react-components';`,
+    importCode: `import { SliderDetents, useSliderDetents } from '@elsesourav/react-ui';`,
     usageCode: `<SliderDetents
   label="Instance CPU Allocation"
   min={1}
@@ -33,11 +33,11 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'parameter-slider',
-    name: 'Parameter Slider (Multi-Variant Scrubber System)',
+    name: 'Parameter Slider',
     category: 'Sliders & Range',
     description:
       'High-precision inspector control system with multi-variant components: Continuous & Stepped Range Sliders with subtle tick ruler, glowing white needle indicator, and live numeric units (px, s, ms, %); Color Picker Pill with circular swatch and uppercase hex pill badge; and companion Pill Toggle Switches.',
-    importCode: `import { ParameterSlider, ParameterSwitch, ParameterColor, ParameterGrid } from 'es-react-components';`,
+    importCode: `import { ParameterSlider, ParameterSwitch, ParameterColor, ParameterGrid } from '@elsesourav/react-ui';`,
     usageCode: `<ParameterGrid columns={3}>
   <ParameterSlider
     label="Height"
@@ -82,7 +82,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
     category: 'Sliders & Range',
     description:
       'Organic rubber-band elastic slider with spring physics, overstretch edge resistance, auto-contrasting ink text, inside/outside icon slots, and vertical/horizontal layout modes.',
-    importCode: `import { ElasticSlider } from 'es-react-components';`,
+    importCode: `import { ElasticSlider } from '@elsesourav/react-ui';`,
     usageCode: `<ElasticSlider
   defaultValue={65}
   startingValue={0}
@@ -122,7 +122,7 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
     category: 'Sliders & Range',
     description:
       'Hydrodynamic waveform slider driven by spring velocity acoustics. As the user scrubs across bars, an asymmetric wake wave ripples with fluid momentum and smooth dissipation.',
-    importCode: `import { WakeSlider } from 'es-react-components';`,
+    importCode: `import { WakeSlider } from '@elsesourav/react-ui';`,
     usageCode: `<WakeSlider
   defaultValue={45}
   min={0}
@@ -158,11 +158,11 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'slider',
-    name: 'Slider (Single & Dual Range)',
+    name: 'Slider',
     category: 'Sliders & Range',
     description:
       'Accessible multi-thumb slider powered by React Aria, supporting single (1) and double (2) thumb range selection, floating tooltip indicators, bottom labels, and keyboard accessibility.',
-    importCode: `import { Slider } from 'es-react-components';`,
+    importCode: `import { Slider } from '@elsesourav/react-ui';`,
     usageCode: `{/* 1. Single Thumb Mode */}
 <Slider
   label="Compute Capacity"

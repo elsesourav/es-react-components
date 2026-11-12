@@ -3,11 +3,11 @@ import type { ComponentDoc } from './types';
 export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   {
     id: 'mono-charts',
-    name: 'Mono Charts Suite (All-in-One)',
+    name: 'Mono Charts',
     category: 'Data & Analytics',
     description:
       'Complete responsive monochrome Recharts dashboard suite combining all 5 charts (Line, Bar, Area, Donut, Stream) into an adaptive grid with synchronized theme switching and compact density modes.',
-    importCode: `import { MonoChartsSuite } from 'es-react-components';`,
+    importCode: `import { MonoChartsSuite } from '@elsesourav/react-ui';`,
     usageCode: `<MonoChartsSuite theme="auto" compact={false} />`,
     props: [
       { name: 'theme', type: "'dark' | 'light' | 'auto'", defaultVal: "'auto'", description: 'Color theme styling. Respects active ThemeContext or DOM class.' },
@@ -18,11 +18,11 @@ export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'mono-line-chart',
-    name: 'Mono Rounded Line Chart',
+    name: 'Mono Line Chart',
     category: 'Data & Analytics',
     description:
       'Minimalist monochrome spline line chart featuring dual/single series toggles, rounded data point markers, hover tooltip cards, and responsive container resizing.',
-    importCode: `import { MonoRoundedLineChart } from 'es-react-components';`,
+    importCode: `import { MonoRoundedLineChart } from '@elsesourav/react-ui';`,
     usageCode: `<MonoRoundedLineChart
   theme="auto"
   activeSeries="all"
@@ -44,11 +44,11 @@ export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'mono-bar-chart',
-    name: 'Mono Rounded Bar Chart',
+    name: 'Mono Bar Chart',
     category: 'Data & Analytics',
     description:
       'Monochrome pill pillar bar chart with full-radius caps, vertical column or horizontal row orientations, segmented layout selector, and hover tooltips.',
-    importCode: `import { MonoRoundedBarChart } from 'es-react-components';`,
+    importCode: `import { MonoRoundedBarChart } from '@elsesourav/react-ui';`,
     usageCode: `<MonoRoundedBarChart
   theme="auto"
   layout="vertical"
@@ -70,11 +70,11 @@ export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'mono-area-chart',
-    name: 'Mono Rounded Area Chart',
+    name: 'Mono Area Chart',
     category: 'Data & Analytics',
     description:
       'Smooth gradient-filled monochrome area chart with monotone or natural spline curve interpolation, hover gradients, and metric indicators.',
-    importCode: `import { MonoRoundedAreaChart } from 'es-react-components';`,
+    importCode: `import { MonoRoundedAreaChart } from '@elsesourav/react-ui';`,
     usageCode: `<MonoRoundedAreaChart
   theme="auto"
   curve="monotone"
@@ -96,11 +96,11 @@ export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'mono-donut-chart',
-    name: 'Mono Rounded Donut Chart',
+    name: 'Mono Donut Chart',
     category: 'Data & Analytics',
     description:
       'Radial monochrome donut chart with soft arc caps, interactive segment slice hover highlights, center allocation metric callout, and legend chips.',
-    importCode: `import { MonoRoundedDonutChart } from 'es-react-components';`,
+    importCode: `import { MonoRoundedDonutChart } from '@elsesourav/react-ui';`,
     usageCode: `<MonoRoundedDonutChart
   theme="auto"
   compact={false}
@@ -120,11 +120,11 @@ export const DATA_ANALYTICS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'mono-stream-chart',
-    name: 'Mono Rounded Stream Chart',
+    name: 'Mono Stream Chart',
     category: 'Data & Analytics',
     description:
       'Fluid stream wave chart with bi-directional ribbon curves, organic wave motion aesthetics, rounded borders, and real-time theme adaptation.',
-    importCode: `import { MonoRoundedStreamChart } from 'es-react-components';`,
+    importCode: `import { MonoRoundedStreamChart } from '@elsesourav/react-ui';`,
     usageCode: `<MonoRoundedStreamChart
   theme="auto"
   compact={false}

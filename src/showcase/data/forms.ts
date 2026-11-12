@@ -3,12 +3,12 @@ import type { ComponentDoc } from './types';
 export const FORMS_COMPONENTS: ComponentDoc[] = [
 {
     id: 'input',
-    name: 'Input (All Variants)',
+    name: 'Input',
     category: 'Inputs & Fields',
     description:
       'Universal Form Input component supporting all standard & advanced variants: standard, floating, inline-validation, password-strength, otp, tag, and expanding-search.',
     importCode: `// Unified Component syntax:
-import { Input } from 'es-react-components';
+import { Input } from '@elsesourav/react-ui';
 
 // Or dedicated individual imports:
 import {
@@ -18,7 +18,7 @@ import {
   OtpInput,
   TagInput,
   ExpandingSearch,
-} from 'es-react-components';`,
+} from '@elsesourav/react-ui';`,
     usageCode: `// 1. Unified syntax with variant prop:
 <Input variant="floating" label="Work Email" type="email" />
 <Input variant="password" label="Master Password" showStrengthMeter />
@@ -72,7 +72,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Animated input field with a floating label that smoothly scales up and floats to the top edge when focused or filled. Includes invalid states and character counters.',
-    importCode: `import { FloatingLabelInput } from 'es-react-components';`,
+    importCode: `import { FloatingLabelInput } from '@elsesourav/react-ui';`,
     usageCode: `<FloatingLabelInput
   label="Work email"
   type="email"
@@ -128,7 +128,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Live validation form field featuring real-time syntax and business rule checking, dynamic success/error status icons, animated slide-in error messages, and touch blur tracking.',
-    importCode: `import { InlineValidation } from 'es-react-components';`,
+    importCode: `import { InlineValidation } from '@elsesourav/react-ui';`,
     usageCode: `<InlineValidation
   label="Work Email"
   type="email"
@@ -151,7 +151,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Segmented multi-cell verification code input with auto-advance on typing, backspace return, full-code clipboard paste, and error vibration animation.',
-    importCode: `import { OtpInput } from 'es-react-components';`,
+    importCode: `import { OtpInput } from '@elsesourav/react-ui';`,
     usageCode: `<OtpInput
   length={6}
   autoFocus
@@ -195,7 +195,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Token and tag manager input supporting customizable separator keys (Enter, comma, semicolon), max tag limits, duplicate rejection, and two-stage backspace delete.',
-    importCode: `import { TagInput } from 'es-react-components';`,
+    importCode: `import { TagInput } from '@elsesourav/react-ui';`,
     usageCode: `<TagInput
   label="Topics"
   value={tags}
@@ -234,7 +234,7 @@ import {
   },
 {
     id: 'password-input',
-    name: 'Password Input & Strength',
+    name: 'Password Input',
     category: 'Inputs & Fields',
     description:
       'Password field with show/hide password eye toggle and integrated real-time password strength meter checking character variety and length requirements.',
@@ -242,7 +242,7 @@ import {
   PasswordInput,
   PasswordStrength,
   usePasswordStrength
-} from 'es-react-components';`,
+} from '@elsesourav/react-ui';`,
     usageCode: `<PasswordInput
   label="New Password"
   value={password}
@@ -281,7 +281,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Collapsible search bar powered by spring physics (motion/react). Smoothly expands from an icon on focus, features live debounced query updates, ESC dismiss, and result counter.',
-    importCode: `import { ExpandingSearch, useExpandingSearch } from 'es-react-components';`,
+    importCode: `import { ExpandingSearch, useExpandingSearch } from '@elsesourav/react-ui';`,
     usageCode: `<ExpandingSearch
   label="Global Search"
   placeholder="Search resources..."
@@ -324,7 +324,7 @@ import {
     category: 'Inputs & Fields',
     description:
       'Multi-line text editor with auto-resizing, character count counters, error states, and theme border focus rings.',
-    importCode: `import { Textarea } from 'es-react-components';`,
+    importCode: `import { Textarea } from '@elsesourav/react-ui';`,
     usageCode: `<Textarea
   label="Project Description"
   placeholder="Enter notes..."

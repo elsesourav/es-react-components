@@ -7,7 +7,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Navigation & Menus',
     description:
       'Hierarchical collapsible tree view with rotating spring carets, vertical connecting branch lines, and full WAI-ARIA keyboard navigation (Arrow keys, Home, End, and letter typeahead).',
-    importCode: `import { TreeView, useTreeView } from 'es-react-components';`,
+    importCode: `import { TreeView, useTreeView } from '@elsesourav/react-ui';`,
     usageCode: `<TreeView
   label="File Explorer"
   defaultExpanded={['src', 'components']}
@@ -47,7 +47,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Scroll & Viewport',
     description:
       'Scroll-condensing responsive header container featuring spring-interpolated title scaling, floating border elevation, leading/trailing action slots, and gradient bottom edge fading.',
-    importCode: `import { StickyHeader, useCondense } from 'es-react-components';`,
+    importCode: `import { StickyHeader, useCondense } from '@elsesourav/react-ui';`,
     usageCode: `<StickyHeader
   title="Deployment Pipelines"
   subtitle="Production clusters in us-east-1 and eu-central-1"
@@ -77,7 +77,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Scroll & Viewport',
     description:
       'Dynamic sticky action bar that auto-collapses on downward scroll and reappears on upward scroll, with focus-within auto-pinning for keyboard accessibility.',
-    importCode: `import { HideOnScroll, useHideOnScroll } from 'es-react-components';`,
+    importCode: `import { HideOnScroll, useHideOnScroll } from '@elsesourav/react-ui';`,
     usageCode: `<HideOnScroll
   barHeight={44}
   hideAfter={14}
@@ -111,7 +111,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Animated categorical item filtering grid with popLayout transitions, dynamic item count badges, radiogroup chip navigation, and responsive multi-column layouts.',
-    importCode: `import { FilterGrid, useFilterGrid } from 'es-react-components';`,
+    importCode: `import { FilterGrid, useFilterGrid } from '@elsesourav/react-ui';`,
     usageCode: `<FilterGrid
   label="Resource Types"
   items={items}
@@ -139,7 +139,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Smooth physics-driven drag-and-drop sortable list with complete keyboard accessibility (Space to grab/drop, ArrowUp/Down to move, Escape to revert) and live screen reader feedback.',
-    importCode: `import { ReorderList, useReorderList } from 'es-react-components';`,
+    importCode: `import { ReorderList, useReorderList } from '@elsesourav/react-ui';`,
     usageCode: `<ReorderList
   label="Deployment Priorities"
   items={items}
@@ -164,7 +164,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Feedback & Overlays',
     description:
       'Zoomable modal image inspector with origin-element morph transitions, wheel zoom toward cursor, drag panning with velocity bounds, keyboard shortcuts (+, -, 0, Escape), and portal overlay.',
-    importCode: `import { Lightbox, useLightbox } from 'es-react-components';`,
+    importCode: `import { Lightbox, useLightbox } from '@elsesourav/react-ui';`,
     usageCode: `<button ref={thumbnailRef} onClick={() => setOpen(true)}>
   <img src="/sample.jpg" alt="Preview" className="rounded" />
 </button>
@@ -193,7 +193,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Progressive image loading component with blurred low-res placeholder, async decode detection, smooth spring unblur reveal, and fallback handling.',
-    importCode: `import { BlurUpImage, useBlurUpImage } from 'es-react-components';`,
+    importCode: `import { BlurUpImage, useBlurUpImage } from '@elsesourav/react-ui';`,
     usageCode: `<BlurUpImage
   src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200"
   placeholder="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=32"
@@ -218,7 +218,7 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     category: 'Surfaces & Cards',
     description:
       'Smooth collapsible content disclosure with dynamic line-height calculation, spring height transitions, gradient fade veil, and full ARIA keyboard control.',
-    importCode: `import { ShowMore, useShowMore } from 'es-react-components';`,
+    importCode: `import { ShowMore, useShowMore } from '@elsesourav/react-ui';`,
     usageCode: `<ShowMore lines={3} maxHeight={320} moreLabel="Show more" lessLabel="Show less">
   <p>Long paragraph or complex dashboard text content...</p>
 </ShowMore>`,
