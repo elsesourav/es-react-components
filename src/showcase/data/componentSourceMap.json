@@ -1,4 +1,46 @@
 {
+  "mono-charts": {
+    "name": "Mono Charts Suite (All-in-One)",
+    "filename": "mono-charts.tsx",
+    "filepath": "src/components/ui/mono-charts.tsx",
+    "lines": 47,
+    "bytes": 1380
+  },
+  "mono-line-chart": {
+    "name": "Mono Rounded Line Chart",
+    "filename": "mono-line-chart.tsx",
+    "filepath": "src/components/ui/mono-line-chart.tsx",
+    "lines": 255,
+    "bytes": 8091
+  },
+  "mono-bar-chart": {
+    "name": "Mono Rounded Bar Chart",
+    "filename": "mono-bar-chart.tsx",
+    "filepath": "src/components/ui/mono-bar-chart.tsx",
+    "lines": 249,
+    "bytes": 8151
+  },
+  "mono-area-chart": {
+    "name": "Mono Rounded Area Chart",
+    "filename": "mono-area-chart.tsx",
+    "filepath": "src/components/ui/mono-area-chart.tsx",
+    "lines": 235,
+    "bytes": 7423
+  },
+  "mono-donut-chart": {
+    "name": "Mono Rounded Donut Chart",
+    "filename": "mono-donut-chart.tsx",
+    "filepath": "src/components/ui/mono-donut-chart.tsx",
+    "lines": 231,
+    "bytes": 7811
+  },
+  "mono-stream-chart": {
+    "name": "Mono Rounded Stream Chart",
+    "filename": "mono-stream-chart.tsx",
+    "filepath": "src/components/ui/mono-stream-chart.tsx",
+    "lines": 210,
+    "bytes": 6499
+  },
   "dialog": {
     "name": "Dialog",
     "filename": "dialog.tsx",
@@ -104,13 +146,6 @@
     "lines": 117,
     "bytes": 3487
   },
-  "dropdown": {
-    "name": "Dropdown (Animated Select)",
-    "filename": "dropdown.tsx",
-    "filepath": "src/components/ui/dropdown.tsx",
-    "lines": 480,
-    "bytes": 15734
-  },
   "switch": {
     "name": "Switch",
     "filename": "switch.tsx",
@@ -182,11 +217,18 @@
     "bytes": 4853
   },
   "arcade-switch": {
-    "name": "Arcade Switch (Retro Toggle & Paddle Slider)",
+    "name": "Tactile Bezel Switch (Arcade)",
     "filename": "arcade-switch.tsx",
     "filepath": "src/components/ui/arcade-switch.tsx",
-    "lines": 241,
-    "bytes": 6495
+    "lines": 336,
+    "bytes": 9083
+  },
+  "arcade-slider": {
+    "name": "Wide Paddle Slider (Arcade)",
+    "filename": "arcade-slider.tsx",
+    "filepath": "src/components/ui/arcade-slider.tsx",
+    "lines": 267,
+    "bytes": 8783
   },
   "input": {
     "name": "Input (All Variants)",
@@ -439,13 +481,6 @@
     "filepath": "src/components/ui/show-more.tsx",
     "lines": 257,
     "bytes": 7149
-  },
-  "mono-charts": {
-    "name": "Mono Rounded Charts",
-    "filename": "mono-charts.tsx",
-    "filepath": "src/components/ui/mono-charts.tsx",
-    "lines": 47,
-    "bytes": 1380
   },
   "leaderboard-table": {
     "name": "Leaderboard Table (Arcade Ranking)",

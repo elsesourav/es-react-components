@@ -233,43 +233,6 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
     ],
     themeTokens: ['--foreground', '--surface', '--border', '--primary', '--radius'],
   },
-{
-    id: 'mono-charts',
-    name: 'Mono Rounded Charts',
-    category: 'Data & Analytics',
-    description:
-      'Suite of 5 minimalist monochrome Recharts components: Spline Dynamics (Line), Mono Pill Pillars (Bar), Mono Curved Wave (Area), Mono Rounded Donut, and Fluid Stream Wave, featuring rounded caps, responsive layout adaptation, and dynamic theme switching.',
-    importCode: `import {
-  MonoRoundedLineChart,
-  MonoRoundedBarChart,
-  MonoRoundedAreaChart,
-  MonoRoundedDonutChart,
-  MonoRoundedStreamChart,
-  MonoChartsSuite,
-} from 'es-react-components';`,
-    usageCode: `// 1. Individual Charts
-<MonoRoundedLineChart theme="auto" compact={false} />
-<MonoRoundedBarChart theme="auto" layout="vertical" />
-<MonoRoundedAreaChart theme="auto" curve="monotone" />
-<MonoRoundedDonutChart theme="auto" />
-<MonoRoundedStreamChart theme="auto" />
-
-// 2. Full Responsive Suite
-<MonoChartsSuite theme="auto" compact={false} />`,
-    props: [
-      { name: 'theme', type: "'dark' | 'light' | 'auto'", defaultVal: "'auto'", description: 'Color theme styling. Respects active ThemeContext or DOM class.' },
-      { name: 'compact', type: 'boolean', defaultVal: 'false', description: 'Reduced vertical height for dense dashboard cards.' },
-      { name: 'data', type: 'Array<T>', defaultVal: 'DEFAULT_*_DATA', description: 'Custom array of data points matching chart series.' },
-      { name: 'title', type: 'string', defaultVal: 'Chart Specific', description: 'Headline label in card header.' },
-      { name: 'badge', type: 'string', defaultVal: 'Pill Tag', description: 'Monospace pill badge in header.' },
-      { name: 'metric', type: 'string | number', defaultVal: 'Computed', description: 'Primary focal number callout.' },
-      { name: 'unit', type: 'string', defaultVal: 'nodes / units / %', description: 'Unit descriptor for primary metric.' },
-      { name: 'activeSeries (Line)', type: "'all' | 'value'", defaultVal: "'all'", description: 'Toggles between Dual line baseline and Single line.' },
-      { name: 'layout (Bar)', type: "'vertical' | 'horizontal'", defaultVal: "'vertical'", description: 'Toggles between vertical columns and horizontal rows.' },
-      { name: 'curve (Area)', type: "'monotone' | 'natural'", defaultVal: "'monotone'", description: 'Spline interpolation algorithm for area curves.' },
-    ],
-    themeTokens: ['--surface', '--foreground', '--border', '--primary', '--card'],
-  },
   {
     id: 'leaderboard-table',
     name: 'Leaderboard Table (Arcade Ranking)',

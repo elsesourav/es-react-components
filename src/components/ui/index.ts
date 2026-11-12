@@ -78,4 +78,5 @@ export * from './mono-charts';
 export * from './logo';
 export * from './arcade-button';
 export * from './arcade-switch';
+export * from './arcade-slider';
 export * from './leaderboard-table';

@@ -70,10 +70,17 @@ import {
   SquishSwitchPlayground,
   ArcadeButtonPlayground,
   ArcadeSwitchPlayground,
+  ArcadeSliderPlayground,
   LeaderboardTablePlayground,
   MotionLoadersPlayground,
   LoadMorePlayground,
-  MonoChartsPlayground
+  MonoChartsPlayground,
+  MonoChartsSuitePlayground,
+  MonoLineChartPlayground,
+  MonoBarChartPlayground,
+  MonoAreaChartPlayground,
+  MonoDonutChartPlayground,
+  MonoStreamChartPlayground,
 } from './playgrounds';
 
 export interface ComponentPlaygroundsProps {
@@ -149,7 +156,6 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
     case 'textarea':
       return <TextareaPlayground />;
     case 'dropdown':
-      return <DropdownPlayground />;
     case 'select':
       return <SelectPlayground />;
     case 'switch':
@@ -225,6 +231,8 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <ArcadeButtonPlayground />;
     case 'arcade-switch':
       return <ArcadeSwitchPlayground />;
+    case 'arcade-slider':
+      return <ArcadeSliderPlayground />;
     case 'leaderboard-table':
       return <LeaderboardTablePlayground />;
     case 'motion-loaders':
@@ -232,7 +240,17 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
     case 'load-more':
       return <LoadMorePlayground />;
     case 'mono-charts':
-      return <MonoChartsPlayground />;
+      return <MonoChartsSuitePlayground />;
+    case 'mono-line-chart':
+      return <MonoLineChartPlayground />;
+    case 'mono-bar-chart':
+      return <MonoBarChartPlayground />;
+    case 'mono-area-chart':
+      return <MonoAreaChartPlayground />;
+    case 'mono-donut-chart':
+      return <MonoDonutChartPlayground />;
+    case 'mono-stream-chart':
+      return <MonoStreamChartPlayground />;
     default:
       return null;
   }

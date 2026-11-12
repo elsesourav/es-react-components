@@ -186,40 +186,65 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'arcade-switch',
-    name: 'Arcade Switch (Retro Toggle & Paddle Slider)',
+    name: 'Tactile Bezel Switch (Arcade)',
     category: 'Checkbox & Switch',
     description:
-      'Tactile retro arcade toggle switch and wide paddle range slider inspired by Breakout Ball. Features metallic silver beveled rim, multi-layered inset track shadows, neon active glow, and 3D white squircle thumb with engraved ON/OFF indicators.',
+      'Tactile retro arcade toggle switch inspired by Breakout Ball. Features metallic silver beveled rim, multi-layered inset track shadows, neon active glow, mathematically concentric border radii, and 3D white squircle thumb with engraved indicators.',
     importCode: `import { ArcadeSwitch } from 'es-react-components';`,
-    usageCode: `// Toggle Switch Mode:
-<ArcadeSwitch
+    usageCode: `<ArcadeSwitch
   checked={isEnabled}
   onChange={setIsEnabled}
   variant="neon-green"
   size="md"
   showText
-/>
-
-// Paddle Range Slider Mode:
-<ArcadeSwitch
-  sliderMode
-  sliderValue={volume}
-  onSliderChange={setVolume}
-  variant="neon-green"
-  size="md"
 />`,
     props: [
-      { name: 'checked', type: 'boolean', defaultVal: 'false', description: 'Controlled on/off boolean state for toggle mode.' },
+      { name: 'checked', type: 'boolean', defaultVal: 'false', description: 'Controlled on/off boolean state.' },
       { name: 'defaultChecked', type: 'boolean', defaultVal: 'false', description: 'Initial uncontrolled boolean state.' },
       { name: 'onChange', type: '(checked: boolean) => void', defaultVal: 'undefined', description: 'Callback fired when toggle state changes.' },
-      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Dimension scale.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Preset dimensions.' },
       { name: 'variant', type: "'neon-green' | 'candy-pink' | 'neon-cyan' | 'amber-gold' | 'cyber-purple'", defaultVal: "'neon-green'", description: 'Active track color hue.' },
-      { name: 'showText', type: 'boolean', defaultVal: 'true', description: 'Renders engraved text on the white thumb.' },
-      { name: 'onLabel', type: 'string', defaultVal: "'ON'", description: 'Text displayed when switch is active.' },
-      { name: 'offLabel', type: 'string', defaultVal: "'OFF'", description: 'Text displayed when switch is inactive.' },
-      { name: 'sliderMode', type: 'boolean', defaultVal: 'false', description: 'Enables continuous paddle range slider mode (Image 2 style).' },
-      { name: 'sliderValue', type: 'number', defaultVal: '50', description: 'Continuous numeric value (0-100) when sliderMode is enabled.' },
-      { name: 'onSliderChange', type: '(val: number) => void', defaultVal: 'undefined', description: 'Callback fired when slider position changes.' },
+      { name: 'borderRadius', type: 'number', defaultVal: 'height / 2', description: 'Outer border radius with 100% mathematically concentric track and thumb rounding.' },
+      { name: 'borderPadding', type: 'number', defaultVal: '2.5', description: 'Subpixel padding between metallic bezel and sliding thumb.' },
+      { name: 'showShadow', type: 'boolean', defaultVal: 'true', description: 'Toggles 3D inset track shadows and tactile thumb shadows.' },
+      { name: 'showGlow', type: 'boolean', defaultVal: 'true', description: 'Toggles ambient neon active glow.' },
+      { name: 'showBezel', type: 'boolean', defaultVal: 'true', description: 'Toggles specular metallic outer bevel rim.' },
+      { name: 'showText', type: 'boolean', defaultVal: 'true', description: 'Renders engraved ON/OFF text on the white thumb.' },
+      { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables user interactions and dims opacity.' },
+    ],
+    themeTokens: ['--primary', '--surface', '--border', '--foreground'],
+  },
+  {
+    id: 'arcade-slider',
+    name: 'Wide Paddle Slider (Arcade)',
+    category: 'Sliders & Range',
+    description:
+      'Authentic arcade wide paddle range slider inspired by Breakout Ball. Features continuous pointer drag, metallic silver beveled rim, glowing active level fill, mathematically concentric border radii, and 3D white tactile thumb knob.',
+    importCode: `import { ArcadeSlider } from 'es-react-components';`,
+    usageCode: `<ArcadeSlider
+  value={volume}
+  onChange={setVolume}
+  variant="neon-green"
+  size="md"
+  borderRadius={21}
+  showShadow
+  showGlow
+/>`,
+    props: [
+      { name: 'value', type: 'number', defaultVal: 'undefined', description: 'Controlled numeric value.' },
+      { name: 'defaultValue', type: 'number', defaultVal: '82', description: 'Initial uncontrolled slider value.' },
+      { name: 'onChange', type: '(val: number) => void', defaultVal: 'undefined', description: 'Callback fired when value changes.' },
+      { name: 'min', type: 'number', defaultVal: '0', description: 'Minimum slider limit.' },
+      { name: 'max', type: 'number', defaultVal: '100', description: 'Maximum slider limit.' },
+      { name: 'step', type: 'number', defaultVal: '1', description: 'Granularity step.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", defaultVal: "'md'", description: 'Preset dimensions.' },
+      { name: 'variant', type: "'neon-green' | 'candy-pink' | 'neon-cyan' | 'amber-gold' | 'cyber-purple'", defaultVal: "'neon-green'", description: 'Active fill color hue.' },
+      { name: 'borderRadius', type: 'number', defaultVal: 'height / 2', description: 'Outer border radius with 100% mathematically concentric track and thumb rounding.' },
+      { name: 'borderPadding', type: 'number', defaultVal: '2.5', description: 'Subpixel padding between metallic bezel and sliding thumb.' },
+      { name: 'showShadow', type: 'boolean', defaultVal: 'true', description: 'Toggles 3D inset track shadows and tactile thumb shadows.' },
+      { name: 'showGlow', type: 'boolean', defaultVal: 'true', description: 'Toggles ambient neon active glow.' },
+      { name: 'showBezel', type: 'boolean', defaultVal: 'true', description: 'Toggles specular metallic outer bevel rim.' },
+      { name: 'showValue', type: 'boolean', defaultVal: 'false', description: 'Renders numeric value directly inside the thumb knob.' },
       { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables user interactions and dims opacity.' },
     ],
     themeTokens: ['--primary', '--surface', '--border', '--foreground'],

@@ -6,6 +6,7 @@ import { FORMS_COMPONENTS } from './forms';
 import { FORMS_CONTROLS_COMPONENTS } from './forms-controls';
 import { FORMS_AI_CONTROLS_COMPONENTS } from './forms-ai-controls';
 import { FORMS_SLIDERS_COMPONENTS } from './forms-sliders';
+import { DATA_ANALYTICS_COMPONENTS } from './data-analytics';
 import { FEEDBACK_COMPONENTS } from './feedback';
 import { NAVIGATION_COMPONENTS } from './navigation';
 import type { ComponentDoc } from './types';
@@ -21,6 +22,7 @@ export const COMPONENTS_DATA: ComponentDoc[] = [
   ...FORMS_CONTROLS_COMPONENTS,
   ...FORMS_AI_CONTROLS_COMPONENTS,
   ...FORMS_SLIDERS_COMPONENTS,
+  ...DATA_ANALYTICS_COMPONENTS,
   ...FEEDBACK_COMPONENTS,
   ...NAVIGATION_COMPONENTS,
 ];

@@ -231,68 +231,6 @@ export const ParameterSliderPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* LIVE WAVEFORM INSPECTOR PREVIEW */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Waveform Simulation Preview
-          </span>
-          <span className="text-[11px] text-muted-foreground font-mono">
-            Modulated by 15 Active Parameters
-          </span>
-        </div>
-
-        <div
-          style={{ backgroundColor: paramTrack }}
-          className={cn(
-            "relative p-6 sm:p-10 rounded-2xl border border-border flex flex-col items-center justify-center min-h-[180px] overflow-hidden transition-all duration-200",
-            paramDisabled && "opacity-40 pointer-events-none"
-          )}
-        >
-          {paramShowValue && (
-            <div className="absolute top-3 right-4 px-2.5 py-1 rounded-full bg-surface-elevated/80 backdrop-blur-md border border-border text-xs font-mono font-bold text-foreground shadow-sm">
-              Level: {paramValue}%
-            </div>
-          )}
-
-          <div
-            className="flex items-end justify-center w-full max-w-xl"
-            style={{ gap: `${paramGap}px` }}
-          >
-            {Array.from({ length: paramBars }).map((_, i) => {
-              const progress = i / Math.max(1, paramBars - 1);
-              const centerDist = Math.abs(progress - 0.5) * 2;
-              const bellCurve = Math.exp(-Math.pow(centerDist * (paramReach / 3), 2));
-              const skewOffset = (progress - 0.5) * paramSkew;
-              const amplitude = (paramValue / 100) * paramSensitivity;
-              const calculatedHeight = Math.max(
-                paramRestHeight,
-                Math.min(
-                  paramHeight,
-                  paramRestHeight + (paramHeight - paramRestHeight) * bellCurve * amplitude * (1 + skewOffset)
-                )
-              );
-
-              return (
-                <div
-                  key={i}
-                  style={{
-                    height: `${calculatedHeight}px`,
-                    backgroundColor: paramFill,
-                    transition: `height ${paramGlide}s ease, background-color 0.2s`,
-                  }}
-                  className="flex-1 min-w-[2px] max-w-[12px] rounded-full shadow-xs"
-                />
-              );
-            })}
-          </div>
-
-          <p className="text-[11px] text-muted-foreground/80 mt-4 text-center font-mono">
-            Modulated by Height ({paramHeight}px), Bars ({paramBars}), Gap ({paramGap}px), Skew ({paramSkew}), Reach ({paramReach}), Glide ({paramGlide}s)
-          </p>
-        </div>
-      </div>
-
       {/* THE COMPLETE 15-CONTROL INSPECTOR GRID */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">

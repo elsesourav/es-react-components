@@ -11,6 +11,58 @@ import { Terminal, Sliders, Code2, Check, Copy } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import { useTheme } from '@/theme/ThemeContext';
 
+/**
+ * Renders syntax-highlighted TSX/JS import statements with high contrast
+ * in both light and dark themes.
+ */
+function renderHighlightedImport(code: string): React.ReactNode[] {
+  const REGEX = /(\/\/.*$|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`[^`]*`|\b(?:import|from|as|type|default)\b|[{}(),;]|[A-Za-z_$][\w$]*)/gm;
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  let key = 0;
+
+  for (const match of code.matchAll(REGEX)) {
+    const idx = match.index ?? 0;
+    const token = match[0];
+    if (idx > last) {
+      nodes.push(<span key={key++} className="text-foreground/70">{code.slice(last, idx)}</span>);
+    }
+    if (token.startsWith("//")) {
+      nodes.push(<span key={key++} className="text-muted-foreground/60 italic">{token}</span>);
+    } else if (token.startsWith('"') || token.startsWith("'") || token.startsWith("`")) {
+      nodes.push(
+        <span key={key++} className="text-emerald-600 dark:text-emerald-400 font-medium">
+          {token}
+        </span>
+      );
+    } else if (/^(?:import|from|as|type|default)$/.test(token)) {
+      nodes.push(
+        <span key={key++} className="text-purple-600 dark:text-purple-400 font-semibold">
+          {token}
+        </span>
+      );
+    } else if (/^[{}(),;]$/.test(token)) {
+      nodes.push(
+        <span key={key++} className="text-muted-foreground font-mono">
+          {token}
+        </span>
+      );
+    } else {
+      // Identifier / Component name
+      nodes.push(
+        <span key={key++} className="text-cyan-700 dark:text-cyan-300 font-medium">
+          {token}
+        </span>
+      );
+    }
+    last = idx + token.length;
+  }
+  if (last < code.length) {
+    nodes.push(<span key={key++} className="text-foreground/70">{code.slice(last)}</span>);
+  }
+  return nodes;
+}
+
 export interface ComponentDocViewProps {
   component: ComponentDoc;
   onSelectOverview?: () => void;
@@ -80,11 +132,15 @@ export const ComponentDocView: React.FC<ComponentDocViewProps> = ({
           {component.description}
         </p>
 
-        {/* Quick Import Snippet Box */}
-        <div className="flex items-center justify-between gap-2 p-2 px-3 sm:px-4 rounded-xl bg-surface border border-border/80 max-w-xl shadow-2xs">
-          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground overflow-x-auto py-0.5">
-            <Terminal className="size-3.5 text-primary shrink-0" />
-            <span className="text-foreground select-all whitespace-nowrap">{component.importCode}</span>
+        {/* Quick Import Snippet Box (Dynamic Width, Zero Premature Scroll, Syntax Highlighted) */}
+        <div className="inline-flex w-fit max-w-full items-center justify-between gap-3 p-2 px-3 sm:px-4 rounded-xl bg-surface border border-border/80 shadow-2xs transition-all">
+          <div className="flex-1 min-w-0 overflow-x-auto scrollbar-thin py-0.5">
+            <div className="flex items-center gap-2 text-xs font-mono select-all">
+              <Terminal className="size-3.5 text-primary shrink-0 select-none" />
+              <div className="whitespace-pre flex items-center">
+                {renderHighlightedImport(component.importCode)}
+              </div>
+            </div>
           </div>
           <Tooltip label="Copy import statement">
             <button

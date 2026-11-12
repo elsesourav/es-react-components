@@ -1,114 +1,98 @@
 import type { ComponentDoc } from './types';
 
 export const FORMS_CONTROLS_COMPONENTS: ComponentDoc[] = [
-{
+  {
     id: 'select',
     name: 'Select',
     category: 'Checkbox & Switch',
     description:
-      'Unified Select supporting both Native HTML5 options and Spring-Animated Dropdown with icons, hints, and sliding indicator pill.',
-    importCode: `// Unified syntax:
-import { Select } from 'es-react-components';
-
-// Native HTML5 Select:
-<Select
-  label="Region"
-  options={[
-    { label: 'US East', value: 'us-east' },
-    { label: 'Europe', value: 'eu-west' },
-  ]}
-/>
-
-// Spring Animated Dropdown:
+      'Unified Select supporting both Spring-Animated Floating Dropdown (with icons, latency hints, and sliding indicator pill) and clean OS-Native HTML5 Select with helper text and validation states.',
+    importCode: `import { Select } from 'es-react-components';`,
+    usageCode: `// 1. Spring-Animated Floating Dropdown:
 <Select
   variant="animated"
-  label="Region"
-  items={[
-    { label: 'US East', value: 'us-east', hint: '14ms' },
-    { label: 'Europe', value: 'eu-west', hint: '82ms' },
-  ]}
-/>`,
-    usageCode: `<Select
   label="Deployment Region"
-  variant="animated"
   items={[
     { value: 'us-east-1', label: 'US East (N. Virginia)', hint: '14ms' },
     { value: 'eu-central-1', label: 'Europe Central (Frankfurt)', hint: '82ms' },
   ]}
+  value={region}
+  onChange={setRegion}
+/>
+
+// 2. Native HTML5 Select:
+<Select
+  variant="native"
+  label="Subscription Tier"
+  options={[
+    { value: 'dev', label: 'Developer (Individual)' },
+    { value: 'org', label: 'Organization (Team)' },
+  ]}
+  defaultValue="dev"
 />`,
     props: [
       {
         name: 'variant',
-        type: `'native' | 'animated'`,
+        type: `'animated' | 'native'`,
         defaultVal: `'native'`,
-        description: 'Select between native browser popup or animated floating dropdown.',
+        description: 'Choose between spring-animated floating dropdown menu or OS-native HTML5 select.',
       },
       {
         name: 'label',
         type: 'string',
         defaultVal: 'undefined',
-        description: 'Field label.',
+        description: 'Field label above the select box.',
       },
-      {
-        name: 'items / options',
-        type: 'Array<{ label: string, value: string, hint?: string, icon?: React.ReactNode, disabled?: boolean }>',
-        defaultVal: '[]',
-        description: 'Selectable items list.',
-      },
-    ],
-    themeTokens: ['--surface', '--surface-elevated', '--border', '--primary', '--radius'],
-  },
-{
-    id: 'dropdown',
-    name: 'Dropdown (Animated Select)',
-    category: 'Checkbox & Switch',
-    description:
-      'Rich floating dropdown menu powered by motion/react spring physics. Features active sliding indicator pill, keyboard navigation (ArrowUp, ArrowDown, Enter, Esc), typeahead search, hints, and HSL theme tokens.',
-    importCode: `import { Dropdown, useDropdown } from 'es-react-components';`,
-    usageCode: `<Dropdown
-  label="Region Selection"
-  value={region}
-  onChange={setRegion}
-  items={[
-    { value: 'us-east', label: 'US East (N. Virginia)', hint: '14ms' },
-    { value: 'us-west', label: 'US West (Oregon)', hint: '38ms' },
-    { value: 'eu-west', label: 'Europe (Frankfurt)', hint: '82ms' },
-    { value: 'sa-east', label: 'South America (São Paulo)', disabled: true },
-  ]}
-/>`,
-    props: [
       {
         name: 'items',
         type: 'DropdownItem[]',
         defaultVal: '[]',
-        description: 'List of items with value, label, optional hint, icon, and disabled flag.',
+        description: 'Selectable items list for variant="animated" (with value, label, hint, icon, disabled).',
+      },
+      {
+        name: 'options',
+        type: 'SelectOption[]',
+        defaultVal: '[]',
+        description: 'Option list for variant="native" (with value, label, disabled).',
       },
       {
         name: 'value / defaultValue',
         type: 'string',
         defaultVal: 'undefined',
-        description: 'Controlled or uncontrolled value string.',
+        description: 'Controlled or uncontrolled selected value.',
       },
       {
         name: 'onChange',
         type: '(value: string) => void',
         defaultVal: 'undefined',
-        description: 'Triggered when an item is selected.',
+        description: 'Callback fired when an item or option is selected.',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Disables select interactions and dims opacity.',
       },
       {
         name: 'fullWidth',
         type: 'boolean',
         defaultVal: 'false',
-        description: 'Expands trigger button to fill 100% of container width.',
+        description: 'Expands trigger button to fill 100% of container width (variant="animated").',
+      },
+      {
+        name: 'error',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Error message and danger outline (variant="native").',
+      },
+      {
+        name: 'helperText',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Subtle guidance caption below select (variant="native").',
       },
     ],
-    themeTokens: [
-      '--surface',
-      '--surface-elevated',
-      '--border',
-      '--primary',
-      '--radius',
-    ],
+    themeTokens: ['--surface', '--surface-elevated', '--border', '--primary', '--radius'],
   },
 {
     id: 'switch',
