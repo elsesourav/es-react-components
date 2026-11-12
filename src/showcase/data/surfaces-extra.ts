@@ -235,26 +235,30 @@ export const SURFACES_EXTRA_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'leaderboard-table',
-    name: 'Leaderboard Table (Arcade Ranking)',
+    name: 'Leaderboard Table',
     category: 'Surfaces & Cards',
     description:
-      'Breakout Ball inspired competitive arcade high-score ranking table with golden trophy header, podium crown/medal badges (#1, #2, #3), completion stopwatch times, live search filtering, column sort toggling, and current-user row illumination.',
-    importCode: `import { LeaderboardTable } from 'es-react-components';`,
+      'High-impact competitive high-score ranking table with fiery flame gradient title, neon-cyan scores and times, hot-pink span badges, current player highlight overlay (.me), customizable border radius, and active theme reactivity.',
+    importCode: `import { LeaderboardTable } from '@elsesourav/react-ui';`,
     usageCode: `<LeaderboardTable
+  variant="arcade"
   title="Players Ranking"
-  subtitle="Global Breakout Ball Leaderboard"
+  subtitle="Global High Scores & Rankings"
+  borderRadius={18}
   searchable
   highlightPodium
   maxRows={8}
   onSelectPlayer={(player) => console.log('Selected player:', player)}
 />`,
     props: [
+      { name: 'variant', type: "'arcade' | 'theme' | 'modern'", defaultVal: "'arcade'", description: 'Styling mode: arcade glow dark mode, active theme adaptive, or modern podium card.' },
       { name: 'title', type: 'string', defaultVal: "'Players Ranking'", description: 'Header title text with trophy icon.' },
-      { name: 'subtitle', type: 'string', defaultVal: "'Global Breakout Ball Leaderboard'", description: 'Subtext displayed below the title.' },
+      { name: 'subtitle', type: 'string', defaultVal: "'Global High Scores & Rankings'", description: 'Subtext displayed below the title.' },
       { name: 'items', type: 'LeaderboardItem[]', defaultVal: 'DEFAULT_PLAYERS', description: 'Array of player ranking items.' },
       { name: 'currentUserId', type: 'string', defaultVal: 'undefined', description: 'ID of player to highlight with glowing "YOU" badge.' },
+      { name: 'borderRadius', type: 'number | string', defaultVal: 'undefined', description: 'Customizable outer container border radius (in px or Tailwind units).' },
       { name: 'searchable', type: 'boolean', defaultVal: 'true', description: 'Renders player search input filter in the table header.' },
-      { name: 'highlightPodium', type: 'boolean', defaultVal: 'true', description: 'Enables gold, silver, and bronze medal badges for top 3.' },
+      { name: 'highlightPodium', type: 'boolean', defaultVal: 'true', description: 'Enables gold, silver, and bronze medal badges for top 3 in modern mode.' },
       { name: 'maxRows', type: 'number', defaultVal: '8', description: 'Maximum visible rows before scrolling.' },
       { name: 'onSelectPlayer', type: '(player: LeaderboardItem) => void', defaultVal: 'undefined', description: 'Callback fired when a player row is clicked.' },
     ],

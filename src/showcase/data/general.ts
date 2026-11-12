@@ -331,26 +331,40 @@ export const GENERAL_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'arcade-button',
-    name: 'Arcade Button (Glossy Candy 3D)',
+    name: 'Arcade Button',
     category: 'Buttons & Actions',
     description:
-      'Lustrous 3D jelly/arcade push button inspired by Breakout Ball. Features specular top lens reflection, animated sweeping light beam, spring press physics recoil, tactile sound-ready click feel, and rich color themes.',
-    importCode: `import { ArcadeButton } from 'es-react-components';`,
+      'Lustrous 3D push button with specular glass highlight, deep beveled border (always matching a deep shade of the background color), starburst gleam animation, and theme reactivity.',
+    importCode: `import { ArcadeButton } from '@elsesourav/react-ui';`,
     usageCode: `<ArcadeButton
-  variant="candy-pink"
+  variant="magenta"
   size="lg"
-  shape="pill"
+  shape="rounded"
+  borderRadius={18}
+  border
+  borderWidth={1.5}
+  mask
+  maskHeight="40%"
   shine
+  shineMode="starburst"
   glow
-  onClick={() => console.log('START clicked!')}
+  onClick={() => console.log('Button clicked!')}
 >
   START
 </ArcadeButton>`,
     props: [
-      { name: 'variant', type: "'candy-pink' | 'arcade-magenta' | 'neon-cyan' | 'arcade-green' | 'cyber-purple' | 'amber-gold' | 'retro-silver'", defaultVal: "'candy-pink'", description: 'Color gradient and ambient glow hue styling.' },
+      { name: 'variant', type: "'magenta' | 'cyan' | 'blue' | 'theme' | 'pink' | 'purple' | 'green' | 'gold' | 'silver'", defaultVal: "'magenta'", description: 'Color gradient and ambient glow hue styling (with automatic deep background-tone border).' },
       { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl'", defaultVal: "'md'", description: 'Sizing scale with proportional typography and padding.' },
-      { name: 'shape', type: "'pill' | 'rounded' | 'square'", defaultVal: "'pill'", description: 'Border curvature geometry.' },
-      { name: 'shine', type: 'boolean', defaultVal: 'true', description: 'Enables diagonal sweeping light shine highlight ray.' },
+      { name: 'shape', type: "'rounded' | 'pill' | 'square'", defaultVal: "'rounded'", description: 'Preset border curvature geometry when custom borderRadius is omitted.' },
+      { name: 'border', type: 'boolean', defaultVal: 'true', description: 'Enables border with color automatically set to a deep shade of the background color.' },
+      { name: 'borderWidth', type: 'number | string', defaultVal: '1.5', description: 'Border stroke thickness in pixels.' },
+      { name: 'borderColor', type: 'string', defaultVal: 'undefined', description: 'Optional border color override; defaults to deep tone of the background gradient.' },
+      { name: 'borderRadius', type: 'number | string', defaultVal: 'undefined', description: 'Explicit border radius control in px or Tailwind units with inherited mask cap.' },
+      { name: 'mask', type: 'boolean', defaultVal: 'true', description: 'Enables specular glass highlight reflection cap.' },
+      { name: 'maskHeight', type: 'number | string', defaultVal: "'40%'", description: 'Customizable height percentage or length for specular reflection cap.' },
+      { name: 'maskOpacity', type: 'number', defaultVal: '0.2', description: 'Translucent opacity of the specular mask highlight.' },
+      { name: 'shine', type: 'boolean', defaultVal: 'true', description: 'Enables animated shine gleam highlight.' },
+      { name: 'shineMode', type: "'starburst' | 'sweep' | 'none'", defaultVal: "'starburst'", description: 'Starburst flash or diagonal ray sweep animation.' },
       { name: 'glow', type: 'boolean', defaultVal: 'true', description: 'Displays an ambient colored backdrop neon glow.' },
       { name: 'isLoading', type: 'boolean', defaultVal: 'false', description: 'Renders loading spinner state and inhibits clicks.' },
       { name: 'disabled', type: 'boolean', defaultVal: 'false', description: 'Disables button interaction and dims opacity.' },

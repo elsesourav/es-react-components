@@ -217,14 +217,14 @@
     "bytes": 9306
   },
   "arcade-switch": {
-    "name": "Tactile Bezel Switch (Arcade)",
+    "name": "Arcade Switch",
     "filename": "arcade-switch.tsx",
     "filepath": "src/components/ui/arcade-switch.tsx",
     "lines": 339,
     "bytes": 9146
   },
   "arcade-slider": {
-    "name": "Wide Paddle Slider (Arcade)",
+    "name": "Arcade Slider",
     "filename": "arcade-slider.tsx",
     "filepath": "src/components/ui/arcade-slider.tsx",
     "lines": 366,
@@ -287,14 +287,14 @@
     "bytes": 2479
   },
   "split-flap-text": {
-    "name": "Split Flap Text (Mechanical Departure Board)",
+    "name": "Split Flap Text",
     "filename": "split-flap-text.tsx",
     "filepath": "src/components/ui/split-flap-text.tsx",
     "lines": 494,
     "bytes": 15451
   },
   "markdown-editor": {
-    "name": "Markdown Editor & Math Preview",
+    "name": "Markdown Editor",
     "filename": "markdown-editor.tsx",
     "filepath": "src/components/ui/markdown-editor.tsx",
     "lines": 364,
@@ -315,7 +315,7 @@
     "bytes": 9546
   },
   "markdown-renderer": {
-    "name": "Markdown & LaTeX Renderer",
+    "name": "Markdown Renderer",
     "filename": "markdown-renderer.tsx",
     "filepath": "src/components/ui/markdown-renderer.tsx",
     "lines": 434,
@@ -357,11 +357,11 @@
     "bytes": 4388
   },
   "arcade-button": {
-    "name": "Arcade Button (Glossy Candy 3D)",
+    "name": "Arcade Button",
     "filename": "arcade-button.tsx",
     "filepath": "src/components/ui/arcade-button.tsx",
-    "lines": 244,
-    "bytes": 7344
+    "lines": 422,
+    "bytes": 12865
   },
   "tabs": {
     "name": "Tabs",
@@ -483,11 +483,11 @@
     "bytes": 7149
   },
   "leaderboard-table": {
-    "name": "Leaderboard Table (Arcade Ranking)",
+    "name": "Leaderboard Table",
     "filename": "leaderboard-table.tsx",
     "filepath": "src/components/ui/leaderboard-table.tsx",
-    "lines": 282,
-    "bytes": 11690
+    "lines": 420,
+    "bytes": 16329
   },
   "card": {
     "name": "Card",

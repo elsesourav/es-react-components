@@ -17,6 +17,7 @@ import {
   Button,
   Badge,
   Tabs,
+  Dropdown,
   SliderDetents,
   AICodeBlock,
   Tooltip,
@@ -53,8 +54,6 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
     isDark,
     toggleDark,
     resetTheme,
-    tactileShadows,
-    toggleTactileShadows,
   } = useTheme();
   const { addToast } = useToast();
 
@@ -168,47 +167,44 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          {/* Global Tactile Specular Shadows Master Switch */}
-          <div className="p-4 rounded-xl border border-border bg-surface-subtle/50 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Sparkles className="size-4 text-primary" />
-                <span className="text-xs font-bold text-foreground">
-                  Tactile Specular Shadows
-                </span>
-                <Badge variant={tactileShadows ? 'primary' : 'outline'} size="sm">
-                  {tactileShadows ? 'Active' : 'Off'}
-                </Badge>
-              </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                Specular highlights & ambient drop shadows (<code className="font-mono text-[10px]">--shadow-float</code>, <code className="font-mono text-[10px]">--shadow-well</code>, <code className="font-mono text-[10px]">--shadow-lift</code>).
-              </p>
-            </div>
-            <ParameterSwitch
-              label=""
-              checked={tactileShadows}
-              onChange={() => {
-                toggleTactileShadows();
-                addToast({
-                  title: tactileShadows ? 'Tactile Shadows Disabled' : 'Tactile Shadows Enabled',
-                  description: tactileShadows ? 'Reverted to flat elevation.' : 'Tactile specular depth active.',
-                  type: 'info',
-                });
-              }}
-            />
-          </div>
           {activeTab === 'presets' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Select a Design Preset
-                </span>
-                <Badge variant="outline" size="sm">
-                  {Object.keys(THEME_PRESETS).length} Presets
-                </Badge>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Select a Design Preset
+                  </span>
+                  <Badge variant="outline" size="sm">
+                    {Object.keys(THEME_PRESETS).length} Presets
+                  </Badge>
+                </div>
+
+                {/* Library's Animated Dropdown for Presets */}
+                <Dropdown
+                  items={(
+                    Object.keys(THEME_PRESETS) as Array<
+                      Exclude<ThemePresetKey, 'custom'>
+                    >
+                  ).map((key) => ({
+                    value: key,
+                    label: THEME_PRESETS[key].name,
+                    hint: THEME_PRESETS[key].isDark ? 'Dark Mode' : 'Light Mode',
+                  }))}
+                  value={preset}
+                  onChange={(val) => {
+                    setPreset(val as ThemePresetKey);
+                    addToast({
+                      title: 'Theme Applied',
+                      description: `Switched to ${THEME_PRESETS[val as keyof typeof THEME_PRESETS]?.name || val}`,
+                      type: 'success',
+                    });
+                  }}
+                  placeholder="Choose design preset..."
+                  className="w-full"
+                />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 {(
                   Object.keys(THEME_PRESETS) as Array<
                     Exclude<ThemePresetKey, 'custom'>

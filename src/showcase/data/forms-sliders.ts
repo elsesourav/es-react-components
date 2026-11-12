@@ -204,11 +204,11 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'arcade-switch',
-    name: 'Tactile Bezel Switch (Arcade)',
+    name: 'Arcade Switch',
     category: 'Checkbox & Switch',
     description:
-      'Tactile retro arcade toggle switch inspired by Breakout Ball. Features metallic silver beveled rim, multi-layered inset track shadows, neon active glow, mathematically concentric border radii, and 3D white squircle thumb with engraved indicators.',
-    importCode: `import { ArcadeSwitch } from 'es-react-components';`,
+      'Tactile retro arcade toggle switch featuring metallic silver beveled rim, multi-layered inset track shadows, neon active glow, concentric border radii, and 3D white thumb with engraved ON/OFF indicators.',
+    importCode: `import { ArcadeSwitch } from '@elsesourav/react-ui';`,
     usageCode: `<ArcadeSwitch
   checked={isEnabled}
   onChange={setIsEnabled}
@@ -234,11 +234,11 @@ export const FORMS_SLIDERS_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'arcade-slider',
-    name: 'Wide Paddle Slider (Arcade)',
+    name: 'Arcade Slider',
     category: 'Sliders & Range',
     description:
-      'Authentic arcade wide paddle range slider inspired by Breakout Ball. Features continuous pointer drag, metallic silver beveled rim, glowing active level fill, mathematically concentric border radii, and 3D white tactile thumb knob.',
-    importCode: `import { ArcadeSlider } from 'es-react-components';`,
+      'Arcade wide paddle range slider featuring continuous pointer drag, metallic silver beveled rim, glowing active level fill, concentric border radii, and 3D white tactile thumb knob.',
+    importCode: `import { ArcadeSlider } from '@elsesourav/react-ui';`,
     usageCode: `<ArcadeSlider
   value={volume}
   onChange={setVolume}

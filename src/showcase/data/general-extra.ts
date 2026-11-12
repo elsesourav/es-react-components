@@ -3,11 +3,11 @@ import type { ComponentDoc } from './types';
 export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
 {
     id: 'split-flap-text',
-    name: 'Split Flap Text (Mechanical Departure Board)',
+    name: 'Split Flap Text',
     category: 'Typography & Content',
     description:
-      'Retro mechanical split-flap ticker replicating vintage airport and train arrival boards. Features 3D split-tile flipping physics, cascading character staggering, specular glare reflections, custom charsets, and reduced-motion fallback.',
-    importCode: `import { SplitFlapText } from 'es-react-components';`,
+      'Retro mechanical split-flap ticker replicating airport and train arrival boards. Features 3D split-tile flipping physics, cascading character staggering, specular glare reflections, custom charsets, and reduced-motion fallback.',
+    importCode: `import { SplitFlapText } from '@elsesourav/react-ui';`,
     usageCode: `<SplitFlapText
   words={["LAUNCH READY", "SYNC ONLINE", "SIGNAL LIVE"]}
   flipDuration={0.12}
@@ -149,11 +149,11 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
   },
 {
     id: 'markdown-editor',
-    name: 'Markdown Editor & Math Preview',
+    name: 'Markdown Editor',
     category: 'Typography & Content',
     description:
-      'Universal Markdown editor and live preview built completely from scratch with KaTeX LaTeX math support ($E=mc^2$ and $$\\int f(x)dx$$), split view, GitHub alerts, code blocks, task lists, and theme token styling.',
-    importCode: `import { MarkdownEditor, MarkdownRenderer } from 'es-react-components';`,
+      'Universal Markdown editor and live preview with KaTeX LaTeX math support ($E=mc^2$ and $$\\int f(x)dx$$), split view, GitHub alerts, code blocks, task lists, and theme token styling.',
+    importCode: `import { MarkdownEditor, MarkdownRenderer } from '@elsesourav/react-ui';`,
     usageCode: `<MarkdownEditor
   label="Article Draft"
   mode="split"
@@ -265,11 +265,11 @@ export const GENERAL_EXTRA_COMPONENTS: ComponentDoc[] = [
   },
   {
     id: 'markdown-renderer',
-    name: 'Markdown & LaTeX Renderer',
+    name: 'Markdown Renderer',
     category: 'Typography & Content',
     description:
       'Optical markdown engine with full GitHub-flavored spec support, KaTeX client-side mathematical typesetting ($inline$ and $$block$$), fenced code syntax highlighting with copy-to-clipboard, callout alerts, tables, and auto-generated outline navigation.',
-    importCode: `import { MarkdownRenderer } from 'es-react-components';`,
+    importCode: `import { MarkdownRenderer } from '@elsesourav/react-ui';`,
     usageCode: `<MarkdownRenderer
   content="# Quantum Mechanics\\n\\nEuler: $e^{i\\pi} + 1 = 0$\\n\\n> [!NOTE]\\n> Pure client-side parsing."
   showTableOfContents

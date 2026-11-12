@@ -1,14 +1,16 @@
-import React from 'react';
-import { Badge, Tooltip, Logo, NativeSelect, SearchButton } from '../ui';
+import React, { useState, useRef, useEffect } from 'react';
+import { Badge, Tooltip, Logo, Dropdown, SearchButton, useToast } from '../ui';
 import { cn } from '@/lib/utils';
 import {
   Sun,
   Moon,
   Palette,
   Menu,
-  ChevronRight,
-  Layers,
-  Sparkles,
+  ChevronDown,
+  Copy,
+  ExternalLink,
+  Check,
+  Package,
 } from 'lucide-react';
 import { useTheme, ThemePresetKey } from '../../theme/ThemeContext';
 import type { ComponentDoc } from '../../showcase/componentsData';
@@ -22,6 +24,15 @@ export interface AppNavbarProps {
   activeComponent?: ComponentDoc | null;
 }
 
+const PRESET_OPTIONS = [
+  { value: 'midnight', label: 'Midnight' },
+  { value: 'minimal-light', label: 'Minimal Light' },
+  { value: 'cyberpunk', label: 'Cyberpunk' },
+  { value: 'emerald', label: 'Emerald' },
+  { value: 'sunset', label: 'Sunset' },
+  { value: 'ocean', label: 'Ocean' },
+];
+
 export const AppNavbar: React.FC<AppNavbarProps> = ({
   onOpenMobileMenu,
   onOpenCommand,
@@ -30,18 +41,41 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
   totalComponents,
   activeComponent,
 }) => {
-  const {
-    isDark,
-    toggleDark,
-    preset,
-    setPreset,
-    tactileShadows,
-    toggleTactileShadows,
-  } = useTheme();
+  const { isDark, toggleDark, preset, setPreset } = useTheme();
+  const { addToast } = useToast();
+  const [showVersionMenu, setShowVersionMenu] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const versionMenuRef = useRef<HTMLDivElement>(null);
+
+  const currentVersion = "1.0.0";
+  const packageName = "@elsesourav/react-ui";
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (versionMenuRef.current && !versionMenuRef.current.contains(e.target as Node)) {
+        setShowVersionMenu(false);
+      }
+    };
+    if (showVersionMenu) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [showVersionMenu]);
+
+  const handleCopyInstall = (cmd: string) => {
+    navigator.clipboard.writeText(cmd);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    addToast({
+      title: 'Command Copied!',
+      description: cmd,
+      type: 'success',
+    });
+  };
 
   return (
     <header className="sticky top-0 z-20 h-14 shrink-0 w-full border-b border-border/80 bg-background/95 backdrop-blur-md flex items-center justify-between px-3 sm:px-6 lg:px-8 transition-colors select-none">
-      {/* Left: Mobile Menu Trigger + Breadcrumb (Matching Reference Image 2 Top-Left) */}
+      {/* Left: Mobile Menu Trigger + Brand & Breadcrumb */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
         {/* Mobile Hamburger Trigger (< md) */}
         <button
@@ -53,7 +87,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           <Menu className="size-4" />
         </button>
 
-        {/* Mobile Brand for tiny screens when sidebar is hidden */}
+        {/* Mobile Brand */}
         <div className="md:hidden flex items-center gap-1.5 min-w-0">
           <Logo size={20} variant="badge" className="shrink-0" />
           <span className="font-bold text-xs text-foreground truncate">
@@ -61,8 +95,93 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           </span>
         </div>
 
-        {/* Desktop Breadcrumb Path (Matching Reference Image 2: "Components · Category · Name") */}
-        <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-2 text-xs font-medium text-muted-foreground min-w-0 truncate">
+        {/* Version Update Control Pill (Desktop & Mobile) */}
+        <div className="relative" ref={versionMenuRef}>
+          <button
+            type="button"
+            onClick={() => setShowVersionMenu(!showVersionMenu)}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 text-[11px] font-mono font-semibold transition-all cursor-pointer shadow-2xs"
+            aria-label="Version update control and package details"
+          >
+            <span>v{currentVersion}</span>
+            <ChevronDown className="size-3 opacity-70" />
+          </button>
+
+          {/* Version Update Control Popover */}
+          {showVersionMenu && (
+            <div className="absolute left-0 mt-2 w-72 rounded-2xl border border-border bg-surface-elevated/95 p-3.5 shadow-xl backdrop-blur-xl z-50 text-xs animate-in fade-in zoom-in-95 duration-150">
+              <div className="flex items-center justify-between border-b border-border/50 pb-2.5 mb-2.5">
+                <div className="flex items-center gap-2">
+                  <div className="size-6 rounded-lg bg-primary/15 text-primary flex items-center justify-center font-bold">
+                    <Package className="size-3.5" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-foreground">{packageName}</div>
+                    <div className="text-[10px] text-muted-foreground font-mono">v{currentVersion} (Latest Release)</div>
+                  </div>
+                </div>
+                <Badge variant="success" size="sm">Stable</Badge>
+              </div>
+
+              {/* Install Command */}
+              <div className="space-y-1.5 mb-3">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground block">
+                  Install Package:
+                </span>
+                <div
+                  onClick={() => handleCopyInstall(`npm i ${packageName}`)}
+                  className="flex items-center justify-between p-2 rounded-xl bg-surface border border-border/80 font-mono text-[11px] text-foreground hover:border-primary/50 transition-colors cursor-pointer group"
+                >
+                  <span className="truncate">npm i {packageName}</span>
+                  {copied ? (
+                    <Check className="size-3 text-emerald-500 shrink-0" />
+                  ) : (
+                    <Copy className="size-3 text-muted-foreground group-hover:text-primary shrink-0 transition-colors" />
+                  )}
+                </div>
+              </div>
+
+              {/* Upgrade Command */}
+              <div className="space-y-1.5 mb-3">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground block">
+                  Update to Latest:
+                </span>
+                <div
+                  onClick={() => handleCopyInstall(`npm i ${packageName}@latest`)}
+                  className="flex items-center justify-between p-2 rounded-xl bg-surface border border-border/80 font-mono text-[11px] text-foreground hover:border-primary/50 transition-colors cursor-pointer group"
+                >
+                  <span className="truncate">npm i {packageName}@latest</span>
+                  <Copy className="size-3 text-muted-foreground group-hover:text-primary shrink-0 transition-colors" />
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
+                <a
+                  href={`https://www.npmjs.com/package/${packageName}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-primary hover:underline font-medium"
+                >
+                  <span>NPM Registry</span>
+                  <ExternalLink className="size-3" />
+                </a>
+                <a
+                  href="https://github.com/elsesourav/es-react-components/releases"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground font-medium transition-colors"
+                >
+                  <span>Changelog</span>
+                  <ExternalLink className="size-3" />
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Breadcrumb Path */}
+        <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-2 text-xs font-medium text-muted-foreground min-w-0 truncate ml-1">
           <button
             type="button"
             onClick={() => onSelectComponent(null)}
@@ -91,7 +210,7 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
         </nav>
       </div>
 
-      {/* Right: Search + Theme Controls (Matching Reference Image 2 Top-Right) */}
+      {/* Right: Search + Theme Preset Dropdown + Theme Customizer + Dark Mode */}
       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 ml-2">
         {/* Top Search Button Trigger */}
         <div className="w-44 sm:w-56 lg:w-64 shrink-0">
@@ -112,54 +231,28 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
           />
         </div>
 
-        {/* Theme Preset Selector */}
-        <div className="relative hidden sm:flex items-center">
-          <Palette className="absolute left-2.5 z-10 size-3 text-primary pointer-events-none" />
-          <NativeSelect
+        {/* Library's Animated Dropdown for Theme Presets */}
+        <div className="hidden sm:block w-36">
+          <Dropdown
+            items={PRESET_OPTIONS}
             value={preset}
-            onChange={(e) => setPreset(e.target.value as ThemePresetKey)}
-            sizeVariant="sm"
-            className="pl-7 pr-7 font-medium shadow-2xs text-xs h-8"
+            onChange={(val) => setPreset(val as ThemePresetKey)}
+            placeholder="Theme Preset"
             aria-label="Theme Preset"
-            options={[
-              { value: 'midnight', label: 'Midnight' },
-              { value: 'minimal-light', label: 'Minimal Light' },
-              { value: 'cyberpunk', label: 'Cyberpunk' },
-              { value: 'emerald', label: 'Emerald' },
-              { value: 'sunset', label: 'Sunset' },
-              { value: 'ocean', label: 'Ocean' },
-            ]}
+            className="w-full text-xs"
           />
         </div>
 
-        {/* Tactile Specular Shadows Toggle */}
-        <Tooltip label={tactileShadows ? "Tactile Shadows: ON (Specular Depth)" : "Tactile Shadows: OFF (Flat Depth)"}>
-          <button
-            type="button"
-            onClick={toggleTactileShadows}
-            className={cn(
-              "size-8 sm:h-8 sm:w-auto sm:px-2.5 text-xs font-medium rounded-lg border transition-all flex items-center justify-center gap-1.5 cursor-pointer",
-              tactileShadows
-                ? "border-primary/50 bg-primary/10 text-primary shadow-lift"
-                : "border-border/80 bg-surface text-muted-foreground hover:text-foreground hover:bg-surface-subtle"
-            )}
-            aria-label={tactileShadows ? "Disable tactile shadows" : "Enable tactile shadows"}
-          >
-            <Sparkles className={cn("size-3.5", tactileShadows ? "text-primary fill-primary/30" : "text-muted-foreground")} />
-            <span className="hidden md:inline">Tactile</span>
-          </button>
-        </Tooltip>
-
-        {/* Theme Tokens Customizer Button */}
-        <Tooltip label="Design Tokens Customizer">
+        {/* Redesigned Theme Customizer Button */}
+        <Tooltip label="Customize Theme Tokens & Presets">
           <button
             type="button"
             onClick={onOpenThemeCustomizer}
-            className="size-8 sm:h-8 sm:w-auto sm:px-2.5 text-xs font-medium rounded-lg border border-border/80 bg-surface text-muted-foreground hover:text-foreground hover:bg-surface-subtle transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
-            aria-label="Open design tokens editor"
+            className="h-8 px-2.5 text-xs font-semibold rounded-lg border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 hover:border-primary/60 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-95"
+            aria-label="Open theme customizer"
           >
-            <Palette className="size-3.5 sm:hidden text-primary" />
-            <span className="hidden sm:inline">Tokens</span>
+            <Palette className="size-3.5 text-primary" />
+            <span className="hidden sm:inline">Theme</span>
           </button>
         </Tooltip>
 
@@ -178,3 +271,5 @@ export const AppNavbar: React.FC<AppNavbarProps> = ({
     </header>
   );
 };
+
+export default AppNavbar;
