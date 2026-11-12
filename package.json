@@ -28,7 +28,7 @@
   "homepage": "https://components.elsesourav.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/elsesourav/es-react-components.git"
+    "url": "git+https://github.com/elsesourav/es-react-components.git"
   },
   "keywords": [
     "react",
