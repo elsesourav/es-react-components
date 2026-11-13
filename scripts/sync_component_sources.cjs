@@ -17,6 +17,7 @@ const OUTPUT_INFO = path.resolve(__dirname, '../src/showcase/data/componentSourc
 const OVERRIDES = {
   'floating-input': 'floating-label-input.tsx',
   'inline-validation': 'inline-validation-input.tsx',
+  'image-upload': 'image-upload.tsx',
 };
 
 function main() {

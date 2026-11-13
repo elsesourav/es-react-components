@@ -109,39 +109,28 @@ export const THEME_PRESETS: Record<Exclude<ThemePresetKey, 'custom'>, ThemePrese
 // Converts #RRGGBB hex to "H S% L%" string for Tailwind HSL variables
 export function hexToHslString(hex: string): string {
   let c = hex.replace('#', '');
-  if (c.length === 3) {
-    c = c.split('').map((char) => char + char).join('');
-  }
+  if (c.length === 3) c = c.split('').map((char) => char + char).join('');
   const num = parseInt(c, 16);
   if (isNaN(num)) return '0 0% 50%';
 
   const r = ((num >> 16) & 255) / 255;
   const g = ((num >> 8) & 255) / 255;
   const b = (num & 255) / 255;
-
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h = 0;
-  let s = 0;
+  let h = 0, s = 0;
   const l = (max + min) / 2;
 
   if (max !== min) {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
     }
     h /= 6;
   }
-
   return `${(h * 360).toFixed(1)} ${(s * 100).toFixed(1)}% ${(l * 100).toFixed(1)}%`;
 }
 
@@ -174,11 +163,81 @@ export function adjustHslLightness(hslStr: string, deltaPercent: number): string
   return `${h} ${s} ${l.toFixed(1)}%`;
 }
 
+// Converts HSL values to a #rrggbb hex string
+export function hslToHex(h: number, s: number, l: number): string {
+  const normL = l / 100;
+  const a = (s * Math.min(normL, 1 - normL)) / 100;
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = normL - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+// Extracts numeric HSL [0-360, 0-100, 0-100] from hex
+export function hexToHslNumbers(hex: string): { h: number; s: number; l: number } {
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map((ch) => ch + ch).join('');
+  const num = parseInt(c, 16);
+  if (isNaN(num)) return { h: 220, s: 80, l: 50 };
+  const r = ((num >> 16) & 255) / 255;
+  const g = ((num >> 8) & 255) / 255;
+  const b = (num & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+// Automatically derives a complete, WCAG-harmonious palette from a primary color
+export function harmonizePalette(primaryHex: string, isDark: boolean, radius: number = 12): ThemeColors {
+  const { h, s } = hexToHslNumbers(primaryHex);
+  const subtleSat = Math.max(10, Math.min(25, Math.round(s * 0.3)));
+  const accentHue = (h + 35) % 360;
+
+  if (isDark) {
+    return {
+      primary: primaryHex,
+      background: hslToHex(h, subtleSat, 5),
+      surface: hslToHex(h, subtleSat + 2, 9),
+      border: hslToHex(h, subtleSat + 4, 18),
+      foreground: '#fafafa',
+      accent: hslToHex(accentHue, Math.min(90, Math.max(60, s)), 60),
+      radius,
+    };
+  } else {
+    return {
+      primary: primaryHex,
+      background: hslToHex(h, subtleSat, 98),
+      surface: '#ffffff',
+      border: hslToHex(h, subtleSat, 88),
+      foreground: hslToHex(h, subtleSat, 10),
+      accent: hslToHex(accentHue, Math.min(90, Math.max(60, s)), 55),
+      radius,
+    };
+  }
+}
+
 export interface ThemeContextType {
   preset: ThemePresetKey;
   setPreset: (preset: ThemePresetKey) => void;
   colors: ThemeColors;
   updateColor: (key: keyof ThemeColors, value: string | number) => void;
+  setCustomColors: (newColors: Partial<ThemeColors>) => void;
+  harmonizeWithPrimary: (primaryHex?: string) => void;
   isDark: boolean;
   toggleDark: () => void;
   resetTheme: () => void;
@@ -187,10 +246,23 @@ export interface ThemeContextType {
   toggleTactileShadows: () => void;
 }
 
+export interface ThemeProviderProps {
+  children: React.ReactNode;
+  defaultPreset?: ThemePresetKey;
+  defaultColors?: Partial<ThemeColors>;
+  defaultTactileShadows?: boolean;
+}
+
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+  children,
+  defaultPreset,
+  defaultColors,
+  defaultTactileShadows,
+}) => {
   const [preset, setPresetState] = useState<ThemePresetKey>(() => {
+    if (defaultPreset) return defaultPreset;
     // Check URL search params first (e.g. ?theme=cyberpunk)
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -203,6 +275,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [colors, setColors] = useState<ThemeColors>(() => {
+    if (defaultColors) {
+      const base = defaultPreset && defaultPreset in THEME_PRESETS
+        ? THEME_PRESETS[defaultPreset as Exclude<ThemePresetKey, 'custom'>].colors
+        : THEME_PRESETS.midnight.colors;
+      return { ...base, ...defaultColors };
+    }
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const urlTheme = urlParams.get('theme') as ThemePresetKey;
@@ -222,6 +300,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [isDark, setIsDark] = useState<boolean>(() => {
+    if (defaultPreset && defaultPreset in THEME_PRESETS) {
+      return THEME_PRESETS[defaultPreset as Exclude<ThemePresetKey, 'custom'>].isDark;
+    }
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const urlTheme = urlParams.get('theme') as ThemePresetKey;
@@ -234,6 +315,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [tactileShadows, setTactileShadows] = useState<boolean>(() => {
+    if (defaultTactileShadows !== undefined) return defaultTactileShadows;
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('es-tactile-shadows');
       if (saved !== null) return saved === 'true';
@@ -346,6 +428,21 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }));
   };
 
+  const setCustomColors = (newColors: Partial<ThemeColors>) => {
+    setPresetState('custom');
+    setColors((prev) => ({
+      ...prev,
+      ...newColors,
+    }));
+  };
+
+  const harmonizeWithPrimary = (primaryHex?: string) => {
+    const target = primaryHex || colors.primary;
+    const harmonized = harmonizePalette(target, isDark, colors.radius);
+    setPresetState('custom');
+    setColors(harmonized);
+  };
+
   const toggleDark = () => {
     const nextDark = !isDark;
     setIsDark(nextDark);
@@ -367,6 +464,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setPreset,
         colors,
         updateColor,
+        setCustomColors,
+        harmonizeWithPrimary,
         isDark,
         toggleDark,
         resetTheme,

@@ -24,3 +24,4 @@ export { ArcadeButtonPlayground } from './ArcadeButtonPlayground';
 export { ArcadeSwitchPlayground } from './ArcadeSwitchPlayground';
 export { ArcadeSliderPlayground } from './ArcadeSliderPlayground';
 export { LeaderboardTablePlayground } from './LeaderboardTablePlayground';
+export { ImageUploadPlayground } from './ImageUploadPlayground';

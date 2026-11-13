@@ -353,5 +353,122 @@ import {
       },
     ],
     themeTokens: ['--surface', '--border', '--primary', '--radius'],
+  },
+  {
+    id: 'image-upload',
+    name: 'Image Upload',
+    category: 'Inputs & Fields',
+    description:
+      'Production-grade image upload and cropping component with drag-and-drop, URL input, 8 aspect ratio presets, interactive zoom, 3x3 rule-of-thirds grid, and high-quality canvas export.',
+    importCode: `import { ImageUpload, ImageUploadWithCrop, ImageCropperModal } from '@elsesourav/react-ui';`,
+    usageCode: `<ImageUpload
+  value={imageUrl}
+  onChange={setImageUrl}
+  label="Avatar & Cover Asset"
+  helperText="Supports PNG, JPG, or WebP. Click thumbnail to crop."
+  previewShape="square"
+  cropShape="rect"
+  aspectRatio={1}
+  targetWidth={512}
+  targetHeight={512}
+  mimeType="image/webp"
+  quality={0.92}
+/>`,
+    props: [
+      {
+        name: 'value',
+        type: 'string',
+        defaultVal: "''",
+        description: 'Controlled image URL string or data URL.',
+      },
+      {
+        name: 'onChange',
+        type: '(url: string) => void',
+        defaultVal: 'undefined',
+        description: 'Callback fired when an image is uploaded, cropped, or cleared.',
+      },
+      {
+        name: 'onUploadFile',
+        type: '(file: File) => Promise<{ success: boolean; url?: string; error?: string }>',
+        defaultVal: 'undefined',
+        description: 'Custom server upload handler. Defaults to client blob data URL.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Form label displayed above the upload bar.',
+      },
+      {
+        name: 'helperText',
+        type: 'string',
+        defaultVal: 'undefined',
+        description: 'Supporting caption or file constraint text.',
+      },
+      {
+        name: 'previewShape',
+        type: "'square' | 'circle' | 'banner' | 'portrait'",
+        defaultVal: "'square'",
+        description: 'Thumbnail geometry shape and aspect ratio.',
+      },
+      {
+        name: 'cropShape',
+        type: "'rect' | 'round'",
+        defaultVal: "'rect'",
+        description: 'Crop bounding box geometry (round or rectangle).',
+      },
+      {
+        name: 'aspectRatio',
+        type: 'number | string | null',
+        defaultVal: '1',
+        description: 'Preset or numeric aspect ratio (e.g. 1, 16/9, 4/3, "1:1", "free").',
+      },
+      {
+        name: 'targetWidth',
+        type: 'number',
+        defaultVal: '512',
+        description: 'Exported canvas image width in pixels.',
+      },
+      {
+        name: 'targetHeight',
+        type: 'number',
+        defaultVal: '512',
+        description: 'Exported canvas image height in pixels.',
+      },
+      {
+        name: 'mimeType',
+        type: "'image/webp' | 'image/png' | 'image/jpeg'",
+        defaultVal: "'image/webp'",
+        description: 'Compression output mime type.',
+      },
+      {
+        name: 'quality',
+        type: 'number',
+        defaultVal: '0.92',
+        description: 'Canvas compression quality between 0.0 and 1.0.',
+      },
+      {
+        name: 'disabled',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Disables user interactions and uploads.',
+      },
+      {
+        name: 'required',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Renders required indicator asterisk.',
+      },
+    ],
+    themeTokens: [
+      '--primary',
+      '--primary-foreground',
+      '--surface-elevated',
+      '--surface-sunken',
+      '--border',
+      '--foreground',
+      '--muted-foreground',
+      '--radius',
+    ],
   }
 ];

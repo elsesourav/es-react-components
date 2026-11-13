@@ -286,6 +286,13 @@
     "lines": 86,
     "bytes": 2479
   },
+  "image-upload": {
+    "name": "Image Upload",
+    "filename": "image-upload.tsx",
+    "filepath": "src/components/ui/image-upload.tsx",
+    "lines": 2,
+    "bytes": 37
+  },
   "split-flap-text": {
     "name": "Split Flap Text",
     "filename": "split-flap-text.tsx",

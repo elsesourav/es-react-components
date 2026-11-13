@@ -72,6 +72,7 @@ import {
   ArcadeSwitchPlayground,
   ArcadeSliderPlayground,
   LeaderboardTablePlayground,
+  ImageUploadPlayground,
   MotionLoadersPlayground,
   LoadMorePlayground,
   MonoChartsPlayground,
@@ -235,6 +236,9 @@ export const ComponentPlaygrounds: React.FC<ComponentPlaygroundsProps> = ({ comp
       return <ArcadeSliderPlayground />;
     case 'leaderboard-table':
       return <LeaderboardTablePlayground />;
+    case 'image-upload':
+    case 'image-crop-upload':
+      return <ImageUploadPlayground />;
     case 'motion-loaders':
       return <MotionLoadersPlayground />;
     case 'load-more':

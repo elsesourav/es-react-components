@@ -7,8 +7,7 @@ import {
   Moon,
   Sparkles,
   Sliders,
-  Check,
-  Copy,
+  Wand2,
 } from 'lucide-react';
 import { useTheme, THEME_PRESETS, ThemePresetKey } from '@/theme/ThemeContext';
 import { useToast } from '@/components/ui/toast';
@@ -18,7 +17,6 @@ import {
   Badge,
   Tabs,
   Dropdown,
-  SliderDetents,
   AICodeBlock,
   Tooltip,
   ParameterSlider,
@@ -46,15 +44,21 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   };
 
   const [activeTab, setActiveTab] = useState<'presets' | 'custom' | 'export'>('presets');
+  const [exportFormat, setExportFormat] = useState<'css' | 'react' | 'tailwind' | 'json'>('css');
+
   const {
     preset,
     setPreset,
     colors,
     updateColor,
+    harmonizeWithPrimary,
     isDark,
     toggleDark,
     resetTheme,
+    tactileShadows,
+    toggleTactileShadows,
   } = useTheme();
+
   const { addToast } = useToast();
 
   React.useEffect(() => {
@@ -66,26 +70,99 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
     '/* Custom Theme Tokens (Auto-Generated) */',
     ':root {',
     `  --primary: ${colors.primary};`,
+    `  --accent: ${colors.accent};`,
     `  --background: ${colors.background};`,
     `  --surface: ${colors.surface};`,
     `  --foreground: ${colors.foreground};`,
     `  --border: ${colors.border};`,
-    `  --accent: ${colors.accent};`,
     `  --radius: ${colors.radius}px;`,
     '}',
   ];
 
-  const radiusDetents = [
-    { value: 0, label: 'Sharp' },
-    { value: 6, label: 'Subtle' },
-    { value: 12, label: 'Smooth' },
-    { value: 18, label: 'Round' },
-    { value: 24, label: 'Pill' },
+  const reactLines = [
+    "import { ThemeProvider } from '@elsesourav/react-ui';",
+    '',
+    'export default function App() {',
+    '  return (',
+    '    <ThemeProvider',
+    `      defaultPreset="${preset}"`,
+    '      defaultColors={{',
+    `        primary: '${colors.primary}',`,
+    `        accent: '${colors.accent}',`,
+    `        background: '${colors.background}',`,
+    `        surface: '${colors.surface}',`,
+    `        foreground: '${colors.foreground}',`,
+    `        border: '${colors.border}',`,
+    `        radius: ${colors.radius},`,
+    '      }}',
+    `      defaultTactileShadows={${tactileShadows}}`,
+    '    >',
+    '      <YourApplication />',
+    '    </ThemeProvider>',
+    '  );',
+    '}',
   ];
+
+  const tailwindLines = [
+    '// tailwind.config.js - theme.extend.colors',
+    'module.exports = {',
+    '  theme: {',
+    '    extend: {',
+    '      colors: {',
+    `        primary: '${colors.primary}',`,
+    `        accent: '${colors.accent}',`,
+    `        background: '${colors.background}',`,
+    `        surface: '${colors.surface}',`,
+    `        border: '${colors.border}',`,
+    '      },',
+    '      borderRadius: {',
+    `        DEFAULT: '${colors.radius}px',`,
+    '      },',
+    '    },',
+    '  },',
+    '};',
+  ];
+
+  const jsonLines = JSON.stringify(
+    {
+      name: preset === 'custom' ? 'My Custom Theme' : THEME_PRESETS[preset as Exclude<ThemePresetKey, 'custom'>]?.name || preset,
+      isDark,
+      tactileShadows,
+      colors,
+    },
+    null,
+    2
+  ).split('\n');
+
+  const currentCodeLines =
+    exportFormat === 'css'
+      ? cssLines
+      : exportFormat === 'react'
+      ? reactLines
+      : exportFormat === 'tailwind'
+      ? tailwindLines
+      : jsonLines;
+
+  const currentFilename =
+    exportFormat === 'css'
+      ? 'theme.css'
+      : exportFormat === 'react'
+      ? 'ThemeProvider.tsx'
+      : exportFormat === 'tailwind'
+      ? 'tailwind.config.js'
+      : 'theme.json';
+
+  const handleHarmonize = () => {
+    harmonizeWithPrimary();
+    addToast({
+      title: 'Palette Harmonized',
+      description: `Generated cohesive ${isDark ? 'dark' : 'light'} palette from primary color.`,
+      type: 'success',
+    });
+  };
 
   return (
     <>
-      {/* Optional Floating Launcher Trigger */}
       {showFloatingTrigger && (
         <Tooltip label="Customize Colors & Theme Tokens" side="top">
           <Button
@@ -100,7 +177,6 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
         </Tooltip>
       )}
 
-      {/* Backdrop */}
       {isOpen && (
         <div
           className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm transition-opacity"
@@ -110,7 +186,6 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
         />
       )}
 
-      {/* Slide-over Drawer */}
       <div
         className={`fixed top-0 right-0 bottom-0 z-50 w-full max-w-md bg-surface-elevated border-l border-border shadow-2xl flex flex-col transition-transform duration-300 ease-out transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -131,23 +206,31 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <Tooltip label="Toggle Light / Dark Mode">
-              <Button
-                size="xs"
-                variant="outline"
-                onClick={toggleDark}
-              >
+              <Button size="xs" variant="outline" onClick={toggleDark}>
                 {isDark ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
               </Button>
             </Tooltip>
             <Tooltip label="Close Editor">
-              <Button
-                size="xs"
-                variant="ghost"
-                onClick={() => setIsOpen(false)}
-              >
+              <Button size="xs" variant="ghost" onClick={() => setIsOpen(false)}>
                 <X className="size-4" />
               </Button>
             </Tooltip>
+          </div>
+        </div>
+
+        {/* Live Mini Preview Bar */}
+        <div className="px-5 py-3 border-b border-border/60 bg-surface-subtle/50 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Button size="xs" variant="primary">
+              Primary
+            </Button>
+            <Badge variant="outline" size="sm">
+              Live Preview
+            </Badge>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+            <span className="size-2 rounded-full bg-primary" />
+            <span>radius: {colors.radius}px</span>
           </div>
         </div>
 
@@ -159,8 +242,8 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
             onChange={(tabId) => setActiveTab(tabId as any)}
             tabs={[
               { id: 'presets', label: 'Presets' },
-              { id: 'custom', label: 'Color Pickers' },
-              { id: 'export', label: 'Export CSS' },
+              { id: 'custom', label: 'Color Palette' },
+              { id: 'export', label: 'Export' },
             ]}
           />
         </div>
@@ -168,7 +251,7 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {activeTab === 'presets' && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -179,7 +262,6 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                   </Badge>
                 </div>
 
-                {/* Library's Animated Dropdown for Presets */}
                 <Dropdown
                   items={(
                     Object.keys(THEME_PRESETS) as Array<
@@ -204,7 +286,7 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-2 gap-3 pt-1">
                 {(
                   Object.keys(THEME_PRESETS) as Array<
                     Exclude<ThemePresetKey, 'custom'>
@@ -226,28 +308,24 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                       }`}
                     >
                       <div className="flex items-center gap-1.5 mb-2.5">
-                        <span
-                          className="size-3 rounded-full border border-black/20"
-                          style={{ backgroundColor: p.colors.primary }}
-                        />
-                        <span
-                          className="size-3 rounded-full border border-black/20"
-                          style={{ backgroundColor: p.colors.surface }}
-                        />
-                        <span
-                          className="size-3 rounded-full border border-black/20"
-                          style={{ backgroundColor: p.colors.background }}
-                        />
+                        <span className="size-3 rounded-full border border-black/20" style={{ backgroundColor: p.colors.primary }} />
+                        <span className="size-3 rounded-full border border-black/20" style={{ backgroundColor: p.colors.surface }} />
+                        <span className="size-3 rounded-full border border-black/20" style={{ backgroundColor: p.colors.background }} />
                       </div>
-                      <div className="text-xs font-bold text-foreground">
-                        {p.name}
-                      </div>
-                      <div className="text-[10px] text-muted-foreground mt-0.5">
-                        {p.isDark ? 'Dark Mode' : 'Light Mode'}
-                      </div>
+                      <div className="text-xs font-bold text-foreground">{p.name}</div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">{p.isDark ? 'Dark Mode' : 'Light Mode'}</div>
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Tactile Specular Shadows Toggle */}
+              <div className="pt-2 border-t border-border">
+                <ParameterSwitch
+                  label="Tactile Specular Shadows"
+                  checked={tactileShadows}
+                  onChange={toggleTactileShadows}
+                />
               </div>
             </div>
           )}
@@ -258,17 +336,28 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Custom Color Palette
                 </span>
-                <Button
-                  size="xs"
-                  variant="ghost"
-                  onClick={() => {
-                    resetTheme();
-                    addToast({ title: 'Theme Reset', description: 'Restored default color tokens.', type: 'info' });
-                  }}
-                  leftIcon={<RotateCcw className="size-3" />}
-                >
-                  Reset
-                </Button>
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    onClick={handleHarmonize}
+                    leftIcon={<Wand2 className="size-3 text-primary" />}
+                    title="Auto-generate matching palette from primary color"
+                  >
+                    Harmonize
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => {
+                      resetTheme();
+                      addToast({ title: 'Theme Reset', description: 'Restored default color tokens.', type: 'info' });
+                    }}
+                    leftIcon={<RotateCcw className="size-3" />}
+                  >
+                    Reset
+                  </Button>
+                </div>
               </div>
 
               {/* Color Controls */}
@@ -292,7 +381,6 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
                   );
                 })}
 
-                {/* Corner Radius with ParameterSlider */}
                 <ParameterSlider
                   label="Corner Radius"
                   value={colors.radius}
@@ -310,17 +398,36 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
             <div className="space-y-4">
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  CSS Variables Code
+                  Export Theme Code
                 </span>
                 <p className="text-xs text-muted-foreground leading-relaxed mt-1">
-                  Copy and paste these CSS custom properties into your global CSS to reproduce this customized theme anywhere.
+                  Choose a format to copy into your application or design system.
                 </p>
               </div>
 
-              <AICodeBlock
-                filename="theme.css"
-                lines={cssLines}
-              />
+              {/* Format Selector */}
+              <div className="grid grid-cols-4 gap-1.5 p-1 rounded-xl bg-surface border border-border">
+                {[
+                  { id: 'css', label: 'CSS' },
+                  { id: 'react', label: 'React' },
+                  { id: 'tailwind', label: 'Tailwind' },
+                  { id: 'json', label: 'JSON' },
+                ].map((fmt) => (
+                  <button
+                    key={fmt.id}
+                    onClick={() => setExportFormat(fmt.id as any)}
+                    className={`text-xs py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                      exportFormat === fmt.id
+                        ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {fmt.label}
+                  </button>
+                ))}
+              </div>
+
+              <AICodeBlock filename={currentFilename} lines={currentCodeLines} />
             </div>
           )}
         </div>
@@ -330,11 +437,7 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
           <span className="text-xs text-muted-foreground">
             Tokens apply in real time
           </span>
-          <Button
-            size="sm"
-            variant="primary"
-            onClick={() => setIsOpen(false)}
-          >
+          <Button size="sm" variant="primary" onClick={() => setIsOpen(false)}>
             Done
           </Button>
         </div>
