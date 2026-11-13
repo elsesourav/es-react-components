@@ -87,4 +87,82 @@ export const FORMS_AI_CONTROLS_COMPONENTS: ComponentDoc[] = [
     ],
     themeTokens: ['--surface', '--foreground', '--border', '--primary'],
   },
+  {
+    id: 'tactile-primitives',
+    name: 'Tactile Primitives',
+    category: 'Buttons & Actions',
+    description:
+      'Precision 3D tactile micro-depth suite featuring TactileButton (keycaps with 1.5px physical travel), TactileInput & TactileTextarea (sunken .mat-well chambers), TactileSelect, TactileTabs, and TactileCard panels.',
+    importCode: `import {
+  TactileButton,
+  TactileInput,
+  TactileTextarea,
+  TactileSelect,
+  TactileCard,
+  TactileBadge,
+  TactileTabs,
+} from '@elsesourav/react-ui';`,
+    usageCode: `// 1. Keycap Push-Button with 1.5px physical depression:
+<TactileButton variant="primary" size="md">
+  Confirm Action
+</TactileButton>
+
+// 2. Sunken Well Input (.mat-well):
+<TactileInput
+  label="Search Deck"
+  placeholder="Type query..."
+  showClear
+/>
+
+// 3. Recessed Multiline Chamber:
+<TactileTextarea
+  label="System Telemetry"
+  characterCount
+  maxLength={200}
+/>
+
+// 4. Physical Keycap Select:
+<TactileSelect
+  label="Channel Detent"
+  options={[
+    { label: 'Discrete Step', value: 'step' },
+    { label: 'Exponential Curve', value: 'curve' },
+  ]}
+/>
+
+// 5. Tactile Hardware Tabs:
+<TactileTabs
+  items={[
+    { id: '1', label: 'Rack A' },
+    { id: '2', label: 'Rack B' },
+  ]}
+/>`,
+    props: [
+      {
+        name: 'variant',
+        type: `'default' | 'primary' | 'secondary' | 'accent' | 'destructive' | 'subtle' | 'ghost'`,
+        defaultVal: `'default'`,
+        description: 'Visual keycap variant styling for TactileButton.',
+      },
+      {
+        name: 'size / sizeVariant',
+        type: `'xs' | 'sm' | 'md' | 'lg' | 'icon'`,
+        defaultVal: `'md'`,
+        description: 'Tactile physical scale sizing.',
+      },
+      {
+        name: 'pressed',
+        type: 'boolean',
+        defaultVal: 'false',
+        description: 'Latches the keycap button in depressed physical state.',
+      },
+      {
+        name: 'showClear / onClear',
+        type: 'boolean / () => void',
+        defaultVal: 'undefined',
+        description: 'Renders tactile clear button inside sunken input well.',
+      },
+    ],
+    themeTokens: ['--shadow-cap', '--shadow-well', '--shadow-lift', '--shadow-float', '--well', '--panel'],
+  },
 ];

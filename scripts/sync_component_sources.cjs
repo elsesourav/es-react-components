@@ -18,6 +18,7 @@ const OVERRIDES = {
   'floating-input': 'floating-label-input.tsx',
   'inline-validation': 'inline-validation-input.tsx',
   'image-upload': 'image-upload.tsx',
+  'tactile-primitives': 'tactile.tsx',
 };
 
 function main() {

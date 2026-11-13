@@ -1,6 +1,6 @@
 {
   "name": "@elsesourav/react-ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Production-grade React 19 UI component library with tactile specular depth, spring physics, and dynamic theme tokens.",
   "type": "module",
   "main": "./dist-lib/index.cjs",

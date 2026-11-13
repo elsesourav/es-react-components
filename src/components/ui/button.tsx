@@ -10,7 +10,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     | 'ghost'
     | 'danger'
     | 'success'
-    | 'subtle';
+    | 'subtle'
+    | 'tactile';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'icon';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -50,6 +51,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         'bg-success text-success-foreground hover:opacity-95 shadow-sm hover:shadow-success/20',
       subtle:
         'bg-primary/10 text-primary hover:bg-primary/15 border border-primary/20',
+      tactile:
+        'bg-surface-elevated text-foreground border border-border/80 shadow-cap hover:bg-surface active:translate-y-[1.5px] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)]',
     };
 
     const sizes = {

@@ -81,3 +81,5 @@ export * from './arcade-switch';
 export * from './arcade-slider';
 export * from './leaderboard-table';
 export * from './image-crop-upload';
+export * from './tactile';
+

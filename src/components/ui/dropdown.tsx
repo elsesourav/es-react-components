@@ -274,6 +274,7 @@ export type DropdownProps = {
   emptyLabel?: string;
   className?: string;
   fullWidth?: boolean;
+  variant?: 'default' | 'tactile' | 'animated';
 };
 
 export function Dropdown({
@@ -287,7 +288,9 @@ export function Dropdown({
   emptyLabel = "Nothing to choose",
   className = "",
   fullWidth = false,
+  variant = 'default',
 }: DropdownProps) {
+  const isTactile = variant === 'tactile';
   const reduced = useReducedMotion();
   const {
     open,
@@ -321,10 +324,14 @@ export function Dropdown({
       )}
       <button
         {...triggerProps}
-        className={`flex h-10 w-full select-none items-center justify-between gap-2.5 whitespace-nowrap rounded-[var(--radius)] border border-border bg-surface px-3.5 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color,background-color] duration-150 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 hover:bg-surface-subtle focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 shadow-lift ${
-          open
-            ? "border-primary ring-2 ring-primary/20 shadow-float"
-            : ""
+        className={`flex h-10 w-full select-none items-center justify-between gap-2.5 whitespace-nowrap rounded-[var(--radius)] border border-border bg-surface px-3.5 text-sm font-medium text-foreground outline-none transition-[box-shadow,border-color,background-color,transform] duration-150 disabled:cursor-not-allowed disabled:opacity-50 hover:border-primary/50 hover:bg-surface-subtle focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 ${
+          isTactile
+            ? open
+              ? "translate-y-[1.5px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.06)] bg-surface-sunken border-primary/70 ring-1 ring-primary/30"
+              : "mat-cap hover:bg-surface active:translate-y-[1.5px]"
+            : open
+              ? "border-primary ring-2 ring-primary/20 shadow-float"
+              : "shadow-lift"
         }`}
       >
         <span className="flex items-center gap-2 truncate">

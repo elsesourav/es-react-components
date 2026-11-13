@@ -15,6 +15,7 @@ import {
   ExpandingSearchProps,
   useExpandingSearch,
 } from './expanding-search';
+import { TactileInput, TactileInputProps } from './tactile/TactileInput';
 
 export {
   FloatingLabelInput,
@@ -26,6 +27,7 @@ export {
   TagInput,
   ExpandingSearch,
   useExpandingSearch,
+  TactileInput,
 };
 
 export type {
@@ -35,6 +37,7 @@ export type {
   OtpInputProps,
   TagInputProps,
   ExpandingSearchProps,
+  TactileInputProps,
 };
 
 export interface StandardInputProps
@@ -125,6 +128,7 @@ StandardInput.displayName = 'StandardInput';
 
 export type UnifiedInputProps =
   | ({ variant?: 'standard' } & StandardInputProps)
+  | ({ variant: 'tactile' } & TactileInputProps)
   | ({ variant: 'floating' } & FloatingLabelInputProps)
   | ({ variant: 'inline-validation' } & InlineValidationProps)
   | ({ variant: 'password' } & PasswordInputProps)
@@ -134,6 +138,8 @@ export type UnifiedInputProps =
 
 export const Input = React.forwardRef<any, UnifiedInputProps>((props, ref) => {
   switch (props.variant) {
+    case 'tactile':
+      return <TactileInput ref={ref} {...(props as TactileInputProps)} />;
     case 'floating':
       return <FloatingLabelInput {...(props as FloatingLabelInputProps)} />;
     case 'inline-validation':
@@ -153,6 +159,7 @@ export const Input = React.forwardRef<any, UnifiedInputProps>((props, ref) => {
   }
 }) as React.ForwardRefExoticComponent<UnifiedInputProps> & {
   Standard: typeof StandardInput;
+  Tactile: typeof TactileInput;
   Floating: typeof FloatingLabelInput;
   InlineValidation: typeof InlineValidation;
   Password: typeof PasswordInput;
@@ -162,6 +169,7 @@ export const Input = React.forwardRef<any, UnifiedInputProps>((props, ref) => {
 };
 
 Input.Standard = StandardInput;
+Input.Tactile = TactileInput;
 Input.Floating = FloatingLabelInput;
 Input.InlineValidation = InlineValidation;
 Input.Password = PasswordInput;

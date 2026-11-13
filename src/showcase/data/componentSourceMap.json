@@ -139,12 +139,19 @@
     "lines": 407,
     "bytes": 14671
   },
+  "tactile-primitives": {
+    "name": "Tactile Primitives",
+    "filename": "tactile.tsx",
+    "filepath": "src/components/ui/tactile.tsx",
+    "lines": 2,
+    "bytes": 33
+  },
   "select": {
     "name": "Select",
     "filename": "select.tsx",
     "filepath": "src/components/ui/select.tsx",
-    "lines": 117,
-    "bytes": 3514
+    "lines": 131,
+    "bytes": 4290
   },
   "switch": {
     "name": "Switch",
@@ -234,8 +241,8 @@
     "name": "Input",
     "filename": "input.tsx",
     "filepath": "src/components/ui/input.tsx",
-    "lines": 172,
-    "bytes": 5306
+    "lines": 180,
+    "bytes": 5623
   },
   "floating-input": {
     "name": "Floating Label Input",
@@ -283,8 +290,8 @@
     "name": "Textarea",
     "filename": "textarea.tsx",
     "filepath": "src/components/ui/textarea.tsx",
-    "lines": 86,
-    "bytes": 2479
+    "lines": 91,
+    "bytes": 2661
   },
   "image-upload": {
     "name": "Image Upload",
@@ -332,15 +339,15 @@
     "name": "Button",
     "filename": "button.tsx",
     "filepath": "src/components/ui/button.tsx",
-    "lines": 85,
-    "bytes": 2797
+    "lines": 88,
+    "bytes": 3036
   },
   "badge": {
     "name": "Badge",
     "filename": "badge.tsx",
     "filepath": "src/components/ui/badge.tsx",
-    "lines": 87,
-    "bytes": 2188
+    "lines": 91,
+    "bytes": 2308
   },
   "avatar": {
     "name": "Avatar",

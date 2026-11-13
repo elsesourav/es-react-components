@@ -10,7 +10,8 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
     | 'success'
     | 'warning'
     | 'danger'
-    | 'info';
+    | 'info'
+    | 'tactile';
   size?: 'sm' | 'md' | 'lg';
   dot?: boolean;
 }
@@ -47,6 +48,8 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         'bg-destructive/15 text-destructive border border-destructive/25',
       info:
         'bg-info/15 text-info border border-info/25',
+      tactile:
+        'mat-lift text-foreground border border-border/80',
     };
 
     const dotColors = {
@@ -58,6 +61,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       warning: 'bg-warning',
       danger: 'bg-destructive',
       info: 'bg-info',
+      tactile: 'bg-primary',
     };
 
     const sizes = {

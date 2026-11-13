@@ -7,6 +7,7 @@ export interface TextareaProps
   error?: string;
   helperText?: string;
   characterCount?: boolean;
+  variant?: 'standard' | 'tactile' | 'sunken';
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -17,6 +18,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       error,
       helperText,
       characterCount = false,
+      variant = 'standard',
       maxLength,
       value,
       onChange,
@@ -64,7 +66,10 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           onChange={handleChange}
           className={cn(
-            'w-full bg-surface border border-border text-foreground placeholder:text-muted-foreground/60 transition-all p-3 text-sm rounded-lg resize-y shadow-well focus:shadow-lift',
+            'w-full border border-border/80 text-foreground placeholder:text-muted-foreground/60 transition-all p-3 text-sm rounded-lg resize-y',
+            variant === 'tactile' || variant === 'sunken'
+              ? 'mat-well'
+              : 'bg-surface shadow-well focus:shadow-lift',
             'focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
             error && 'border-destructive focus:border-destructive focus:ring-destructive/20',
