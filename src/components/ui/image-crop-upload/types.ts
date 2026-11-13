@@ -37,6 +37,7 @@ export interface ImageUploadWithCropProps {
   value: string;
   onChange: (url: string) => void;
   onUploadFile?: (file: File) => Promise<{ success: boolean; url?: string; error?: string }>;
+  onUpload?: (file: File) => Promise<string>;
   label?: string;
   helperText?: string;
   placeholder?: string;
@@ -49,6 +50,7 @@ export interface ImageUploadWithCropProps {
   mimeType?: 'image/webp' | 'image/png' | 'image/jpeg';
   quality?: number;
   previewShape?: 'circle' | 'square' | 'banner' | 'portrait';
+  allowClipboard?: boolean;
   className?: string;
   disabled?: boolean;
   fallbackUrl?: string;

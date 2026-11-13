@@ -148,7 +148,7 @@ export function ImageCropperModal({
           onClose();
         }
       }}
-      className="fixed inset-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center p-3 sm:p-5 bg-background/80 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto"
+      className="fixed inset-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto"
     >
       <div
         onClick={(e) => e.stopPropagation()}

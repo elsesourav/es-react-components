@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button } from '../button';
 import { Input } from '../input';
 import { ImageCropperModal } from './ImageCropperModal';
+import { ImageUploadSourceModal } from './ImageUploadSourceModal';
 import type { ImageUploadWithCropProps } from './types';
 import { Upload, Crop, X, Loader2, Image as ImageIcon } from 'lucide-react';
 
@@ -11,6 +12,7 @@ export function ImageUploadWithCrop({
   value,
   onChange,
   onUploadFile,
+  onUpload,
   label,
   helperText,
   placeholder = 'Image URL or upload file',
@@ -18,27 +20,111 @@ export function ImageUploadWithCrop({
   aspectRatio = 1,
   allowedRatios,
   cropShape = 'rect',
-  targetWidth = 512,
-  targetHeight = 512,
+  targetWidth,
+  targetHeight,
   mimeType = 'image/webp',
   quality = 0.92,
   previewShape = 'square',
+  allowClipboard = true,
   className = '',
   disabled = false,
   fallbackUrl,
 }: ImageUploadWithCropProps) {
   const [cropperOpen, setCropperOpen] = React.useState(false);
+  const [sourceModalOpen, setSourceModalOpen] = React.useState(false);
   const [selectedImageSrc, setSelectedImageSrc] = React.useState<string | null>(null);
   const [selectedFileName, setSelectedFileName] = React.useState<string>('image.webp');
   const [isUploading, setIsUploading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-
   const displayImage = value || fallbackUrl;
 
+  // Determine crop dimensions and numeric ratio dynamically
+  const cropConfig = React.useMemo(() => {
+    if (aspectRatio) {
+      let numericRatio = 1.0;
+      if (typeof aspectRatio === 'number') {
+        numericRatio = aspectRatio;
+      } else if (aspectRatio === '21:9') {
+        numericRatio = 21 / 9;
+      } else if (aspectRatio === '16:9') {
+        numericRatio = 16 / 9;
+      } else if (aspectRatio === '3:4') {
+        numericRatio = 3 / 4;
+      } else if (aspectRatio === '4:3') {
+        numericRatio = 4 / 3;
+      } else if (aspectRatio === '1:6') {
+        numericRatio = 1 / 6;
+      } else if (aspectRatio === '6:1') {
+        numericRatio = 6.0;
+      } else if (typeof aspectRatio === 'string' && (aspectRatio.includes(':') || aspectRatio.includes('/'))) {
+        const parts = aspectRatio.split(/[:/]/);
+        const num = parseFloat(parts[0] || '1');
+        const den = parseFloat(parts[1] || '1');
+        numericRatio = den !== 0 ? num / den : 1.0;
+      } else {
+        const parsed = parseFloat(String(aspectRatio));
+        if (!isNaN(parsed) && parsed > 0) numericRatio = parsed;
+      }
+
+      const isWideBanner = numericRatio >= 2.0;
+      const isPortrait = numericRatio < 1.0;
+
+      return {
+        aspectRatio: numericRatio,
+        cropShape: previewShape === 'circle' ? ('round' as const) : cropShape,
+        width: targetWidth || (isWideBanner ? 2520 : isPortrait ? 900 : 1200),
+        height: targetHeight || (isWideBanner ? 1080 : isPortrait ? 1200 : Math.round(1200 / numericRatio)),
+      };
+    }
+
+    switch (previewShape) {
+      case 'circle':
+        return {
+          aspectRatio: 1.0,
+          cropShape: 'round' as const,
+          width: targetWidth || 512,
+          height: targetHeight || 512,
+        };
+      case 'portrait':
+        return {
+          aspectRatio: 3 / 4,
+          cropShape: 'rect' as const,
+          width: targetWidth || 900,
+          height: targetHeight || 1200,
+        };
+      case 'banner':
+        return {
+          aspectRatio: 16 / 9,
+          cropShape: 'rect' as const,
+          width: targetWidth || 1200,
+          height: targetHeight || 675,
+        };
+      case 'square':
+      default:
+        return {
+          aspectRatio: 1.0,
+          cropShape: 'rect' as const,
+          width: targetWidth || 512,
+          height: targetHeight || 512,
+        };
+    }
+  }, [previewShape, aspectRatio, cropShape, targetWidth, targetHeight]);
+
   const directUpload = async (fileToUpload: File) => {
-    if (onUploadFile) {
+    if (onUpload) {
+      try {
+        setIsUploading(true);
+        setErrorMessage(null);
+        const url = await onUpload(fileToUpload);
+        onChange(url);
+      } catch (err) {
+        setErrorMessage(err instanceof Error ? err.message : 'Upload failed');
+      } finally {
+        setIsUploading(false);
+      }
+    } else if (onUploadFile) {
       try {
         setIsUploading(true);
         setErrorMessage(null);
@@ -69,27 +155,14 @@ export function ImageUploadWithCrop({
 
     const objectUrl = URL.createObjectURL(file);
 
-    // If an aspect ratio is required, inspect dimensions
     const img = new Image();
     img.src = objectUrl;
     img.onload = () => {
       const imgRatio = img.naturalWidth / img.naturalHeight;
-      let numericRatio: number | null = null;
-      if (typeof aspectRatio === 'number') {
-        numericRatio = aspectRatio;
-      } else if (typeof aspectRatio === 'string') {
-        if (aspectRatio === '1:1') numericRatio = 1.0;
-        else if (aspectRatio === '16:9') numericRatio = 16 / 9;
-        else if (aspectRatio === '4:3') numericRatio = 4 / 3;
-        else if (aspectRatio === '3:4') numericRatio = 3 / 4;
-        else if (aspectRatio === '1:6') numericRatio = 1 / 6;
-        else if (aspectRatio === '6:1') numericRatio = 6.0;
-        else if (aspectRatio === '21:9') numericRatio = 21 / 9;
-        else numericRatio = parseFloat(aspectRatio) || null;
-      }
+      const targetRatio = cropConfig.aspectRatio;
 
       const isRatioMatched =
-        numericRatio !== null ? Math.abs(imgRatio - numericRatio) <= 0.05 : true;
+        targetRatio !== null ? Math.abs(imgRatio - targetRatio) <= 0.03 : true;
 
       if (!isRatioMatched) {
         setSelectedImageSrc(objectUrl);
@@ -115,14 +188,22 @@ export function ImageUploadWithCrop({
 
   const previewClasses = {
     circle:
-      'w-12 h-12 rounded-full overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
+      'size-12 rounded-full overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
     square:
-      'w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
+      'size-12 rounded-xl overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
     banner:
       'w-20 h-12 rounded-xl overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
     portrait:
       'w-10 h-14 rounded-xl overflow-hidden shrink-0 border border-border bg-surface-sunken flex items-center justify-center',
   }[previewShape];
+
+  const handleUploadButtonClick = () => {
+    if (allowClipboard) {
+      setSourceModalOpen(true);
+    } else {
+      fileInputRef.current?.click();
+    }
+  };
 
   return (
     <div className={`space-y-1.5 ${className}`}>
@@ -153,7 +234,7 @@ export function ImageUploadWithCrop({
               }}
               className="text-[11px] text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors px-1 py-0.5 rounded cursor-pointer"
             >
-              <Crop className="w-3 h-3 text-primary" /> Crop
+              <Crop className="size-3 text-primary" /> Crop
             </button>
           )}
           {value && (
@@ -162,7 +243,7 @@ export function ImageUploadWithCrop({
               onClick={() => onChange('')}
               className="text-[11px] text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors px-1 py-0.5 rounded cursor-pointer"
             >
-              <X className="w-3 h-3" /> Clear
+              <X className="size-3" /> Clear
             </button>
           )}
         </div>
@@ -192,11 +273,11 @@ export function ImageUploadWithCrop({
                 }}
               />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                <Crop className="w-3.5 h-3.5 text-primary" />
+                <Crop className="size-3.5 text-primary" />
               </div>
             </>
           ) : (
-            <ImageIcon className="w-5 h-5 text-muted-foreground" />
+            <ImageIcon className="size-5 text-muted-foreground" />
           )}
         </div>
 
@@ -216,16 +297,17 @@ export function ImageUploadWithCrop({
               type="button"
               variant="outline"
               size="xs"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={handleUploadButtonClick}
               disabled={disabled || isUploading}
               leftIcon={
                 isUploading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="size-3.5 animate-spin" />
                 ) : (
-                  <Upload className="w-3.5 h-3.5" />
+                  <Upload className="size-3.5" />
                 )
               }
               className="rounded-xl h-9 px-3"
+              title="Upload image from device or clipboard"
             >
               {isUploading ? 'Uploading...' : 'Upload'}
             </Button>
@@ -235,6 +317,15 @@ export function ImageUploadWithCrop({
 
       {helperText && <p className="text-[11px] text-muted-foreground">{helperText}</p>}
       {errorMessage && <p className="text-[11px] text-destructive font-medium">{errorMessage}</p>}
+
+      {/* Upload Source Modal (Device vs Clipboard) */}
+      <ImageUploadSourceModal
+        isOpen={sourceModalOpen}
+        onClose={() => setSourceModalOpen(false)}
+        onSelectFile={handleFileSelect}
+        title={`Upload ${label || 'Image'}`}
+        description="Select from your device or paste directly from clipboard"
+      />
 
       {/* Interactive Crop Modal */}
       {selectedImageSrc && (
@@ -249,11 +340,11 @@ export function ImageUploadWithCrop({
           }}
           imageSrc={selectedImageSrc}
           fileName={selectedFileName}
-          aspectRatio={aspectRatio}
+          aspectRatio={cropConfig.aspectRatio}
           allowedRatios={allowedRatios}
-          cropShape={cropShape}
-          targetWidth={targetWidth}
-          targetHeight={targetHeight}
+          cropShape={cropConfig.cropShape}
+          targetWidth={cropConfig.width}
+          targetHeight={cropConfig.height}
           mimeType={mimeType}
           quality={quality}
           onCropComplete={handleCropComplete}
@@ -265,3 +356,4 @@ export function ImageUploadWithCrop({
 
 // Alias for convenience
 export const ImageUpload = ImageUploadWithCrop;
+export default ImageUploadWithCrop;

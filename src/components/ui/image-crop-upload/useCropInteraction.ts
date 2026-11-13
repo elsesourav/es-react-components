@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { loadImageElement } from './crop-utils';
 import type { CropArea } from './types';
@@ -48,14 +50,8 @@ export function useCropInteraction({
     if (r === '6:1') return 6.0;
     if (r === '21:9') return 21 / 9;
     if (typeof r === 'string') {
-      if (r.includes('/')) {
-        const parts = r.split('/');
-        const num = parseFloat(parts[0] || '1');
-        const den = parseFloat(parts[1] || '1');
-        return den !== 0 ? num / den : 1.0;
-      }
-      if (r.includes(':')) {
-        const parts = r.split(':');
+      if (r.includes('/') || r.includes(':')) {
+        const parts = r.split(/[:/]/);
         const num = parseFloat(parts[0] || '1');
         const den = parseFloat(parts[1] || '1');
         return den !== 0 ? num / den : 1.0;
@@ -67,20 +63,16 @@ export function useCropInteraction({
   }, []);
 
   const effectiveRatios = React.useMemo(() => {
-    // If an explicit list of allowed ratios is provided, use it directly
     if (allowedRatios && allowedRatios.length > 0) {
       return allowedRatios;
     }
-    // If a specific aspect ratio is requested, restrict strictly to that single ratio
     if (aspectRatio !== undefined && aspectRatio !== null && aspectRatio !== 'free') {
       const numRatio = parseNumericRatio(aspectRatio);
       if (numRatio !== null) {
         const matched = PRESET_RATIOS.find(
           (p) => p.ratio !== null && Math.abs(p.ratio - numRatio) < 0.01
         );
-        if (matched) {
-          return [matched];
-        }
+        if (matched) return [matched];
         const label =
           typeof aspectRatio === 'string'
             ? `${aspectRatio} Ratio`
@@ -100,25 +92,19 @@ export function useCropInteraction({
   }, [aspectRatio, allowedRatios, parseNumericRatio]);
 
   const [activeRatio, setActiveRatio] = React.useState<number | null>(getInitialRatio);
-  const [isLocked, setIsLocked] = React.useState<boolean>(() => {
-    const init = getInitialRatio();
-    return init !== null;
-  });
-
-  // Crop area in natural image coordinates (pixels)
+  const [isLocked, setIsLocked] = React.useState<boolean>(() => getInitialRatio() !== null);
   const [crop, setCrop] = React.useState<CropArea>({ x: 0, y: 0, width: 100, height: 100 });
 
-  // Dragging state tracking
   const draggingRef = React.useRef<boolean>(false);
   const dragTypeRef = React.useRef<string | null>(null);
-  const dragStartRef = React.useRef<{
-    clientX: number;
-    clientY: number;
-    cropX: number;
-    cropY: number;
-    cropW: number;
-    cropH: number;
-  }>({ clientX: 0, clientY: 0, cropX: 0, cropY: 0, cropW: 0, cropH: 0 });
+  const dragStartRef = React.useRef({
+    clientX: 0,
+    clientY: 0,
+    cropX: 0,
+    cropY: 0,
+    cropW: 0,
+    cropH: 0,
+  });
 
   // Initialize crop box to 100% full fit on image (zero arbitrary shrinkage)
   const initializeCrop = React.useCallback(
@@ -126,20 +112,17 @@ export function useCropInteraction({
       const nw = img.naturalWidth;
       const nh = img.naturalHeight;
 
-      // Free crop: select 100% of the entire image
       if (ratio === null) {
         setCrop({ x: 0, y: 0, width: nw, height: nh });
         return;
       }
 
-      // Check if image ratio already matches the target ratio within 2% tolerance
       const imgRatio = nw / nh;
       if (Math.abs(imgRatio - ratio) <= 0.02) {
         setCrop({ x: 0, y: 0, width: nw, height: nh });
         return;
       }
 
-      // Fit the maximum possible frame touching image borders (Fit Full)
       let w = nw;
       let h = w / ratio;
       if (h > nh) {
@@ -151,13 +134,11 @@ export function useCropInteraction({
       h = Math.round(Math.min(h, nh));
       const x = Math.round(Math.max(0, (nw - w) / 2));
       const y = Math.round(Math.max(0, (nh - h) / 2));
-
       setCrop({ x, y, width: w, height: h });
     },
     []
   );
 
-  // Load image whenever imageSrc opens
   React.useEffect(() => {
     if (!isOpen || !imageSrc) return;
     let cancelled = false;
@@ -182,7 +163,6 @@ export function useCropInteraction({
     };
   }, [isOpen, imageSrc, getInitialRatio, initializeCrop]);
 
-  // Fit Entire Image (expands crop box to maximum image boundary)
   const fitFullImage = React.useCallback(() => {
     if (!image) return;
     const nw = image.naturalWidth;
@@ -204,11 +184,9 @@ export function useCropInteraction({
     h = Math.round(h);
     const x = Math.round((nw - w) / 2);
     const y = Math.round((nh - h) / 2);
-
     setCrop({ x, y, width: w, height: h });
   }, [image, activeRatio, isLocked]);
 
-  // Center the current crop frame
   const centerCrop = React.useCallback(() => {
     if (!image) return;
     const nw = image.naturalWidth;
@@ -218,17 +196,13 @@ export function useCropInteraction({
     setCrop((prev) => ({ ...prev, x, y }));
   }, [image, crop.width, crop.height]);
 
-  // Handle Preset Ratio Selection
   const handleSelectPreset = (ratio: number | null) => {
     setActiveRatio(ratio);
     setIsLocked(ratio !== null);
-    if (!image) return;
+    if (!image || ratio === null) return;
 
     const nw = image.naturalWidth;
     const nh = image.naturalHeight;
-
-    if (ratio === null) return; // Free mode keeps current crop dimensions
-
     let newW = crop.width;
     let newH = newW / ratio;
 
@@ -249,19 +223,16 @@ export function useCropInteraction({
     setCrop({ x: newX, y: newY, width: newW, height: newH });
   };
 
-  // Toggle Aspect Ratio Lock
   const toggleRatioLock = () => {
     if (isLocked) {
       setIsLocked(false);
       setActiveRatio(null);
     } else {
       setIsLocked(true);
-      const currentRatio = crop.width / crop.height;
-      setActiveRatio(currentRatio);
+      setActiveRatio(crop.width / crop.height);
     }
   };
 
-  // Pointer Down for Drag or Resize Handles
   const handlePointerDown = (e: React.PointerEvent, type: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -277,7 +248,6 @@ export function useCropInteraction({
     };
   };
 
-  // Internal Move Handler for Mouse & Touch
   const onPointerMoveInternal = React.useCallback(
     (clientX: number, clientY: number) => {
       if (!draggingRef.current || !image || !imgElementRef.current) return;
@@ -287,7 +257,6 @@ export function useCropInteraction({
 
       const scaleX = image.naturalWidth / imgDisplay.width;
       const scaleY = image.naturalHeight / imgDisplay.height;
-
       const dx = (clientX - dragStartRef.current.clientX) * scaleX;
       const dy = (clientY - dragStartRef.current.clientY) * scaleY;
 
@@ -308,6 +277,7 @@ export function useCropInteraction({
         newX = Math.round(Math.max(0, Math.min(cropX + dx, nw - cropW)));
         newY = Math.round(Math.max(0, Math.min(cropY + dy, nh - cropH)));
       } else if (type === 'se') {
+        // Anchor: Top-Left (cropX, cropY)
         if (lockRatio === null) {
           newW = Math.min(nw - cropX, Math.max(minSize, cropW + dx));
           newH = Math.min(nh - cropY, Math.max(minSize, cropH + dy));
@@ -315,20 +285,19 @@ export function useCropInteraction({
           let targetW = Math.abs(dx) >= Math.abs(dy * lockRatio) ? cropW + dx : cropW + dy * lockRatio;
           targetW = Math.max(minSize, targetW);
           let targetH = targetW / lockRatio;
-          const maxW = nw - cropX;
-          const maxH = nh - cropY;
-          if (targetW > maxW) {
-            targetW = maxW;
+          if (targetW > nw - cropX) {
+            targetW = nw - cropX;
             targetH = targetW / lockRatio;
           }
-          if (targetH > maxH) {
-            targetH = maxH;
+          if (targetH > nh - cropY) {
+            targetH = nh - cropY;
             targetW = targetH * lockRatio;
           }
           newW = targetW;
           newH = targetH;
         }
       } else if (type === 'sw') {
+        // Anchor: Top-Right (anchorX = cropX + cropW, cropY)
         const anchorX = cropX + cropW;
         if (lockRatio === null) {
           newW = Math.min(anchorX, Math.max(minSize, cropW - dx));
@@ -337,14 +306,12 @@ export function useCropInteraction({
           let targetW = Math.abs(-dx) >= Math.abs(dy * lockRatio) ? cropW - dx : cropW + dy * lockRatio;
           targetW = Math.max(minSize, targetW);
           let targetH = targetW / lockRatio;
-          const maxW = anchorX;
-          const maxH = nh - cropY;
-          if (targetW > maxW) {
-            targetW = maxW;
+          if (targetW > anchorX) {
+            targetW = anchorX;
             targetH = targetW / lockRatio;
           }
-          if (targetH > maxH) {
-            targetH = maxH;
+          if (targetH > nh - cropY) {
+            targetH = nh - cropY;
             targetW = targetH * lockRatio;
           }
           newW = targetW;
@@ -352,6 +319,7 @@ export function useCropInteraction({
         }
         newX = anchorX - newW;
       } else if (type === 'ne') {
+        // Anchor: Bottom-Left (cropX, anchorY = cropY + cropH)
         const anchorY = cropY + cropH;
         if (lockRatio === null) {
           newW = Math.min(nw - cropX, Math.max(minSize, cropW + dx));
@@ -360,14 +328,12 @@ export function useCropInteraction({
           let targetW = Math.abs(dx) >= Math.abs(-dy * lockRatio) ? cropW + dx : cropW - dy * lockRatio;
           targetW = Math.max(minSize, targetW);
           let targetH = targetW / lockRatio;
-          const maxW = nw - cropX;
-          const maxH = anchorY;
-          if (targetW > maxW) {
-            targetW = maxW;
+          if (targetW > nw - cropX) {
+            targetW = nw - cropX;
             targetH = targetW / lockRatio;
           }
-          if (targetH > maxH) {
-            targetH = maxH;
+          if (targetH > anchorY) {
+            targetH = anchorY;
             targetW = targetH * lockRatio;
           }
           newW = targetW;
@@ -375,6 +341,7 @@ export function useCropInteraction({
         }
         newY = anchorY - newH;
       } else if (type === 'nw') {
+        // Anchor: Bottom-Right (anchorX = cropX + cropW, anchorY = cropY + cropH)
         const anchorX = cropX + cropW;
         const anchorY = cropY + cropH;
         if (lockRatio === null) {
@@ -384,14 +351,12 @@ export function useCropInteraction({
           let targetW = Math.abs(-dx) >= Math.abs(-dy * lockRatio) ? cropW - dx : cropW - dy * lockRatio;
           targetW = Math.max(minSize, targetW);
           let targetH = targetW / lockRatio;
-          const maxW = anchorX;
-          const maxH = anchorY;
-          if (targetW > maxW) {
-            targetW = maxW;
+          if (targetW > anchorX) {
+            targetW = anchorX;
             targetH = targetW / lockRatio;
           }
-          if (targetH > maxH) {
-            targetH = maxH;
+          if (targetH > anchorY) {
+            targetH = anchorY;
             targetW = targetH * lockRatio;
           }
           newW = targetW;
@@ -427,7 +392,6 @@ export function useCropInteraction({
     [image, isLocked, activeRatio, imgElementRef]
   );
 
-  // Global window pointer listeners guarantee flawless dragging
   React.useEffect(() => {
     const onWindowPointerMove = (e: PointerEvent) => {
       if (!draggingRef.current) return;
@@ -448,24 +412,17 @@ export function useCropInteraction({
     };
   }, [onPointerMoveInternal]);
 
-  // Compute displayed overlay position relative to displayed image element
   const getRenderedBoxStyle = (): React.CSSProperties => {
     if (!image) return { display: 'none' };
-
     const nw = image.naturalWidth;
     const nh = image.naturalHeight;
     if (nw === 0 || nh === 0) return { display: 'none' };
 
-    const leftPercent = (crop.x / nw) * 100;
-    const topPercent = (crop.y / nh) * 100;
-    const widthPercent = (crop.width / nw) * 100;
-    const heightPercent = (crop.height / nh) * 100;
-
     return {
-      left: `${leftPercent}%`,
-      top: `${topPercent}%`,
-      width: `${widthPercent}%`,
-      height: `${heightPercent}%`,
+      left: `${(crop.x / nw) * 100}%`,
+      top: `${(crop.y / nh) * 100}%`,
+      width: `${(crop.width / nw) * 100}%`,
+      height: `${(crop.height / nh) * 100}%`,
     };
   };
 

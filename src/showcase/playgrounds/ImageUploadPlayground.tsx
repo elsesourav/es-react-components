@@ -12,43 +12,50 @@ import { Sliders, Image as ImageIcon, Sparkles, RefreshCw } from 'lucide-react';
 
 const SAMPLE_IMAGES = [
   {
-    label: 'Cyber Art',
+    label: 'Cyber Art (1:1)',
     url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80',
     shape: 'square' as const,
-    ratio: 1,
+    ratio: '1:1',
   },
   {
-    label: 'Hero Banner',
+    label: 'Hero Banner (16:9)',
     url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80',
     shape: 'banner' as const,
-    ratio: 16 / 9,
+    ratio: '16:9',
   },
   {
-    label: 'User Avatar',
+    label: 'Desktop Banner (21:9)',
+    url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop&q=80',
+    shape: 'banner' as const,
+    ratio: '21:9',
+  },
+  {
+    label: 'User Avatar (Round)',
     url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
     shape: 'circle' as const,
-    ratio: 1,
+    ratio: '1:1',
   },
   {
-    label: 'Portrait Poster',
+    label: 'Poster (3:4)',
     url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=80',
     shape: 'portrait' as const,
-    ratio: 3 / 4,
+    ratio: '3:4',
   },
 ];
 
 export const ImageUploadPlayground: React.FC = () => {
   const { addToast } = useToast();
   const [imageUrl, setImageUrl] = useState<string>(SAMPLE_IMAGES[0].url);
-  const [label, setLabel] = useState<string>('Profile Avatar & Cover Image');
-  const [helperText, setHelperText] = useState<string>('PNG, JPG or WebP up to 10MB. Click thumbnail or Crop to adjust.');
+  const [label] = useState<string>('Profile Avatar & Cover Image');
+  const [helperText] = useState<string>('PNG, JPG or WebP. Click Upload to pick files or paste from clipboard (⌘V).');
   const [previewShape, setPreviewShape] = useState<'square' | 'circle' | 'banner' | 'portrait'>('square');
   const [cropShape, setCropShape] = useState<CropShape>('rect');
-  const [aspectRatio, setAspectRatio] = useState<number | string>(1);
+  const [aspectRatio, setAspectRatio] = useState<number | string>('1:1');
   const [targetWidth, setTargetWidth] = useState<number>(512);
   const [targetHeight, setTargetHeight] = useState<number>(512);
   const [mimeType, setMimeType] = useState<'image/webp' | 'image/png' | 'image/jpeg'>('image/webp');
   const [quality, setQuality] = useState<number>(0.92);
+  const [allowClipboard, setAllowClipboard] = useState<boolean>(true);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [required, setRequired] = useState<boolean>(false);
 
@@ -75,12 +82,28 @@ export const ImageUploadPlayground: React.FC = () => {
     setAspectRatio(sample.ratio);
     if (sample.shape === 'circle') {
       setCropShape('round');
+      setTargetWidth(512);
+      setTargetHeight(512);
+    } else if (sample.ratio === '21:9') {
+      setCropShape('rect');
+      setTargetWidth(2520);
+      setTargetHeight(1080);
+    } else if (sample.ratio === '16:9') {
+      setCropShape('rect');
+      setTargetWidth(1200);
+      setTargetHeight(675);
+    } else if (sample.ratio === '3:4') {
+      setCropShape('rect');
+      setTargetWidth(900);
+      setTargetHeight(1200);
     } else {
       setCropShape('rect');
+      setTargetWidth(512);
+      setTargetHeight(512);
     }
     addToast({
       title: 'Sample Preset Loaded',
-      description: `Loaded ${sample.label} with ${sample.shape} preview.`,
+      description: `Loaded ${sample.label} (${sample.ratio}).`,
       type: 'info',
     });
   };
@@ -130,6 +153,7 @@ export const ImageUploadPlayground: React.FC = () => {
             targetHeight={targetHeight}
             mimeType={mimeType}
             quality={quality}
+            allowClipboard={allowClipboard}
             disabled={disabled}
             required={required}
           />
@@ -138,7 +162,9 @@ export const ImageUploadPlayground: React.FC = () => {
         {/* Quick Summary Pill */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono bg-surface-subtle px-3 py-1.5 rounded-full border border-border">
           <ImageIcon className="size-3.5 text-primary" />
-          <span>Output: {targetWidth} × {targetHeight} px ({mimeType.replace('image/', '').toUpperCase()} · {Math.round(quality * 100)}%)</span>
+          <span>
+            Ratio: {String(aspectRatio)} · Output: {targetWidth} × {targetHeight} px ({mimeType.replace('image/', '').toUpperCase()} · {Math.round(quality * 100)}%)
+          </span>
         </div>
       </div>
 
@@ -162,6 +188,27 @@ export const ImageUploadPlayground: React.FC = () => {
         </div>
 
         <ParameterGrid columns={3}>
+          {/* Target Ratio Selection */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-foreground">Target Aspect Ratio</label>
+            <div className="grid grid-cols-3 gap-1.5">
+              {(['1:1', '16:9', '21:9', '3:4', '4:3', 'free'] as const).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setAspectRatio(r)}
+                  className={`text-xs px-2 py-1.5 rounded-lg border capitalize transition-all cursor-pointer ${
+                    aspectRatio === r
+                      ? 'border-primary bg-primary/10 text-primary font-semibold'
+                      : 'border-border bg-surface-subtle text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Preview Shape */}
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-foreground">Thumbnail Shape</label>
@@ -203,27 +250,6 @@ export const ImageUploadPlayground: React.FC = () => {
               ))}
             </div>
           </div>
-
-          {/* Export Format */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-foreground">Export Mime Type</label>
-            <div className="grid grid-cols-3 gap-1">
-              {(['image/webp', 'image/png', 'image/jpeg'] as const).map((mime) => (
-                <button
-                  key={mime}
-                  type="button"
-                  onClick={() => setMimeType(mime)}
-                  className={`text-xs px-2 py-1.5 rounded-lg border uppercase transition-all cursor-pointer ${
-                    mimeType === mime
-                      ? 'border-primary bg-primary/10 text-primary font-semibold'
-                      : 'border-border bg-surface-subtle text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {mime.replace('image/', '')}
-                </button>
-              ))}
-            </div>
-          </div>
         </ParameterGrid>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
@@ -233,7 +259,7 @@ export const ImageUploadPlayground: React.FC = () => {
             value={targetWidth}
             onChange={setTargetWidth}
             min={128}
-            max={1920}
+            max={2560}
             step={64}
             unit="px"
           />
@@ -244,7 +270,7 @@ export const ImageUploadPlayground: React.FC = () => {
             value={targetHeight}
             onChange={setTargetHeight}
             min={128}
-            max={1920}
+            max={2560}
             step={64}
             unit="px"
           />
@@ -264,6 +290,11 @@ export const ImageUploadPlayground: React.FC = () => {
 
           {/* Toggles */}
           <div className="space-y-2.5">
+            <ParameterSwitch
+              label="Allow Clipboard Upload (⌘V / Paste Modal)"
+              checked={allowClipboard}
+              onChange={setAllowClipboard}
+            />
             <ParameterSwitch
               label="Required Field Indicator"
               checked={required}
