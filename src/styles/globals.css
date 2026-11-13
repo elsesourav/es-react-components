@@ -66,6 +66,11 @@
     --hairline: rgba(0, 0, 0, 0.08);
     --hairline-strong: rgba(0, 0, 0, 0.16);
 
+    /* Opaque solid toast variables */
+    --toast-bg: hsl(var(--surface-elevated, 0 0% 100%));
+    --toast-fg: hsl(var(--foreground, 240 10% 3.9%));
+    --toast-border: hsl(var(--border, 240 5.9% 90%));
+
     /* Light Tactile Specular Shadows (Physical Micro-Depth) */
     --shadow-float: 0 28px 56px -24px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.08);
     --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.1);
@@ -130,6 +135,11 @@
     --sub: hsl(var(--surface-subtle));
     --hairline: rgba(255, 255, 255, 0.08);
     --hairline-strong: rgba(255, 255, 255, 0.16);
+
+    /* Opaque solid toast variables */
+    --toast-bg: hsl(var(--surface-elevated, 240 14% 13%));
+    --toast-fg: hsl(var(--foreground, 0 0% 98%));
+    --toast-border: hsl(var(--border, 240 14% 16%));
 
     /* Dark Tactile Specular Shadows (Physical Micro-Depth) */
     --shadow-float: 0 28px 56px -22px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);

@@ -4,15 +4,19 @@ import React, { useEffect, useRef, useState, type CSSProperties, type ReactNode 
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Cancel01Icon } from '@hugeicons/core-free-icons';
+import { CheckCircle2, AlertCircle, TriangleAlert, Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export type SwipeToastCloseReason = 'timeout' | 'swipe' | 'action' | 'close' | 'escape' | 'programmatic';
 export type SwipeToastFuse = 'bottom' | 'top' | 'none';
 export type SwipeToastPhase = 'open' | 'closing' | 'gone';
+export type SwipeToastType = 'info' | 'success' | 'warning' | 'error';
 
 export interface SwipeToastProps {
   title?: ReactNode;
   description?: ReactNode;
   icon?: ReactNode;
+  type?: SwipeToastType;
   actionLabel?: ReactNode;
   onAction?: () => void;
   open?: boolean;
@@ -32,6 +36,9 @@ export interface SwipeToastProps {
   inline?: boolean;
   dismissible?: boolean;
   className?: string;
+  // Stack and height measurement integration
+  isPaused?: boolean;
+  onHeightChange?: (height: number) => void;
 }
 
 type Sample = [number, number];
@@ -69,28 +76,31 @@ const velocityOf = (hist: Sample[]) => {
 };
 
 export const SwipeToast: React.FC<SwipeToastProps> = ({
-  title = 'File archived',
+  title = 'Notification',
   description = '',
   icon,
+  type = 'info',
   actionLabel = '',
   onAction,
   open = true,
   onClose,
-  background = 'var(--surface-elevated, #27272a)',
-  color = 'var(--foreground, #f5f5f5)',
-  fuseColor = 'var(--primary, #f5a524)',
+  background,
+  color,
+  fuseColor,
   width = 356,
   radius = 12,
-  slideMs = 400,
+  slideMs = 380,
   settleBounce = 0.2,
   swipeDistance = 40,
   duration = 4000,
   fuse = 'bottom',
   pauseOnHover = true,
-  closeButton = false,
+  closeButton = true,
   inline = false,
   dismissible = true,
-  className = ''
+  className = '',
+  isPaused = false,
+  onHeightChange,
 }) => {
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState<SwipeToastPhase>('open');
@@ -100,7 +110,7 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
   const fuseRef = useRef<HTMLElement>(null);
   const anim = useRef<Animation | null>(null);
   const drag = useRef<Drag | null>(null);
-  const flags = useRef({ hover: false, interacting: false, focus: false, hidden: false });
+  const flags = useRef({ hover: false, interacting: false, focus: false, hidden: false, paused: false });
   const lastInput = useRef<'pointer' | 'keyboard'>('pointer');
   const pendingClose = useRef<SwipeToastCloseReason | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -113,21 +123,24 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
 
   const y = useMotionValue(0);
   const fade = useMotionValue(1);
-  const transform = useTransform(y, v => `translateY(${v}px)`);
+  const transform = useTransform(y, (v) => `translateY(${v}px)`);
 
   const syncFuse = () => {
     const a = anim.current;
     if (!a) return;
     const f = flags.current;
-    if (f.hover || f.interacting || f.focus || f.hidden) a.pause();
+    if (f.hover || f.interacting || f.focus || f.hidden || f.paused) a.pause();
     else if (a.playState === 'paused') a.play();
   };
 
   const finish = (why: SwipeToastCloseReason) => {
     setPhase('gone');
     leaving.current = false;
-    if (latest.current.inline) closeTimer.current = setTimeout(() => latest.current.onClose?.(why), COLLAPSE_MS);
-    else latest.current.onClose?.(why);
+    if (latest.current.inline) {
+      closeTimer.current = setTimeout(() => latest.current.onClose?.(why), COLLAPSE_MS);
+    } else {
+      latest.current.onClose?.(why);
+    }
   };
 
   const close = (why: SwipeToastCloseReason) => {
@@ -154,6 +167,11 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
   };
 
   useEffect(() => {
+    flags.current.paused = isPaused;
+    syncFuse();
+  }, [isPaused]);
+
+  useEffect(() => {
     if (!open) close('programmatic');
     else if (phaseRef.current !== 'open') rescue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,6 +180,22 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
   useEffect(() => {
     if (!HAS_STARTING_STYLE) requestAnimationFrame(() => setMounted(true));
   }, []);
+
+  // Measure and report height for stack arithmetic
+  useEffect(() => {
+    if (!cardRef.current || !onHeightChange) return;
+    onHeightChange(cardRef.current.offsetHeight);
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const h = entry.borderBoxSize?.[0]?.blockSize || entry.contentRect.height;
+        if (h > 0) onHeightChange(h);
+      }
+    });
+
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, [onHeightChange, title, description, actionLabel]);
 
   useEffect(() => {
     if (phase !== 'open' || duration <= 0 || !fuseRef.current) return undefined;
@@ -204,7 +238,12 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
     leaving.current = true;
     pendingClose.current = null;
     if (!reduce && cardRef.current) {
-      animate(y, dy + cardRef.current.offsetHeight, { type: 'spring', duration: 0.3, bounce: 0, velocity: v * 1000 });
+      animate(y, dy + cardRef.current.offsetHeight + 16, {
+        type: 'spring',
+        duration: 0.3,
+        bounce: 0,
+        velocity: v * 1000,
+      });
     }
     animate(fade, 0, { duration: 0.2, ease: EASE_OUT }).then(() => finish('swipe'));
   };
@@ -217,8 +256,9 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
       drag.current ||
       leaving.current ||
       (e.target as HTMLElement).closest('button')
-    )
+    ) {
       return;
+    }
     if (phaseRef.current === 'closing') rescue();
     try {
       cardRef.current?.setPointerCapture(e.pointerId);
@@ -229,7 +269,7 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
       startY: e.clientY,
       grab: null,
       moved: false,
-      hist: [[performance.now(), y.get()]]
+      hist: [[performance.now(), y.get()]],
     };
     flags.current.interacting = true;
     syncFuse();
@@ -281,9 +321,38 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
     else syncFuse();
   };
 
+  const renderStatusIcon = () => {
+    if (icon) {
+      return (
+        <div className="shrink-0 pt-0.5">
+          <span className="inline-flex size-6 flex-none items-center justify-center [&_svg]:size-full" aria-hidden="true">
+            {icon}
+          </span>
+        </div>
+      );
+    }
+    const iconStyle = "size-7 rounded-full flex items-center justify-center border shadow-xs shrink-0 mt-0.5";
+    if (type === 'success') {
+      return <div className={cn(iconStyle, "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25")}><CheckCircle2 className="size-4 stroke-[2.5]" /></div>;
+    }
+    if (type === 'error') {
+      return <div className={cn(iconStyle, "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25")}><AlertCircle className="size-4 stroke-[2.5]" /></div>;
+    }
+    if (type === 'warning') {
+      return <div className={cn(iconStyle, "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25")}><TriangleAlert className="size-4 stroke-[2.5]" /></div>;
+    }
+    return <div className={cn(iconStyle, "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/25")}><Info className="size-4 stroke-[2.5]" /></div>;
+  };
+
   return (
     <div
-      className={`group grid w-[min(var(--st-w),100%)] text-[13px] leading-normal [grid-template-rows:1fr] [color:var(--st-ink)] data-[inline=false]:fixed data-[inline=false]:right-8 data-[inline=false]:bottom-[calc(32px+env(safe-area-inset-bottom,0px))] data-[inline=false]:z-[999999999] data-[inline=false]:w-[min(var(--st-w),calc(100vw-64px))] max-[600px]:data-[inline=false]:right-4 max-[600px]:data-[inline=false]:bottom-[calc(16px+env(safe-area-inset-bottom,0px))] max-[600px]:data-[inline=false]:w-[min(var(--st-w),calc(100vw-32px))] data-[inline=true]:[transition:grid-template-rows_var(--st-slide)_cubic-bezier(0.23,1,0.32,1)] data-[inline=true]:starting:[grid-template-rows:0fr] data-[inline=true]:data-[mounted=false]:[grid-template-rows:0fr] data-[inline=true]:data-[phase=closing]:[grid-template-rows:0fr] data-[inline=true]:data-[phase=gone]:[grid-template-rows:0fr] data-[inline=true]:data-[phase=closing]:[transition-duration:calc(var(--st-slide)*0.7)] data-[inline=true]:data-[phase=gone]:[transition-duration:200ms]${className ? ` ${className}` : ''}`}
+      className={cn(
+        "group grid w-[min(var(--st-w),100%)] text-[13px] leading-normal [grid-template-rows:1fr]",
+        // Standalone fixed positioning when not inline and not stacked
+        !inline && "fixed right-6 bottom-[calc(24px+env(safe-area-inset-bottom,0px))] z-[999999] max-sm:right-3 max-sm:left-3 max-sm:w-[calc(100vw-24px)]",
+        inline && "data-[mounted=false]:[grid-template-rows:0fr] data-[phase=closing]:[grid-template-rows:0fr] data-[phase=gone]:[grid-template-rows:0fr] [transition:grid-template-rows_var(--st-slide)_cubic-bezier(0.23,1,0.32,1)]",
+        className
+      )}
       data-phase={phase}
       data-inline={inline ? 'true' : 'false'}
       data-fuse={duration > 0 ? fuse : 'none'}
@@ -292,37 +361,46 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
       data-mounted={mounted ? 'true' : 'false'}
       style={
         {
-          '--st-bg': background,
-          '--st-ink': color,
-          '--st-fuse': fuseColor,
           '--st-w': `${width}px`,
           '--st-radius': `${radius}px`,
           '--st-slide': `${slideMs}ms`,
-          '--st-gap': '10px'
         } as CSSProperties
       }
     >
       <div className="min-h-0">
-        <div className="opacity-100 group-data-[inline=true]:mt-[var(--st-gap)] [transform:translateY(0)] [transition:transform_var(--st-slide)_cubic-bezier(0.23,1,0.32,1),opacity_calc(var(--st-slide)*0.6)_ease] starting:opacity-0 starting:[transform:translateY(100%)] group-data-[mounted=false]:opacity-0 group-data-[mounted=false]:[transform:translateY(100%)] group-data-[phase=closing]:opacity-0 group-data-[phase=closing]:[transform:translateY(100%)] group-data-[phase=closing]:[transition:transform_calc(var(--st-slide)*0.7)_cubic-bezier(0.23,1,0.32,1),opacity_calc(var(--st-slide)*0.5)_ease] group-data-[phase=gone]:invisible group-data-[phase=gone]:opacity-0 group-data-[phase=gone]:[transform:translateY(100%)] group-data-[instant]:[transition-duration:0s] motion-reduce:[transform:none]! motion-reduce:[transition:opacity_200ms_ease]">
+        <div className="opacity-100 [transform:translateY(0)] [transition:transform_var(--st-slide)_cubic-bezier(0.23,1,0.32,1),opacity_calc(var(--st-slide)*0.6)_ease] starting:opacity-0 starting:[transform:translateY(100%)] group-data-[mounted=false]:opacity-0 group-data-[mounted=false]:[transform:translateY(100%)] group-data-[phase=closing]:opacity-0 group-data-[phase=closing]:[transform:translateY(100%)] group-data-[phase=closing]:[transition:transform_calc(var(--st-slide)*0.7)_cubic-bezier(0.23,1,0.32,1),opacity_calc(var(--st-slide)*0.5)_ease] group-data-[phase=gone]:invisible group-data-[phase=gone]:opacity-0 group-data-[phase=gone]:[transform:translateY(100%)] group-data-[instant]:[transition-duration:0s] motion-reduce:[transform:none]! motion-reduce:[transition:opacity_200ms_ease]">
           <motion.div
             ref={cardRef}
-            className="relative flex cursor-grab touch-none items-center gap-2 overflow-hidden p-4 outline-none select-none shadow-[0_1px_2px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.1)] border border-border/60 [-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none] [background:var(--st-bg)] [border-radius:var(--st-radius)] data-[swiping]:cursor-grabbing group-data-[dismissible=false]:cursor-default group-data-[dismissible=false]:touch-auto"
+            className={cn(
+              "relative flex cursor-grab touch-none items-start gap-3 overflow-hidden p-3.5 sm:p-4 outline-none select-none",
+              // Guaranteed solid, 100% opaque surface with crisp micro-depth shadows
+              "bg-white dark:bg-[#18181b] border border-border/80 dark:border-border/60 text-foreground",
+              "shadow-[0_10px_30px_-5px_rgba(0,0,0,0.14),0_2px_8px_-2px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.6),0_4px_12px_-2px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.1)]",
+              "[-webkit-tap-highlight-color:transparent] [-webkit-touch-callout:none]",
+              "data-[swiping]:cursor-grabbing group-data-[dismissible=false]:cursor-default group-data-[dismissible=false]:touch-auto"
+            )}
             role="status"
             aria-live="polite"
             aria-atomic="true"
             tabIndex={0}
-            style={{ transform, opacity: fade }}
+            style={{
+              borderRadius: radius,
+              transform,
+              opacity: fade,
+              ...(background ? { backgroundColor: background } : {}),
+              ...(color ? { color } : {}),
+            }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-            onPointerEnter={e => {
+            onPointerEnter={(e) => {
               if (pauseOnHover && e.pointerType === 'mouse') {
                 flags.current.hover = true;
                 syncFuse();
               }
             }}
-            onPointerLeave={e => {
+            onPointerLeave={(e) => {
               if (e.pointerType === 'mouse') {
                 flags.current.hover = false;
                 syncFuse();
@@ -332,13 +410,13 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
               flags.current.focus = true;
               syncFuse();
             }}
-            onBlur={e => {
+            onBlur={(e) => {
               if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
                 flags.current.focus = false;
                 syncFuse();
               }
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') lastInput.current = 'keyboard';
               if (e.key === 'Escape' && dismissible) {
                 e.stopPropagation();
@@ -346,26 +424,23 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
               }
             }}
           >
-            {icon ? (
-              <span
-                className="inline-flex h-[18px] w-[18px] flex-none [&_svg]:h-full [&_svg]:w-full"
-                aria-hidden="true"
-              >
-                {icon}
+            {renderStatusIcon()}
+
+            <div className="flex min-w-0 flex-auto flex-col gap-0.5">
+              <span className="leading-snug font-semibold text-foreground text-[13.5px] select-text">
+                {title}
               </span>
-            ) : null}
-            <span className="flex min-w-0 flex-auto flex-col gap-px">
-              <span className="leading-normal font-medium text-foreground">{title}</span>
               {description ? (
-                <span className="leading-[1.4] font-normal text-muted-foreground">
+                <span className="leading-relaxed font-normal text-muted-foreground text-xs select-text">
                   {description}
                 </span>
               ) : null}
-            </span>
+            </div>
+
             {actionLabel ? (
               <button
                 type="button"
-                className="h-6 flex-none cursor-pointer touch-manipulation rounded-[5px] border-0 px-2 text-xs font-medium outline-none [-webkit-tap-highlight-color:transparent] [background:var(--st-ink)] [color:var(--st-bg)] [font-family:inherit] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),opacity_160ms_ease] active:[transform:scale(0.97)] motion-reduce:active:[transform:none] [@media(hover:hover)_and_(pointer:fine)]:hover:opacity-[0.88]"
+                className="h-7 px-2.5 flex-none cursor-pointer touch-manipulation rounded-md border border-border/80 bg-surface hover:bg-surface-subtle text-foreground text-xs font-semibold outline-none transition-all duration-150 active:scale-[0.96] shadow-xs inline-flex items-center justify-center whitespace-nowrap self-center"
                 onClick={() => {
                   latest.current.onAction?.();
                   close('action');
@@ -374,19 +449,29 @@ export const SwipeToast: React.FC<SwipeToastProps> = ({
                 {actionLabel}
               </button>
             ) : null}
+
             {closeButton ? (
               <button
                 type="button"
-                className="relative grid h-6 w-6 flex-none cursor-pointer touch-manipulation place-items-center rounded-[5px] border-0 bg-transparent text-inherit outline-none [-webkit-tap-highlight-color:transparent] [font-family:inherit] [transition:transform_160ms_cubic-bezier(0.23,1,0.32,1),background-color_160ms_ease] before:absolute before:-inset-2 before:content-[''] active:[transform:scale(0.97)] motion-reduce:active:[transform:none] [@media(hover:hover)_and_(pointer:fine)]:hover:[background:color-mix(in_srgb,var(--st-ink)_10%,transparent)]"
-                aria-label="Close"
+                className="size-6 -mr-1 -mt-0.5 flex-none cursor-pointer touch-manipulation place-items-center rounded-md border-0 bg-transparent text-muted-foreground hover:text-foreground hover:bg-foreground/5 outline-none transition-colors self-start inline-flex items-center justify-center"
+                aria-label="Close notification"
                 onClick={() => close('close')}
               >
-                <HugeiconsIcon icon={Cancel01Icon} size={12} strokeWidth={2.5} />
+                <HugeiconsIcon icon={Cancel01Icon} size={13} strokeWidth={2.5} />
               </button>
             ) : null}
+
+            {/* Burning Fuse Progress Bar */}
             <i
               ref={fuseRef}
-              className="pointer-events-none absolute right-0 bottom-0 left-0 h-0.5 origin-left [background:linear-gradient(90deg,transparent_0%,color-mix(in_srgb,var(--st-fuse)_18%,transparent)_9%,color-mix(in_srgb,var(--st-fuse)_50%,transparent)_18%,color-mix(in_srgb,var(--st-fuse)_84%,transparent)_28%,var(--st-fuse)_38%,var(--st-fuse)_62%,color-mix(in_srgb,var(--st-fuse)_84%,transparent)_72%,color-mix(in_srgb,var(--st-fuse)_50%,transparent)_82%,color-mix(in_srgb,var(--st-fuse)_18%,transparent)_91%,transparent_100%)] group-data-[fuse=top]:top-0 group-data-[fuse=top]:bottom-auto group-data-[fuse=none]:opacity-0"
+              className={cn(
+                "pointer-events-none absolute right-0 bottom-0 left-0 h-[2.5px] origin-left group-data-[fuse=top]:top-0 group-data-[fuse=top]:bottom-auto group-data-[fuse=none]:opacity-0",
+                !fuseColor && type === 'success' && "bg-gradient-to-r from-emerald-500 to-emerald-400",
+                !fuseColor && type === 'error' && "bg-gradient-to-r from-rose-500 to-rose-400",
+                !fuseColor && type === 'warning' && "bg-gradient-to-r from-amber-500 to-amber-400",
+                !fuseColor && (!type || type === 'info') && "bg-gradient-to-r from-primary to-primary/80"
+              )}
+              style={fuseColor ? { background: fuseColor } : undefined}
               aria-hidden="true"
             />
           </motion.div>

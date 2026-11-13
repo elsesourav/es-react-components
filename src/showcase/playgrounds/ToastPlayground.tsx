@@ -7,10 +7,11 @@ import {
   ParameterSwitch,
   ParameterGrid,
 } from '@/components/ui';
-import { useToast } from '@/components/ui';
+import { useToast, type ToastPosition } from '@/components/ui';
+import { Layers, Sparkles, Trash2, ArrowUpDown } from 'lucide-react';
 
 export const ToastPlayground: React.FC = () => {
-  const { addToast, clearToasts } = useToast();
+  const { addToast, clearToasts, toasts, position, setPosition, isExpanded, setIsExpanded } = useToast();
   const [toastDuration, setToastDuration] = useState(4500);
   const [fusePosition, setFusePosition] = useState<SwipeToastFuse>('bottom');
   const [pauseOnHover, setPauseOnHover] = useState(true);
@@ -29,6 +30,48 @@ export const ToastPlayground: React.FC = () => {
     setInlineToastOpen(true);
     setLastDismissReason(null);
   };
+
+  const spawnBatchStack = () => {
+    addToast({
+      title: 'Database replica synced',
+      description: 'Distributed cluster nodes verified at revision 104.',
+      type: 'success',
+      duration: toastDuration,
+      fuse: fusePosition,
+      actionLabel: showAction ? 'View Logs' : undefined,
+    });
+
+    setTimeout(() => {
+      addToast({
+        title: 'CPU load threshold 82%',
+        description: 'Auto-scaling policy initiated for worker pool.',
+        type: 'warning',
+        duration: toastDuration,
+        fuse: fusePosition,
+        actionLabel: showAction ? 'Scale Up' : undefined,
+      });
+    }, 180);
+
+    setTimeout(() => {
+      addToast({
+        title: 'New API version live',
+        description: 'v2.4 endpoints now accepting traffic with zero downtime.',
+        type: 'info',
+        duration: toastDuration,
+        fuse: fusePosition,
+        actionLabel: showAction ? 'Docs' : undefined,
+      });
+    }, 360);
+  };
+
+  const positions: { label: string; value: ToastPosition }[] = [
+    { label: 'Bottom Right', value: 'bottom-right' },
+    { label: 'Bottom Left', value: 'bottom-left' },
+    { label: 'Bottom Center', value: 'bottom-center' },
+    { label: 'Top Right', value: 'top-right' },
+    { label: 'Top Left', value: 'top-left' },
+    { label: 'Top Center', value: 'top-center' },
+  ];
 
   return (
     <div className="space-y-6">
@@ -55,6 +98,7 @@ export const ToastPlayground: React.FC = () => {
                 open={inlineToastOpen}
                 title="Workspace backup archived"
                 description="Encrypted bundle synced to edge storage"
+                type="success"
                 actionLabel={showAction ? 'Undo' : undefined}
                 onAction={() => {
                   addToast({
@@ -93,40 +137,86 @@ export const ToastPlayground: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Imperative Floating Toasts (useToast Hook) */}
+      {/* 2. Floating Card Deck Stack (Sonner-style Stack Queue) */}
       <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h4 className="text-sm font-semibold text-foreground">Floating Notifications Queue (useToast)</h4>
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-semibold text-foreground">
+                3D Kinetic Notification Deck Stack
+              </h4>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
+                <Layers className="size-3" />
+                {toasts.length} active
+              </span>
+            </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Click to dispatch real-time kinetic toasts to the viewport bottom-right corner.
+              Hover over notifications to expand the stack into a full list. Older cards tuck underneath with 3D depth.
             </p>
           </div>
-          <Button variant="ghost" size="sm" onClick={clearToasts} className="text-muted-foreground hover:text-foreground">
-            Clear Queue
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsExpanded((prev) => !prev)}
+              className="text-xs"
+            >
+              <ArrowUpDown className="size-3.5 mr-1" />
+              {isExpanded ? 'Collapse Deck' : 'Expand Deck'}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearToasts}
+              className="text-muted-foreground hover:text-destructive text-xs"
+            >
+              <Trash2 className="size-3.5 mr-1" />
+              Clear Queue
+            </Button>
+          </div>
+        </div>
+
+        {/* Quick Batch Trigger */}
+        <div className="p-4 rounded-xl bg-surface-subtle/60 border border-border/60 flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-0.5">
+            <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <Sparkles className="size-3.5 text-primary" />
+              One-Click Stack Demonstration
+            </span>
+            <p className="text-[11px] text-muted-foreground">
+              Dispatches 3 queued notifications in sequence to demonstrate Sonner card-deck stacking & expand-on-hover.
+            </p>
+          </div>
+          <Button variant="primary" size="sm" onClick={spawnBatchStack} className="shadow-sm">
+            Spawn 3x Stacked Toasts
           </Button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Individual Types Dispatch */}
+        <div className="flex flex-wrap items-center gap-2.5 pt-1">
           <Button
-            variant="primary"
+            variant="outline"
+            size="sm"
+            className="border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
             onClick={() =>
               addToast({
                 title: 'Changes Synchronized',
-                description: 'Profile configurations pushed to distributed cluster.',
+                description: 'Profile configurations pushed to edge cluster.',
                 type: 'success',
                 duration: toastDuration,
                 fuse: fusePosition,
-                actionLabel: 'Details',
-                onAction: () => console.log('Details clicked'),
+                actionLabel: showAction ? 'Details' : undefined,
               })
             }
           >
-            Success Toast
+            + Success Toast
           </Button>
 
           <Button
-            variant="danger"
+            variant="outline"
+            size="sm"
+            className="border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
             onClick={() =>
               addToast({
                 title: 'Connection Dropped',
@@ -134,31 +224,35 @@ export const ToastPlayground: React.FC = () => {
                 type: 'error',
                 duration: toastDuration,
                 fuse: fusePosition,
-                actionLabel: 'Retry Now',
-                onAction: () => console.log('Retry clicked'),
+                actionLabel: showAction ? 'Retry Now' : undefined,
               })
             }
           >
-            Danger Toast
+            + Danger Toast
           </Button>
 
           <Button
             variant="outline"
+            size="sm"
+            className="border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
             onClick={() =>
               addToast({
-                title: 'Memory Threshold Warning',
+                title: 'Memory Warning',
                 description: 'V8 heap allocation crossed 85% safety boundary.',
                 type: 'warning',
                 duration: toastDuration,
                 fuse: fusePosition,
+                actionLabel: showAction ? 'Inspect' : undefined,
               })
             }
           >
-            Warning Toast
+            + Warning Toast
           </Button>
 
           <Button
-            variant="secondary"
+            variant="outline"
+            size="sm"
+            className="border-sky-500/30 text-sky-600 dark:text-sky-400 hover:bg-sky-500/10"
             onClick={() =>
               addToast({
                 title: 'Edge Cluster Advisory',
@@ -166,21 +260,46 @@ export const ToastPlayground: React.FC = () => {
                 type: 'info',
                 duration: toastDuration,
                 fuse: fusePosition,
+                actionLabel: showAction ? 'Learn More' : undefined,
               })
             }
           >
-            Info Toast
+            + Info Toast
           </Button>
         </div>
+
+        {/* Viewport Position Switcher */}
+        <div className="pt-3 border-t border-border/50">
+          <span className="text-xs font-medium text-muted-foreground block mb-2">
+            Toast Stack Screen Position:
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {positions.map((pos) => (
+              <button
+                key={pos.value}
+                type="button"
+                onClick={() => setPosition(pos.value)}
+                className={`px-3 py-1 text-xs rounded-lg border transition-all cursor-pointer ${
+                  position === pos.value
+                    ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs'
+                    : 'border-border text-muted-foreground hover:text-foreground hover:bg-surface-subtle'
+                }`}
+              >
+                {pos.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
+
       {/* 3. Parameter Controls (Controls Second) */}
       <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-5">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
-            Kinetic SwipeToast Parameters
+            Kinetic Toast Parameters
           </span>
           <span className="text-[11px] text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-mono">
-            Physics: Inertia + Velocity Rubberband
+            Physics: Card Deck Stack + Rubberband Swipe
           </span>
         </div>
 
@@ -272,7 +391,6 @@ export const ToastPlayground: React.FC = () => {
           ))}
         </div>
       </div>
-
     </div>
   );
 };
