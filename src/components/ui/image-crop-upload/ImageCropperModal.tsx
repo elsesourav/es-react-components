@@ -148,11 +148,11 @@ export function ImageCropperModal({
           onClose();
         }
       }}
-      className="fixed inset-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto"
+      className="fixed inset-0 top-0 left-0 right-0 bottom-0 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md animate-in fade-in duration-150 overflow-y-auto"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl rounded-2xl sm:rounded-3xl border border-border bg-surface-elevated p-4 sm:p-6 shadow-2xl flex flex-col space-y-3.5 max-h-[92vh] my-auto overflow-y-auto"
+        className="relative w-full max-w-4xl lg:max-w-5xl rounded-2xl sm:rounded-3xl border border-border bg-surface-elevated p-4 sm:p-7 shadow-2xl flex flex-col space-y-4 max-h-[94vh] my-auto overflow-y-auto"
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-2.5 border-b border-border">
@@ -255,7 +255,7 @@ export function ImageCropperModal({
         {/* Viewport Canvas */}
         <div
           ref={containerRef}
-          className="relative w-full h-[320px] sm:h-[400px] rounded-xl sm:rounded-2xl bg-surface-sunken overflow-hidden select-none flex items-center justify-center touch-none border border-border"
+          className="relative w-full h-[380px] sm:h-[480px] lg:h-[520px] rounded-xl sm:rounded-2xl bg-surface-sunken overflow-hidden select-none flex items-center justify-center touch-none border border-border"
         >
           {image ? (
             <div
@@ -271,7 +271,7 @@ export function ImageCropperModal({
                 src={image.src}
                 alt="Crop preview"
                 draggable={false}
-                className="max-h-[300px] sm:max-h-[380px] max-w-full block select-none pointer-events-none"
+                className="max-h-[360px] sm:max-h-[460px] lg:max-h-[500px] max-w-full block select-none pointer-events-none"
               />
 
               {/* Dynamic Resizable Crop Box */}

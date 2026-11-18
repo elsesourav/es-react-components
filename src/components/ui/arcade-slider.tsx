@@ -60,23 +60,23 @@ export const ARCADE_SLIDER_SIZES: Record<
     thumbWidth: 26,
     border: 2.5,
     padding: 2,
-    fontSize: "text-[10px]",
+    fontSize: "text-[8.5px]",
     sliderWidth: 220,
   },
   md: {
     height: 42,
-    thumbWidth: 34,
+    thumbWidth: 36,
     border: 3,
     padding: 2.5,
-    fontSize: "text-xs",
+    fontSize: "text-[9px]",
     sliderWidth: 280,
   },
   lg: {
     height: 52,
-    thumbWidth: 44,
+    thumbWidth: 46,
     border: 3.5,
     padding: 3,
-    fontSize: "text-sm",
+    fontSize: "text-[10px]",
     sliderWidth: 360,
   },
 };
@@ -350,9 +350,13 @@ export const ArcadeSlider: React.FC<ArcadeSliderProps> = ({
         {showValue && (
           <span
             className={cn(
-              "font-mono font-bold tracking-tight select-none text-[9px] text-zinc-700",
+              "font-mono font-bold tracking-tight select-none text-[8.5px] text-zinc-700 leading-none",
               dims.fontSize
             )}
+            style={{
+              fontSize: displayVal.length >= 4 ? '8px' : '9px',
+              letterSpacing: displayVal.length >= 4 ? '-0.05em' : '-0.02em',
+            }}
           >
             {displayVal}
           </span>

@@ -234,8 +234,8 @@
     "name": "Arcade Slider",
     "filename": "arcade-slider.tsx",
     "filepath": "src/components/ui/arcade-slider.tsx",
-    "lines": 366,
-    "bytes": 11772
+    "lines": 370,
+    "bytes": 11972
   },
   "input": {
     "name": "Input",

@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "projectId": "es-react-components",
+  "name": "ES React Components",
+  "npmPackage": "@elsesourav/react-ui",
+  "version": "1.1.0",
+  "author": {
+    "name": "Sourav",
+    "handle": "@elsesourav",
+    "website": "https://elsesourav.com"
+  },
+  "urls": {
+    "website": "https://elsesourav.com",
+    "showcase": "https://components.elsesourav.com",
+    "repository": "https://github.com/elsesourav/es-react-components",
+    "npm": "https://www.npmjs.com/package/@elsesourav/react-ui"
+  },
+  "tagline": "Modular, Physical 3D Micro-Depth UI Component Suite for React 19",
+  "summary": "A bespoke, production-ready React 19 component library engineered specifically for the ElseSourav ecosystem. Features instant CSS variable theme switching, physical sunken wells and 3D keycaps, Sonner-style kinetic toasts, and zero-runtime Tailwind styling.",
+  "meta": {
+    "totalPrimitives": 81,
+    "reactVersion": "^19.0.0",
+    "typescript": "^5.9.0",
+    "cssFramework": "Tailwind CSS 3.4 + HSL CSS Custom Properties",
+    "iconLibrary": "Lucide React + Hugeicons Free Core",
+    "animationEngine": "Motion / Framer Motion 14",
+    "runtimeOverhead": "< 18 KB Base",
+    "license": "MIT"
+  },
+  "architecturePhilosophy": {
+    "purpose": "Developed specifically to serve as the unified design backbone across all ElseSourav web apps and platforms (elsesourav.com), ensuring consistent interaction models, tactile physical depth, and instant real-time theme adaptability.",
+    "themeEngine": {
+      "strategy": "100% CSS Custom Property token binding. No CSS-in-JS runtime overhead.",
+      "tokens": [
+        "--primary",
+        "--background",
+        "--surface",
+        "--foreground",
+        "--border",
+        "--radius",
+        "--well",
+        "--panel",
+        "--shadow-lift",
+        "--shadow-well",
+        "--shadow-cap",
+        "--shadow-float"
+      ],
+      "presets": [
+        "Midnight Space",
+        "Clean Light",
+        "Cyberpunk Neon",
+        "Emerald Matrix",
+        "Sunset Glow",
+        "Oceanic Abyss"
+      ]
+    },
+    "tactileDepth": "Physical 1.5px depression travel on active states, specular 1px top-hairline highlights, sunken inner well shadows (mat-well), and authentic hardware deck tactile keycaps."
+  },
+  "provenanceAndModifications": {
+    "statement": "While selected foundational patterns and accessibility contracts draw inspiration from reputable open-source libraries, every primitive in this library has been heavily refactored, custom-styled, and re-architected to seamlessly integrate with the ElseSourav design token system and tactile 3D guidelines.",
+    "adaptations": [
+      {
+        "domain": "Tactile 3D Micro-Depth",
+        "originalConcept": "Physical hardware interfaces & skeuomorphic micro-surfaces",
+        "modification": "Engineered proprietary CSS elevation tokens (--shadow-lift, --shadow-well, --shadow-cap) combined with active 1.5px translate-y depressions and specular top borders, creating a modern, subtle physical depth without heavy blur artifacts."
+      },
+      {
+        "domain": "Dynamic Theming",
+        "originalConcept": "Tailwind utility styling",
+        "modification": "Refactored all component templates to consume reactive HSL and hex CSS custom properties, allowing live theme customizers to update the entire application in real time without virtual DOM re-renders."
+      },
+      {
+        "domain": "Kinetic Notifications",
+        "originalConcept": "Sonner card-deck stacking physics",
+        "modification": "Rebuilt with 100% solid, non-transparent surface tokens, tactile drop shadows, bidirectional swipe inertia, and customizable position docks (bottom-right, bottom-left, top-right, etc.)."
+      },
+      {
+        "domain": "Studio Cropping",
+        "originalConcept": "Standard canvas croppers",
+        "modification": "Engineered custom aspect ratio presets (including 21:9 Ultrawide, 16:9 Landscape, 1:1 Square, 3:4 Portrait, 9:16 Story), integrated clipboard image paste (Cmd+V), and responsive desktop modal viewport scaling."
+      },
+      {
+        "domain": "Data Analytics & Charts",
+        "originalConcept": "Recharts responsive SVG wrappers",
+        "modification": "Unified all 5 chart primitives (Line, Bar, Area, Donut, Stream) under a monochromatic high-contrast visual identity that dynamically reflects active CSS theme accent tokens."
+      }
+    ]
+  },
+  "componentCategories": [
+    {
+      "name": "Tactile 3D Suite",
+      "count": 7,
+      "description": "Hardware-inspired physical keycaps, sunken well inputs, and tactile cards.",
+      "components": ["TactileButton", "TactileInput", "TactileTextarea", "TactileSelect", "TactileCard", "TactileTabs", "TactileBadge"]
+    },
+    {
+      "name": "Buttons & Actions",
+      "count": 4,
+      "description": "Interactive push buttons, tactile switches, and arcade action triggers.",
+      "components": ["Button", "ArcadeButton", "KeycapButton", "InteractivePressable"]
+    },
+    {
+      "name": "Inputs & Fields",
+      "count": 9,
+      "description": "Form inputs featuring floating labels, OTP digit slots, tag chips, and password masks.",
+      "components": ["Input", "FloatingLabelInput", "PasswordInput", "OtpInput", "TagInput", "ExpandingSearch", "Textarea", "Select", "QuantityCounter"]
+    },
+    {
+      "name": "Media & Studio",
+      "count": 6,
+      "description": "Media presentation tools with precision image cropper studio, blur-up progressive loaders, and coverflow galleries.",
+      "components": ["ImageUpload", "ImageCropUpload", "BlurUpImage", "Lightbox", "CardCoverflow", "CardCarousel"]
+    },
+    {
+      "name": "Surfaces & Cards",
+      "count": 15,
+      "description": "Elevation containers, stats metrics, leaderboard rankings, and liquid glass sheets.",
+      "components": ["Card", "Stat", "LeaderboardTable", "TreeView", "ReorderList", "LiquidGlassSheet", "Badge", "Avatar"]
+    },
+    {
+      "name": "Feedback & Overlays",
+      "count": 9,
+      "description": "Non-blocking Sonner 3D kinetic toast stacks, accessible dialogs, and skeleton loaders.",
+      "components": ["Toast", "Dialog", "Modal", "Alert", "Spinner", "MotionLoaders", "CollapsibleBanner", "Tooltip"]
+    },
+    {
+      "name": "Data & Analytics",
+      "count": 6,
+      "description": "Responsive monochrome Recharts dashboards with dynamic theme synchronization.",
+      "components": ["MonoCharts", "MonoLineChart", "MonoBarChart", "MonoAreaChart", "MonoDonutChart", "MonoStreamChart"]
+    },
+    {
+      "name": "AI & Agentic UX",
+      "count": 6,
+      "description": "Modern generative AI control interfaces, prompt bars, code execution cards, and approval blocks.",
+      "components": ["AIPromptBar", "AIApprovalCard", "AIFineTuneCard", "AICodeBlock"]
+    }
+  ],
+  "presentationAssets": {
+    "heroCarouselUltrawide": {
+      "file": "showcase/banners/carousel-slider-desktop-21x9.png",
+      "ratio": "21:9",
+      "resolution": "2520x1080"
+    },
+    "heroCarouselDesktop": {
+      "file": "showcase/banners/carousel-slider-desktop-16x9.png",
+      "ratio": "16:9",
+      "resolution": "1920x1080"
+    },
+    "heroCarouselMobile": {
+      "file": "showcase/banners/carousel-slider-mobile-3x4.png",
+      "ratio": "3:4",
+      "resolution": "1200x1600"
+    },
+    "platformCoverLandscape": {
+      "file": "showcase/banners/app-cover-landscape-16x9.png",
+      "ratio": "16:9",
+      "resolution": "1600x900"
+    },
+    "platformCoverPortrait": {
+      "file": "showcase/banners/app-cover-portrait-3x4.png",
+      "ratio": "3:4",
+      "resolution": "1200x1600"
+    },
+    "versionUpdateBanner": {
+      "file": "showcase/banners/update-banner-v2-16x9.png",
+      "ratio": "16:9",
+      "resolution": "1600x900"
+    },
+    "desktopScreenshots": [
+      {
+        "file": "showcase/screenshots/desktop-01-overview.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "Showcase Overview & 81+ Component Matrix"
+      },
+      {
+        "file": "showcase/screenshots/desktop-02-tactile-suite.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "Physical 3D Tactile Suite & Hardware Deck"
+      },
+      {
+        "file": "showcase/screenshots/desktop-03-theme-engine.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "Live Dynamic Theme Engine & CSS Token Presets"
+      },
+      {
+        "file": "showcase/screenshots/desktop-04-toast-stack.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "3D Kinetic Sonner-Style Notification Card Deck"
+      },
+      {
+        "file": "showcase/screenshots/desktop-05-image-crop-upload.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "Precision Image Cropper & Aspect Ratio Studio"
+      },
+      {
+        "file": "showcase/screenshots/desktop-06-mono-charts.png",
+        "ratio": "16:9",
+        "resolution": "1920x1080",
+        "caption": "Monochrome Data & Analytics Recharts Suite"
+      }
+    ],
+    "appIcons": {
+      "transparent": "showcase/app-icons/app-icon-512x512.png",
+      "cyberNightSquircle": "showcase/app-icons/app-icon-night-512x512.png",
+      "vectorSvg": "showcase/app-icons/app-icon.svg"
+    }
+  }
+}
